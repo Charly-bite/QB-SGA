@@ -1,0 +1,1086 @@
+[
+    {
+        "timestamp": "2026-01-09 11:28:53",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-09 13:02:36",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-09 13:18:38",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-09 13:19:17",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-09",
+            "batch_number": "12345",
+            "count": 14,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-09 13:26:01",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-09 13:26:37",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-09",
+            "batch_number": "12345",
+            "count": 14,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-09 13:27:10",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-09 13:27:19",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-09",
+            "batch_number": "12345",
+            "count": 14,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-09 16:26:22",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 08:40:51",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 08:41:12",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 1,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 08:41:34",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 13,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:42:32",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:47:15",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:49:22",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:52:01",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:52:22",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 14,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:52:46",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:52:53",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 1,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:53:13",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 2,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:53:29",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 2,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:53:40",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 9,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 11:54:02",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 12:22:20",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 12:26:33",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 12:29:02",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 12:32:47",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 12:41:51",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 12:42:40",
+        "event_type": "IMPRESION",
+        "details": {
+            "batch_date": "2026-01-12",
+            "batch_number": "12345",
+            "count": 14,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-12 12:58:06",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 13:03:20",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 13:08:33",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 13:13:16",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-12 13:24:35",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 08:39:23",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 08:41:18",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:01:48",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:07:58",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:15:49",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:23:25",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:27:42",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:41:47",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:43:30",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:47:29",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 09:58:09",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 10:07:16",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 10:11:19",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 10:11:32",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 10:23:12",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": "300050",
+            "client": "Cliente Ejemplo S.A.",
+            "item_count": 14
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:16:59",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 168,
+            "client": "DL MEDICA",
+            "item_count": 1,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:17:37",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:28:57",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:37:06",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:42:02",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:45:01",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:57:22",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:57:47",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 11:57:55",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:01:11",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:04:46",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:05:14",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 168,
+            "client": "DL MEDICA",
+            "item_count": 1,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:05:28",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10167,
+            "client": "VENTAS MOSTRADOR FACT",
+            "item_count": 1,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:18:16",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:21:02",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:28:15",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:28:51",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:32:29",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:37:17",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:42:38",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:43:21",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:44:23",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 12:45:51",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 13:10:51",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 13:12:20",
+        "event_type": "IMPRESION",
+        "details": {
+            "batches": {
+                "LOT-20260114-10168": 3
+            },
+            "batch_count": 1,
+            "count": 3,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 13:17:27",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 13:33:07",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10167,
+            "client": "VENTAS MOSTRADOR FACT",
+            "item_count": 1,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-14 14:03:59",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 09:23:05",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 09:49:02",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 09:49:19",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 09:54:59",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 10:07:56",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 10:14:08",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 10:34:15",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 10:41:24",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 10:44:45",
+        "event_type": "IMPRESION",
+        "details": {
+            "batches": {
+                "LOT-20260115-10168": 1
+            },
+            "batch_count": 1,
+            "count": 1,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:05:04",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:05:43",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:08:22",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:13:25",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:14:07",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:25:49",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:47:14",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-15 11:49:48",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 09:28:24",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 09:33:34",
+        "event_type": "IMPRESION",
+        "details": {
+            "batches": {
+                "LOT-20260116-10168": 4
+            },
+            "batch_count": 1,
+            "count": 4,
+            "output_dir": "/home/quimicab/Base_datos/generated_labels",
+            "errors": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 10:41:41",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 10:47:52",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 10:50:27",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 10:55:49",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 10:59:29",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 11:10:41",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 11:31:46",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 11:40:52",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 11:42:37",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-16 14:57:48",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-19 08:56:40",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10169,
+            "client": "LAURA VERONICA VILLEGAS GOMEZ",
+            "item_count": 1,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-19 08:56:52",
+        "event_type": "SAP_IMPORT",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-19 09:28:24",
+        "event_type": "SAP_IMPORT",
+        "user": "admin",
+        "details": {
+            "order_id": 10169,
+            "client": "LAURA VERONICA VILLEGAS GOMEZ",
+            "item_count": 1,
+            "skipped": 0
+        }
+    },
+    {
+        "timestamp": "2026-01-19 09:32:32",
+        "event_type": "SAP_IMPORT",
+        "user": "admin",
+        "details": {
+            "order_id": 10168,
+            "client": "JOSE MANUEL CASTILLO CARRILLO",
+            "item_count": 4,
+            "skipped": 0
+        }
+    }
+]

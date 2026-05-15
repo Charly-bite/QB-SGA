@@ -1,0 +1,122 @@
+
+================================================================================
+PAGE 6
+================================================================================
+ 
+ 1 
+1. Introduction  
+ 
+Thank you very much for purchasing TSC bar code printer.  
+ 
+The TTP-2610MT Series Printers are  designed with die -casting aluminum chassis and print mechanism, metal cover with large 
+clear media view window, which ensuring to work for the extreme and heavy duty industrial environment and applications.  
+ 
+With back -lit graphic LCD display, printer status can be managed easier and operated more user friendly. The moveable sensor 
+design can accept wide range of label media. All of the most frequently used bar code formats are included. Fonts and bar cod es 
+can be printed in a ny one of the four directio ns. TTP -2610MT Series are built-in the high quality, high performance MONOTYPE 
+IMAGING«  True Type font engine and one CG Triumvirate Bold Condensed smooth font. With flexible firmware design, user can 
+also download the True Type Font from PC into printer m emory for printing labels. It also provides a choice of five different sizes of 
+alphanumeric bitmap font, OCR -A and OCR -B fon ts. By integrating rich features.  
+ 
+This document  provides an easy reference f or operating the MH241  series. TSC printers include th e Windows labeling software for 
+creating your label template. For system integration, the TSPL/TSPL2 printer programming manual or SDKs can be found on TSC 
+website at : https://www.tscprinters.com . 
+  
+
+================================================================================
+PAGE 7
+================================================================================
+ 
+ 2 
+1.1 Product Specification  
+Product standard  feature  203 dpi 
+models  300 dpi  
+models  
+Thermal transfer / or direct thermal  V V 
+High quality die -cast aluminum design  V V 
+Metal cover with large clear media view window  V V 
+Transmissive gap sensor (position adjustable  from 4ö~8ö) V V 
+Reflective black mark sensor position full web adjustable  V V 
+Transmissive ribbon end sensor  V V 
+Ribbon encoder sensor ( Support color ribbon ) V V 
+Head open sensor  V V 
+Resistive Touch Screen , 16 bits Color, 480 x 272 pixels, with back lights  V V 
+Control panel with 6 operation buttons  V V 
+LED indicators  V V 
+Real time clock  V V 
+Internal Ethernet print server (10/100 Mbps) interface  V V 
+USB 2.0 client ( High  speed mode)  V V 
+Serial RS -232C (2400 -115200 bps) interface  V V 
+USB host interface,  for scanner or PC keyboard  V V 
+Centronics (SPP mode)  V V 
+256 MB DDR2  SDRAM memory  V V 
+512 MB FLASH memory  V V 
+SD Flash memory card slot for Flash memory expansion, up to 32GB  V V 
+32-bit RISC high performance processor (BGA 536MHz)  V V 
+Internal 8 alpha -numeric bitmap fonts  V V 
+Fonts and bar codes can be printed in any one of the four directions (0, 90,180, 270 degree)  V V 
+Internal Monotype Imaging« true type font engine with one CG Triumvirate Bold Condensed V V 
+
+================================================================================
+PAGE 8
+================================================================================
+ 
+ 3 
+scalable font  
+Downloadable fonts from PC to printer memory  V V 
+Bar code, graphics/image printing  
+ 
+1D bar code : 
+Code128 subsets A.B.C, Code128UCC, EAN128, Interleave 2 of 5, Code 39, Code 93, EAN -13, EAN -
+8, Codabar , POSTNET, UPC -A, UPC -E, EAN and UPC 2(5) digits, MSI, PLESSEY, China Post, 
+ITF14, EAN14, Code 11, TELPEN, PLANET, Code 49, Deutsche Post Identcode, Deutsche Post 
+Leitcode, LOGMARS   
+ 
+2D bar code:  
+CODABLOCK F mode, DataMatrix, Maxicode, PDF -417, Aztec, Micr oPDF417, QR code, RSS 
+Barcode (GS1 Databar)   
+ 
+Supported Image:  
+BITMAP, BMP, PCX (Max. 256 colors graphics)  V V 
+  
+
+================================================================================
+PAGE 9
+================================================================================
+ 
+ 4 
+1.1.1 Printer Optional Features  
+The printer offers the following optional features.  
+Product option feature  User 
+option  Dealer  
+option  Factory 
+option  
+Applicator I/O interface  (GPIO)    V 
+Peel-off module   V  
+Regular cutter (Rotary cutter)  
+Max. paper width:178mm  
+Media thickness: 0.06 ~ 0.25mm  
+Media type: receipt, tag, and label liner w/o glue   V  
+KP-200 Plus  series  keyboard  V   
+KU-007 Plus programmable smart keyboard  V   
+Bluetooth module (Serial interface)  V   
+802.11 a/b/g/n wireless module  
+(Slot-in; For TTP -2610MT only )  V  
+Note: Except for the linerless cutter, all regular/heavy duty/care label cutters DO NOT cut on media with glue.  
+ 
+ 
+ 
+ 
+ 
+
+================================================================================
+PAGE 10
+================================================================================
+Traceback (most recent call last):
+  File "c:\Users\QB_DESARROLLO\Desktop\SGAv1.01\extract_pages.py", line 18, in <module>
+    print(text)
+    ~~~~~^^^^^^
+  File "C:\Python314\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u02da' in position 298: character maps to <undefined>

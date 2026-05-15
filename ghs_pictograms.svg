@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <!--
+    Four GHS Hazard Pictograms arranged as diamonds forming one master diamond.
+    Seamless red borders achieved by drawing one large red diamond, then
+    overlaying four smaller white interior diamonds, leaving the red grid visible.
+    Center: (300, 300). Sub-diamond radius: 130. White interior radius: 118.
+  -->
+
+  <!-- ══════════ SEAMLESS RED DIAMOND GRID ══════════ -->
+  <!-- Large red master diamond (single shape = no gaps or overlaps) -->
+  <polygon points="300,40 560,300 300,560 40,300" fill="#C1272D"/>
+
+  <!-- White interior diamonds (cut out of the red, forming red cross) -->
+  <polygon points="300,52 418,170 300,288 182,170" fill="#FFFFFF"/>
+  <polygon points="430,182 548,300 430,418 312,300" fill="#FFFFFF"/>
+  <polygon points="300,312 418,430 300,548 182,430" fill="#FFFFFF"/>
+  <polygon points="170,182 288,300 170,418 52,300"  fill="#FFFFFF"/>
+
+  <!-- ══════════ TOP: EXCLAMATION MARK (GHS07) ══════════ -->
+  <g fill="#000000">
+    <!-- Bold tapered bar -->
+    <path d="M 285,100 L 315,100 L 311,216 L 289,216 Z"/>
+    <!-- Round dot -->
+    <circle cx="300" cy="250" r="17"/>
+  </g>
+
+  <!-- ══════════ RIGHT: FLAME (GHS02) ══════════ -->
+  <g transform="translate(430,300)" fill="#000000">
+    <!-- Flame body with tongues -->
+    <path d="
+      M 0,-62
+      C 3,-48 14,-36 20,-24
+      C 26,-12 28,0 26,10
+      C 24,16 18,14 16,18
+      C 12,8 6,14 10,28
+      C 14,40 24,50 30,58
+      L -30,58
+      C -24,50 -14,40 -10,28
+      C -6,14 -12,8 -16,18
+      C -18,14 -24,16 -26,10
+      C -28,0 -26,-12 -20,-24
+      C -14,-36 -3,-48 0,-62 Z"/>
+    <!-- Base surface -->
+    <rect x="-35" y="60" width="70" height="7" rx="1"/>
+  </g>
+
+  <!-- ══════════ BOTTOM: ENVIRONMENTAL HAZARD (GHS09) ══════════ -->
+  <g transform="translate(300,430)" fill="#000000">
+    <!-- Dead tree trunk -->
+    <path d="M -18,55 L -18,-38 L -12,-38 L -12,55 Z"/>
+    <!-- Right branches -->
+    <path d="M -12,-28 L 14,-58 L 18,-54 L -9,-25 Z"/>
+    <path d="M -12,-12 L 10,-34 L 14,-30 L -9,-9 Z"/>
+    <path d="M -12,6 L 6,-12 L 10,-8 L -9,9 Z"/>
+    <!-- Left branches -->
+    <path d="M -18,-20 L -42,-50 L -38,-54 L -15,-23 Z"/>
+    <path d="M -18,-4 L -36,-26 L -32,-29 L -15,-7 Z"/>
+    <path d="M -18,14 L -32,0 L -28,-3 L -15,11 Z"/>
+    <!-- Ground / shore line -->
+    <rect x="-50" y="55" width="100" height="5"/>
+    <!-- Dead fish (belly up, facing right) -->
+    <path d="
+      M 10,64
+      C 16,58 28,56 40,58
+      C 48,60 52,62 52,66
+      L 60,60 L 62,62 L 60,70 L 62,72 L 60,68
+      L 52,72
+      C 52,76 48,78 40,78
+      C 28,80 16,78 10,72
+      C 6,68 6,66 10,64 Z"/>
+    <!-- Fish eye -->
+    <circle cx="40" cy="66" r="2.5" fill="#FFFFFF"/>
+  </g>
+
+  <!-- ══════════ LEFT: HEALTH HAZARD (GHS08) ══════════ -->
+  <g transform="translate(170,300)" fill="#000000">
+    <!-- Head -->
+    <circle cx="0" cy="-48" r="18"/>
+    <!-- Body / torso -->
+    <path d="
+      M -40,-24
+      C -40,-28 -30,-28 -20,-28
+      L 20,-28
+      C 30,-28 40,-28 40,-24
+      L 36,0
+      C 35,6 32,10 28,13
+      L 22,16 L 22,58 L -22,58 L -22,16
+      L -28,13
+      C -32,10 -35,6 -36,0
+      Z"/>
+    <!-- Starburst on chest (white cutout, 8-pointed) -->
+    <path fill="#FFFFFF" d="
+      M 0,-22 L 3,-8 L 14,-15 L 8,-3 L 22,0 L 8,3 L 14,15 L 3,8
+      L 0,22 L -3,8 L -14,15 L -8,3 L -22,0 L -8,-3 L -14,-15 L -3,-8 Z"
+      transform="translate(0,8)"/>
+  </g>
+
+</svg>

@@ -1,0 +1,1555 @@
+{
+  "metadata": {
+    "generated": "2026-02-23 11:39:37",
+    "total_results": 58,
+    "stats": {
+      "products_updated": 58,
+      "h_entries_added": 29,
+      "p_entries_added": 315,
+      "pic_entries_added": 18,
+      "signal_words_updated": 3
+    },
+    "dry_run": false
+  },
+  "results": [
+    {
+      "product_id": "ASH-QB00001",
+      "chemical_name": "BENECEL",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H232"
+      ],
+      "p_codes": [],
+      "pictograms": [],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "ASH-QB00032",
+      "chemical_name": "NATROSOL HHR250",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H232"
+      ],
+      "p_codes": [],
+      "pictograms": [],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "ASH-QB00062",
+      "chemical_name": "N-HANCE HP40",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H232"
+      ],
+      "p_codes": [],
+      "pictograms": [],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "ASH-QB00066",
+      "chemical_name": "LUBRAGEL OIL FREE",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H319",
+        "H320"
+      ],
+      "p_codes": [
+        "P102",
+        "P103",
+        "P305",
+        "P313",
+        "P338",
+        "P351"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "ASH-QB00070",
+      "chemical_name": "GERMALL PLUS POLVO",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H319",
+        "H320"
+      ],
+      "p_codes": [
+        "P264",
+        "P280",
+        "P305",
+        "P305+P351+P338",
+        "P338",
+        "P351"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "IFF-QB00150",
+      "chemical_name": "JUNGLE MELON",
+      "cas_number": "Mezcla",
+      "h_codes": [],
+      "p_codes": [
+        "P210",
+        "P261"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "IFF-QB00263",
+      "chemical_name": "QUIM SH MOD",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H227",
+        "H303",
+        "H304",
+        "H315",
+        "H317",
+        "H319",
+        "H361",
+        "H400"
+      ],
+      "p_codes": [
+        "P201",
+        "P202",
+        "P210",
+        "P261",
+        "P264",
+        "P280",
+        "P301+P310",
+        "P302+P352",
+        "P305+P351+P338",
+        "P312",
+        "P331",
+        "P333+P313",
+        "P337+P313",
+        "P370+P378",
+        "P391",
+        "P403+P235",
+        "P405",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS02",
+        "GHS07",
+        "GHS08",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "IFF-QB00272",
+      "chemical_name": "SOFT BLUE M 68",
+      "cas_number": "-",
+      "h_codes": [],
+      "p_codes": [],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": null,
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00002",
+      "chemical_name": "ASFIER 121",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H370",
+        "H372"
+      ],
+      "p_codes": [
+        "P260",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P361",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00003",
+      "chemical_name": "ASFIER 208",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H370",
+        "H372",
+        "H400",
+        "H401"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P351",
+        "P352",
+        "P361",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS08",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00007",
+      "chemical_name": "ASFIER 216 S/P",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H314",
+        "H318",
+        "H371",
+        "H373",
+        "H401"
+      ],
+      "p_codes": [
+        "P261",
+        "P264",
+        "P273",
+        "P280",
+        "P304",
+        "P305",
+        "P310",
+        "P313",
+        "P330",
+        "P331",
+        "P338",
+        "P361",
+        "P363"
+      ],
+      "pictograms": [
+        "GHS05",
+        "GHS08",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00009",
+      "chemical_name": "ASFIER 710",
+      "cas_number": "7732-18-5, 130014-37-8",
+      "h_codes": [
+        "H302",
+        "H315",
+        "H319",
+        "H410"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P273",
+        "P280",
+        "P301",
+        "P302",
+        "P313",
+        "P330",
+        "P351",
+        "P352",
+        "P391",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS09"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00011",
+      "chemical_name": "DANOX RAP 305",
+      "cas_number": "61788-62-3, 1317-38-0, 13463-67-7",
+      "h_codes": [
+        "H315",
+        "H318",
+        "H400",
+        "H401"
+      ],
+      "p_codes": [
+        "P264",
+        "P273",
+        "P280",
+        "P302",
+        "P313",
+        "P351",
+        "P352",
+        "P391",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00012",
+      "chemical_name": "GRIPER X2",
+      "cas_number": "12645-31-7",
+      "h_codes": [
+        "H314",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P351",
+        "P352",
+        "P361",
+        "P363",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00016",
+      "chemical_name": "AKYPO LM-40 S/P",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H318"
+      ],
+      "p_codes": [
+        "P280",
+        "P305",
+        "P338",
+        "P351"
+      ],
+      "pictograms": [
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00019",
+      "chemical_name": "ALFANOX 46",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P280",
+        "P302",
+        "P305",
+        "P310",
+        "P338",
+        "P351",
+        "P362",
+        "P363"
+      ],
+      "pictograms": [
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00021",
+      "chemical_name": "AMIDET N",
+      "cas_number": "Sustancia",
+      "h_codes": [
+        "H315",
+        "H402"
+      ],
+      "p_codes": [
+        "P264",
+        "P273",
+        "P280",
+        "P302",
+        "P313",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00022",
+      "chemical_name": "AMIET 502 TAMBOR 175 KGS",
+      "cas_number": "61791-26-2",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P305",
+        "P312",
+        "P313",
+        "P330",
+        "P338",
+        "P362",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00024",
+      "chemical_name": "AMIET 515",
+      "cas_number": "61791-26-2",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H370",
+        "H372"
+      ],
+      "p_codes": [
+        "P261",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P313",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P351",
+        "P352",
+        "P361",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS08"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00027",
+      "chemical_name": "CETILICO KALCOL 6098",
+      "cas_number": "36653-82-4",
+      "h_codes": [
+        "H226"
+      ],
+      "p_codes": [
+        "P210",
+        "P233",
+        "P235",
+        "P280",
+        "P302",
+        "P352",
+        "P361",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS02"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00034",
+      "chemical_name": "DANOX PL-10",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H319",
+        "H320"
+      ],
+      "p_codes": [
+        "P264",
+        "P280",
+        "P305+P351+P338"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00037",
+      "chemical_name": "DIAMIET 515 s/p",
+      "cas_number": "61790-85-0",
+      "h_codes": [
+        "H302",
+        "H315",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P305",
+        "P310",
+        "P312",
+        "P313",
+        "P330",
+        "P338",
+        "P351",
+        "P362",
+        "P363",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00039",
+      "chemical_name": "DIAMIN T S/P",
+      "cas_number": "61791-55-7",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H372",
+        "H400",
+        "H410"
+      ],
+      "p_codes": [
+        "P260",
+        "P264",
+        "P270",
+        "P273",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P351",
+        "P361",
+        "P363",
+        "P391",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS08",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00041",
+      "chemical_name": "EMAL 10 PHD S/P",
+      "cas_number": "73296-89-6",
+      "h_codes": [
+        "H302",
+        "H315",
+        "H318",
+        "H412"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P273",
+        "P280",
+        "P301",
+        "P302",
+        "P305",
+        "P312",
+        "P313",
+        "P330",
+        "P338",
+        "P351",
+        "P352",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00042",
+      "chemical_name": "EMAL 10-N LAURIL SULFATO DE SODIO",
+      "cas_number": "73296-89-6",
+      "h_codes": [
+        "H302",
+        "H315",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P305",
+        "P310",
+        "P312",
+        "P313",
+        "P330",
+        "P338",
+        "P351",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00043",
+      "chemical_name": "EMAL 10G",
+      "cas_number": "73296-89-6",
+      "h_codes": [
+        "H302",
+        "H315",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P305",
+        "P310",
+        "P312",
+        "P313",
+        "P330",
+        "P338",
+        "P351",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00048",
+      "chemical_name": "FORMOX DM40",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H318",
+        "H400",
+        "H411"
+      ],
+      "p_codes": [
+        "P264",
+        "P273",
+        "P280",
+        "P302",
+        "P305",
+        "P313",
+        "P338",
+        "P351",
+        "P352",
+        "P391",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00054",
+      "chemical_name": "KAOSOFT AGL85",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H226"
+      ],
+      "p_codes": [
+        "P210",
+        "P233",
+        "P235",
+        "P280",
+        "P302",
+        "P352",
+        "P361",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS02"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00056",
+      "chemical_name": "KAOSOFT AT-50V",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H226"
+      ],
+      "p_codes": [
+        "P210",
+        "P233",
+        "P235",
+        "P280",
+        "P302",
+        "P352",
+        "P361",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS02"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00061",
+      "chemical_name": "POIZ 88",
+      "cas_number": "57-55-6, 7732-18-5",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H370",
+        "H372"
+      ],
+      "p_codes": [
+        "P261",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P313",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P351",
+        "P352",
+        "P361",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00062",
+      "chemical_name": "QUARTAMIN 60",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P280",
+        "P302",
+        "P305",
+        "P310",
+        "P313",
+        "P338",
+        "P351"
+      ],
+      "pictograms": [
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00063",
+      "chemical_name": "QUARTAMIN 60 S/P (TOTE)",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H318",
+        "H400",
+        "H401"
+      ],
+      "p_codes": [
+        "P264",
+        "P273",
+        "P280",
+        "P302",
+        "P313",
+        "P338",
+        "P351",
+        "P352",
+        "P391",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00064",
+      "chemical_name": "QUARTAMIN 60W30P",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H318"
+      ],
+      "p_codes": [
+        "P264",
+        "P280",
+        "P302",
+        "P305",
+        "P310",
+        "P313",
+        "P338",
+        "P351"
+      ],
+      "pictograms": [
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00065",
+      "chemical_name": "QUARTAMIN AB",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H318",
+        "H371",
+        "H373",
+        "H400",
+        "H401"
+      ],
+      "p_codes": [
+        "P260",
+        "P264",
+        "P273",
+        "P280",
+        "P302",
+        "P305",
+        "P313",
+        "P338",
+        "P351",
+        "P352",
+        "P391",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05",
+        "GHS08",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00067",
+      "chemical_name": "QUARTAMIN D081 S/P",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H226",
+        "H302",
+        "H312",
+        "H314",
+        "H318",
+        "H400"
+      ],
+      "p_codes": [
+        "P210",
+        "P233",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P312",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P351",
+        "P352",
+        "P361",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS02",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00069",
+      "chemical_name": "QUARTAMIN D86P",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H371",
+        "H373"
+      ],
+      "p_codes": [
+        "P260",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P310",
+        "P313",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P361",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05",
+        "GHS02"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00070",
+      "chemical_name": "TETRANYL AT7590 s/p",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H225"
+      ],
+      "p_codes": [
+        "P210",
+        "P233",
+        "P302",
+        "P403"
+      ],
+      "pictograms": [
+        "GHS02"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00072",
+      "chemical_name": "TETRANYL AT7590E",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H225"
+      ],
+      "p_codes": [
+        "P210",
+        "P233",
+        "P302",
+        "P403"
+      ],
+      "pictograms": [
+        "GHS02"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00079",
+      "chemical_name": "TETRANYL L17-90E",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H226",
+        "H315",
+        "H319",
+        "H412"
+      ],
+      "p_codes": [
+        "P210",
+        "P233",
+        "P235",
+        "P264",
+        "P273",
+        "P280",
+        "P302",
+        "P305",
+        "P313",
+        "P338",
+        "P351",
+        "P352",
+        "P361",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00083",
+      "chemical_name": "HRB-1 S/P",
+      "cas_number": "110-30-5",
+      "h_codes": [
+        "H232"
+      ],
+      "p_codes": [],
+      "pictograms": [],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00084",
+      "chemical_name": "KAOAMIN 12",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H400",
+        "H410"
+      ],
+      "p_codes": [
+        "P264",
+        "P270",
+        "P273",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P361",
+        "P363",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00086",
+      "chemical_name": "HRB-2 S/P",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H302",
+        "H304",
+        "H314",
+        "H318",
+        "H373"
+      ],
+      "p_codes": [
+        "P260",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P313",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P361",
+        "P363",
+        "P403",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS08"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00097",
+      "chemical_name": "DANOX BH-15 (DANOX TLC-24)",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H318",
+        "H412"
+      ],
+      "p_codes": [
+        "P264",
+        "P273",
+        "P280",
+        "P302",
+        "P305",
+        "P313",
+        "P338",
+        "P351",
+        "P352",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "KAO-QB00103",
+      "chemical_name": "DIAMIN O",
+      "cas_number": "7173-62-8",
+      "h_codes": [
+        "H302",
+        "H314",
+        "H318",
+        "H372",
+        "H290",
+        "H301",
+        "H315",
+        "H400",
+        "H410"
+      ],
+      "p_codes": [
+        "P261",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P313",
+        "P330",
+        "P331",
+        "P340",
+        "P361",
+        "P363",
+        "P403",
+        "P501",
+        "P234",
+        "P260",
+        "P264+P265",
+        "P273",
+        "P301+P316",
+        "P301+P317",
+        "P301+P330+P331",
+        "P302+P352",
+        "P302+P361+P354",
+        "P304+P340",
+        "P305+P354+P338",
+        "P316",
+        "P317",
+        "P319",
+        "P321",
+        "P332+P317",
+        "P362+P364",
+        "P390",
+        "P391",
+        "P405",
+        "P406"
+      ],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS08",
+        "GHS06",
+        "GHS09"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy+pubchem"
+    },
+    {
+      "product_id": "KAO-QB00104",
+      "chemical_name": "DIAMIN C",
+      "cas_number": "61791-63-7",
+      "h_codes": [
+        "H301",
+        "H314",
+        "H318",
+        "H372"
+      ],
+      "p_codes": [
+        "P261",
+        "P264",
+        "P270",
+        "P280",
+        "P301",
+        "P302",
+        "P304",
+        "P305",
+        "P310",
+        "P330",
+        "P331",
+        "P338",
+        "P340",
+        "P361",
+        "P363",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS05",
+        "GHS08",
+        "GHS06"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "LUB-QB00002",
+      "chemical_name": "ACTIPHYTE BLUE AGAVE GL100NP",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H317",
+        "H318"
+      ],
+      "p_codes": [],
+      "pictograms": [
+        "GHS07",
+        "GHS05"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "LUB-QB00023",
+      "chemical_name": "CARBOPOL ULTREZ 10",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H232"
+      ],
+      "p_codes": [],
+      "pictograms": [],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "LUB-QB00045",
+      "chemical_name": "MERQUAT 550PR (POLIQUATERNIUM 7)",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H402"
+      ],
+      "p_codes": [
+        "P501"
+      ],
+      "pictograms": [
+        "GHS09"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "LUB-QB00049",
+      "chemical_name": "NOVERITE 301 S/P",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H316"
+      ],
+      "p_codes": [
+        "P313",
+        "P332+P313"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "LUB-QB00067",
+      "chemical_name": "SILSENSE DW-18",
+      "cas_number": "No Aplicable",
+      "h_codes": [
+        "H315",
+        "H316"
+      ],
+      "p_codes": [
+        "P313",
+        "P332+P313"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00032",
+      "chemical_name": "C.M.C.",
+      "cas_number": "9004-32-4, 7647-14-5",
+      "h_codes": [
+        "H232",
+        "H315"
+      ],
+      "p_codes": [],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00081",
+      "chemical_name": "ESPESANTE D150",
+      "cas_number": "9005-08-7",
+      "h_codes": [],
+      "p_codes": [],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": null,
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00100",
+      "chemical_name": "GLICERINA USP",
+      "cas_number": "56-81-5",
+      "h_codes": [
+        "H332"
+      ],
+      "p_codes": [
+        "P261",
+        "P271",
+        "P304",
+        "P304+P340",
+        "P312",
+        "P340"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "Atención",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00118",
+      "chemical_name": "NACARANTE QB",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H315",
+        "H319",
+        "H320"
+      ],
+      "p_codes": [
+        "P264",
+        "P280",
+        "P305+P351+P338"
+      ],
+      "pictograms": [
+        "GHS07"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00157",
+      "chemical_name": "ACIDO POLIFOSFORICO 117% S/P",
+      "cas_number": "8017-16-1",
+      "h_codes": [
+        "H301",
+        "H314",
+        "H335"
+      ],
+      "p_codes": [],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS08"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00158",
+      "chemical_name": "ACIDO POLIFOSFORICO 115% S/P",
+      "cas_number": "8017-16-1",
+      "h_codes": [
+        "H301",
+        "H314",
+        "H335"
+      ],
+      "p_codes": [],
+      "pictograms": [
+        "GHS07",
+        "GHS05",
+        "GHS08"
+      ],
+      "signal_word": "PELIGRO",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00175",
+      "chemical_name": "POLYQUATERNIUM 7",
+      "cas_number": "26590-05-6",
+      "h_codes": [
+        "H402"
+      ],
+      "p_codes": [
+        "P501"
+      ],
+      "pictograms": [
+        "GHS09"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    },
+    {
+      "product_id": "VAR-QB00182",
+      "chemical_name": "FIJADOR X100",
+      "cas_number": "Mezcla",
+      "h_codes": [
+        "H227",
+        "H315",
+        "H317",
+        "H319",
+        "H411"
+      ],
+      "p_codes": [
+        "P210",
+        "P261",
+        "P264",
+        "P272",
+        "P273",
+        "P280",
+        "P302+P352",
+        "P305+P351+P338",
+        "P333+P313",
+        "P337+P313",
+        "P362+P364",
+        "P370+P378",
+        "P391",
+        "P403+P235",
+        "P405",
+        "P501"
+      ],
+      "pictograms": [
+        "GHS02",
+        "GHS07",
+        "GHS09"
+      ],
+      "signal_word": "ATENCION",
+      "source": "legacy_parse"
+    }
+  ]
+}

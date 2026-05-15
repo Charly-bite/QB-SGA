@@ -1,0 +1,54 @@
+{
+  "header": {
+    "order_number": 10168,
+    "customer_code": "CL00831",
+    "customer_name": "JOSE MANUEL CASTILLO CARRILLO",
+    "order_date": "2026-01-09 00:00:00",
+    "delivery_date": "2026-01-09 00:00:00",
+    "total_value": 9433.49,
+    "currency": "MXN",
+    "doc_entry": 15702
+  },
+  "items": [
+    {
+      "line_number": 0,
+      "item_code": "VAR-QB00005",
+      "description": "ACEITE DE PINO Y55",
+      "quantity": 20.0,
+      "unit": "KGM",
+      "unit_price": 129.67,
+      "line_total": 2593.4,
+      "warehouse": "01"
+    },
+    {
+      "line_number": 1,
+      "item_code": "IFF-QB00019",
+      "description": "LAVENDER SKY 099 MOD",
+      "quantity": 7.0,
+      "unit": "KGM",
+      "unit_price": 492.6,
+      "line_total": 3448.2,
+      "warehouse": "01"
+    },
+    {
+      "line_number": 2,
+      "item_code": "IFF-QB00025",
+      "description": "MARINE LOVE 818",
+      "quantity": 5.0,
+      "unit": "KGM",
+      "unit_price": 367.61,
+      "line_total": 1838.05,
+      "warehouse": "01"
+    },
+    {
+      "line_number": 7,
+      "item_code": "IFF-QB00044",
+      "description": "DSM 1007 TERSO BEBE",
+      "quantity": 1.0,
+      "unit": "KGM",
+      "unit_price": 252.67,
+      "line_total": 252.67,
+      "warehouse": "01"
+    }
+  ]
+}

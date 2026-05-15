@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGA Architecture — Interactive Diagrams</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-card: rgba(255,255,255,0.03);
+            --glass-border: rgba(255,255,255,0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .bg-glow .orb {
+            position: absolute; border-radius: 50%; filter: blur(140px); opacity: .12;
+            animation: float 25s ease-in-out infinite;
+        }
+        .bg-glow .orb:nth-child(1) { width: 500px; height: 500px; background: #3b82f6; top: -5%; right: 10%; }
+        .bg-glow .orb:nth-child(2) { width: 400px; height: 400px; background: #8b5cf6; bottom: 10%; left: -5%; animation-delay: -8s; }
+        @keyframes float {
+            0%,100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+        /* --- Back Link & Header --- */
+        .top-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 24px 0 0;
+        }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--text-secondary); text-decoration: none;
+            font-size: .88rem; font-weight: 600;
+            transition: color .2s;
+        }
+        .back-link:hover { color: var(--accent-blue); }
+        .back-link svg { width: 16px; height: 16px; }
+
+        header { padding: 32px 0 8px; text-align: center; }
+        header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900;
+            letter-spacing: -1px; margin-bottom: 8px;
+            background: linear-gradient(135deg, #f1f5f9 30%, #94a3b8 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        header p { color: var(--text-secondary); font-size: .95rem; margin-bottom: 32px; }
+
+        /* --- Tabs --- */
+        .tabs {
+            display: flex; flex-wrap: wrap; gap: 6px;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+        .tab-btn {
+            background: var(--bg-card); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(8px);
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: .84rem; font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all .25s;
+        }
+        .tab-btn:hover { color: var(--text-primary); background: rgba(255,255,255,.06); }
+        .tab-btn.active {
+            background: rgba(59,130,246,.12);
+            border-color: rgba(59,130,246,.3);
+            color: var(--accent-blue);
+        }
+
+        /* --- Diagram panels --- */
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .diagram-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+        .diagram-card h2 {
+            font-size: 1.3rem; font-weight: 800; margin-bottom: 6px;
+        }
+        .diagram-card .desc {
+            font-size: .88rem; color: var(--text-secondary); margin-bottom: 24px; line-height: 1.6;
+        }
+
+        /* Mermaid overrides for dark theme */
+        .mermaid {
+            display: flex; justify-content: center;
+        }
+        .mermaid svg { max-width: 100%; height: auto; }
+
+        /* --- Legend --- */
+        .legend {
+            display: flex; flex-wrap: wrap; gap: 16px;
+            margin-top: 24px; padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .legend-item {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: .78rem; color: var(--text-secondary); font-weight: 500;
+        }
+        .legend-dot {
+            width: 12px; height: 12px; border-radius: 4px;
+        }
+
+        footer {
+            text-align: center; padding: 32px 0;
+            color: var(--text-muted); font-size: .8rem;
+            border-top: 1px solid var(--glass-border);
+        }
+        footer a { color: var(--accent-blue); text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .diagram-card { padding: 16px; }
+            .tabs { gap: 4px; }
+            .tab-btn { padding: 8px 14px; font-size: .78rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"><div class="orb"></div><div class="orb"></div></div>
+
+    <div class="container">
+        <div class="top-bar">
+            <a href="index.html" class="back-link">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back to Docs
+            </a>
+        </div>
+
+        <header>
+            <h1>System Architecture</h1>
+            <p>Interactive diagrams of the SGA system — click the tabs to explore different views.</p>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="overview">System Overview</button>
+            <button class="tab-btn" data-tab="data-flow">Label Print Flow</button>
+            <button class="tab-btn" data-tab="sap-sync">SAP Sync Flow</button>
+            <button class="tab-btn" data-tab="deps">Module Dependencies</button>
+        </div>
+
+        <!-- ===================== TAB 1: SYSTEM OVERVIEW ===================== -->
+        <div class="tab-panel active" id="tab-overview">
+            <div class="diagram-card">
+                <h2>3-Tier Architecture</h2>
+                <p class="desc">The SGA system follows a clean 3-tier architecture: Presentation (Flask + Jinja2), Business Logic (core managers), and Data (SAP HANA, SQL Server, local files).</p>
+                <div class="mermaid">
+graph TB
+    subgraph PRESENTATION["🖥️ Presentation Layer — Flask Web App"]
+        direction LR
+        AUTH["auth.py<br/>Login / Logout / CSRF"]
+        MAIN["main.py<br/>Dashboard"]
+        LABELS["labels.py<br/>GHS Label Generation"]
+        PRODUCTS["products.py<br/>Product CRUD"]
+        ORDERS["orders.py<br/>Order Status + Monitor"]
+        USERS["users.py<br/>User Admin"]
+        API["api.py<br/>REST API"]
+        TEMPLATES_R["templates.py<br/>Label Templates"]
+        CONTROL["control_interno.py<br/>Internal Control"]
+    end
+
+    subgraph LOGIC["⚙️ Business Logic Layer — Core Managers"]
+        direction LR
+        SGA_CTRL["SGAController<br/><i>Orchestration</i>"]
+        SMART["SmartLabelManager<br/><i>Product Data</i>"]
+        GHS["GHSLabelGenerator<br/><i>ReportLab PDF</i>"]
+        ORDER_MGR["OrderStatusManager<br/><i>Status Tracking</i>"]
+        USER_MGR["UserManager<br/><i>Auth & Roles</i>"]
+        HISTORY["HistoryManager<br/><i>Audit Log</i>"]
+        TARA["TaraWeightManager<br/><i>Weight Calc</i>"]
+        TEMPLATE_MGR["TemplateManager<br/><i>Label Layouts</i>"]
+        SFM["SharedFileManager<br/><i>Thread-safe I/O</i>"]
+        SCM["SharedConfigManager<br/><i>Config Sync</i>"]
+    end
+
+    subgraph DATA["💾 Data Layer — Persistent Storage"]
+        direction LR
+        SAP["SAP HANA<br/><i>hdbcli / port 30015</i>"]
+        SQL["SQL Server<br/><i>pyodbc / ODBC</i>"]
+        JSON["Local JSON/CSV<br/><i>unified_db/</i>"]
+    end
+
+    PRESENTATION --> LOGIC
+    LOGIC --> DATA
+
+    classDef pres fill:#1e40af33,stroke:#3b82f6,stroke-width:2px,color:#93c5fd
+    classDef logic fill:#065f4633,stroke:#10b981,stroke-width:2px,color:#6ee7b7
+    classDef data fill:#581c8733,stroke:#8b5cf6,stroke-width:2px,color:#c4b5fd
+    classDef node_default fill:#1e293b,stroke:#475569,color:#e2e8f0
+
+    class AUTH,MAIN,LABELS,PRODUCTS,ORDERS,USERS,API,TEMPLATES_R,CONTROL pres
+    class SGA_CTRL,SMART,GHS,ORDER_MGR,USER_MGR,HISTORY,TARA,TEMPLATE_MGR,SFM,SCM logic
+    class SAP,SQL,JSON data
+                </div>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> Presentation (Flask routes)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Business Logic (Python managers)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> Data Storage</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB 2: LABEL PRINT FLOW ===================== -->
+        <div class="tab-panel" id="tab-data-flow">
+            <div class="diagram-card">
+                <h2>Label Generation & Print Flow</h2>
+                <p class="desc">A complete sequence of how a GHS label is generated — from user scanning a product code to the PDF appearing in the browser for printing.</p>
+                <div class="mermaid">
+sequenceDiagram
+    actor User as 👤 Operator
+    participant Browser as 🌐 Browser
+    participant Flask as ⚡ Flask Route<br/>(labels.py)
+    participant Smart as 📦 SmartLabelManager
+    participant Tara as ⚖️ TaraWeightManager
+    participant GHS as 🏷️ GHSLabelGenerator
+    participant RL as 📄 ReportLab
+    participant P2I as 🖼️ pdf2image
+
+    User->>Browser: Scan barcode / Enter product code
+    Browser->>Flask: POST /labels/queue/add {code, qty}
+    Flask->>Smart: get_product_data(code)
+    Smart-->>Flask: {name, hazards, pictograms, H/P statements...}
+    Flask->>Tara: resolve_tara(code, quantity)
+    Tara-->>Flask: peso_tara (kg)
+    Flask-->>Browser: ✅ Item added to session queue
+
+    User->>Browser: Click "Print Labels"
+    Browser->>Flask: POST /labels/generate_print {item_ids}
+    Flask->>Smart: get_product_data(code)
+    Smart-->>Flask: Full product data
+    Flask->>GHS: generate_label(product_data, tmp.pdf)
+    GHS->>RL: Build PDF (pictograms, H/P, batch, weight)
+    RL-->>GHS: tmp.pdf saved
+    GHS-->>Flask: PDF path
+    Flask->>P2I: convert_from_path(tmp.pdf, 300 DPI)
+    P2I-->>Flask: PNG image
+    Flask-->>Browser: HTML print page with PNG images
+    Browser->>User: 🖨️ Browser native print dialog
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB 3: SAP SYNC FLOW ===================== -->
+        <div class="tab-panel" id="tab-sap-sync">
+            <div class="diagram-card">
+                <h2>SAP Order Sync Flow</h2>
+                <p class="desc">How orders flow from SAP HANA into the local SGA status database — both via manual import and the background sync daemon.</p>
+                <div class="mermaid">
+sequenceDiagram
+    participant SAP as 🏢 SAP HANA<br/>(hdbcli)
+    participant Conn as 🔌 SAPHanaConnector
+    participant Route as ⚡ Flask Route<br/>(orders.py)
+    participant MGR as 📋 OrderStatusManager
+    participant SQL as 🗄️ SQL Server
+    participant JSON as 📁 JSON Fallback
+
+    Note over SAP,JSON: Manual Import (User triggered)
+    Route->>Conn: get_order_details(DocNum)
+    Conn->>SAP: SELECT from ORDR/RDR1
+    SAP-->>Conn: header + line items
+    Conn-->>Route: {header, items}
+    Route->>MGR: import_from_sap(flattened)
+    MGR->>SQL: INSERT/UPDATE order_status
+    MGR->>JSON: Write order_status_db.json
+    MGR-->>Route: ✅ Order imported
+
+    Note over SAP,JSON: Background Sync (Every 5 min)
+    loop Every 5 minutes
+        Conn->>SAP: get_recent_orders(limit=100)
+        SAP-->>Conn: Recent orders
+        Conn-->>MGR: Compare sap_status
+        alt Status changed
+            MGR->>MGR: reconcile_statuses()
+            MGR->>SQL: UPDATE order_status
+            MGR->>JSON: Sync to disk
+        end
+    end
+
+    Note over SAP,JSON: Batch Status Sync (Visor/Monitor)
+    Route->>Conn: get_orders_status_batch(ids[])
+    Conn->>SAP: SELECT DocStatus, CANCELED<br/>WHERE DocNum IN (...)
+    SAP-->>Conn: Batch results
+    Conn-->>Route: {DocNum: {sap_status, ...}}
+    Route->>MGR: Update local statuses
+                </div>
+            </div>
+
+            <div class="diagram-card">
+                <h2>Order Status Lifecycle</h2>
+                <p class="desc">All possible order status transitions in the SGA system.</p>
+                <div class="mermaid">
+stateDiagram-v2
+    [*] --> Pendiente: Import from SAP
+    Pendiente --> EnProceso: Start processing
+    Pendiente --> EnEspera: Put on hold
+    EnEspera --> Pendiente: Resume
+    EnProceso --> Preparando: Begin picking
+    Preparando --> ListoParaEnvio: Picking complete
+    ListoParaEnvio --> Enviado: Ship order
+    Enviado --> CerradoEnSAP: SAP confirms close
+
+    Pendiente --> Cancelado: Cancel
+    EnProceso --> Cancelado: Cancel
+    Preparando --> Cancelado: Cancel
+    EnEspera --> Cancelado: Cancel
+
+    state "Pendiente" as Pendiente
+    state "En Proceso" as EnProceso
+    state "Preparando" as Preparando
+    state "Listo para Envío" as ListoParaEnvio
+    state "Enviado" as Enviado
+    state "Cerrado en SAP" as CerradoEnSAP
+    state "Cancelado" as Cancelado
+    state "En Espera" as EnEspera
+
+    CerradoEnSAP --> [*]
+    Cancelado --> [*]
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== TAB 4: MODULE DEPENDENCIES ===================== -->
+        <div class="tab-panel" id="tab-deps">
+            <div class="diagram-card">
+                <h2>Module Dependency Graph</h2>
+                <p class="desc">Which core Python modules import which — showing the dependency tree from the Flask app down to data sources.</p>
+                <div class="mermaid">
+graph LR
+    APP["app.py<br/><i>Application Factory</i>"] --> CONFIG["config.py"]
+    APP --> EXTENSIONS["extensions.py<br/><i>Flask-Limiter</i>"]
+    APP --> MODELS["models.py<br/><i>User model</i>"]
+    APP --> DB_CONN["db_connector.py<br/><i>SMB Mount + Path</i>"]
+
+    APP --> R_AUTH["routes/auth.py"]
+    APP --> R_MAIN["routes/main.py"]
+    APP --> R_LABELS["routes/labels.py"]
+    APP --> R_PRODUCTS["routes/products.py"]
+    APP --> R_ORDERS["routes/orders.py"]
+    APP --> R_USERS["routes/users.py"]
+    APP --> R_API["routes/api.py"]
+    APP --> R_TEMPLATES["routes/templates.py"]
+    APP --> R_CONTROL["routes/control_interno.py"]
+
+    APP --> SMART["SmartLabelManager"]
+    APP --> GHS["GHSLabelGenerator"]
+    APP --> ORDER_MGR["OrderStatusManager"]
+    APP --> USER_MGR["UserManager"]
+    APP --> HISTORY["HistoryManager"]
+    APP --> TARA["TaraWeightManager"]
+    APP --> TEMPLATE_MGR["TemplateManager"]
+    APP -.-> SAP_CONN["SAPHanaConnector"]
+
+    R_LABELS --> SMART
+    R_LABELS --> GHS
+    R_LABELS --> TARA
+    R_LABELS --> TEMPLATE_MGR
+    R_ORDERS --> ORDER_MGR
+    R_ORDERS --> SAP_CONN
+    R_PRODUCTS --> SMART
+    R_CONTROL --> TARA
+
+    SMART --> SFM["SharedFileManager"]
+    ORDER_MGR --> DB_CLIENT["DatabaseClient<br/><i>pyodbc</i>"]
+    ORDER_MGR --> SFM
+    USER_MGR --> SFM
+    GHS --> SMART
+    SGA_CTRL["SGAController"] --> SAP_CONN
+    SGA_CTRL --> SMART
+    SGA_CTRL --> GHS
+    SGA_CTRL --> SFM
+
+    SAP_CONN --> HDBCLI["hdbcli<br/><i>SAP HANA Driver</i>"]
+    DB_CLIENT --> PYODBC["pyodbc<br/><i>SQL Server</i>"]
+    SFM --> FS["File System<br/><i>JSON / CSV</i>"]
+
+    classDef app fill:#1e40af44,stroke:#3b82f6,color:#93c5fd
+    classDef route fill:#0f766e33,stroke:#14b8a6,color:#5eead4
+    classDef core fill:#065f4633,stroke:#10b981,color:#6ee7b7
+    classDef data fill:#581c8733,stroke:#8b5cf6,color:#c4b5fd
+    classDef external fill:#78350f33,stroke:#f59e0b,color:#fcd34d
+
+    class APP app
+    class R_AUTH,R_MAIN,R_LABELS,R_PRODUCTS,R_ORDERS,R_USERS,R_API,R_TEMPLATES,R_CONTROL route
+    class SMART,GHS,ORDER_MGR,USER_MGR,HISTORY,TARA,TEMPLATE_MGR,SGA_CTRL,SFM,SCM core
+    class SAP_CONN,DB_CLIENT,DB_CONN data
+    class HDBCLI,PYODBC,FS external
+    class CONFIG,EXTENSIONS,MODELS app
+                </div>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> App Core</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#14b8a6;"></span> Flask Routes</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Business Logic Managers</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> Data Connectors</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> External Drivers</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <a href="index.html">← Back to Documentation Hub</a>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Mermaid with dark theme
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1e3a5f',
+                primaryTextColor: '#e2e8f0',
+                primaryBorderColor: '#3b82f6',
+                lineColor: '#475569',
+                secondaryColor: '#1e293b',
+                tertiaryColor: '#0f172a',
+                fontSize: '14px',
+                fontFamily: 'Inter, sans-serif'
+            },
+            flowchart: { curve: 'basis', padding: 20 },
+            sequence: { mirrorActors: false, messageAlign: 'left' },
+        });
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panels = document.querySelectorAll('.tab-panel');
+        const rendered = new Set();
+
+        async function renderPanel(panelId) {
+            if (rendered.has(panelId)) return;
+            const panel = document.getElementById('tab-' + panelId);
+            if (!panel) return;
+            const nodes = panel.querySelectorAll('.mermaid');
+            for (const node of nodes) {
+                const code = node.textContent;
+                const id = 'mermaid-' + Math.random().toString(36).substr(2,9);
+                try {
+                    const { svg } = await mermaid.render(id, code);
+                    node.innerHTML = svg;
+                } catch(e) {
+                    console.error('Mermaid render error:', e);
+                    node.innerHTML = '<pre style="color:#f87171;">' + e.message + '</pre>';
+                }
+            }
+            rendered.add(panelId);
+        }
+
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabs.forEach(b => b.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                const panel = document.getElementById('tab-' + tabId);
+                panel.classList.add('active');
+                renderPanel(tabId);
+            });
+        });
+
+        // Render first tab
+        renderPanel('overview');
+
+        // Handle hash navigation
+        if (window.location.hash) {
+            const hashTab = window.location.hash.replace('#', '');
+            const matchBtn = [...tabs].find(b => b.getAttribute('data-tab') === hashTab);
+            if (matchBtn) matchBtn.click();
+        }
+    </script>
+</body>
+</html>

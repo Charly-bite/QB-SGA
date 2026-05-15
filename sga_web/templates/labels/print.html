@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Imprimir Etiquetas</title>
+    <style>
+        @page {
+            size: {{ page_w_mm }}mm {{ page_h_mm }}mm;
+            margin: 0;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .page-container {
+            width: {{ page_w_mm }}mm;
+            height: {{ page_h_mm }}mm;
+            page-break-after: always;
+            overflow: hidden;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .page-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @media print {
+            body {
+                background-color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% for img in images %}
+    <div class="page-container">
+        <img src="data:image/png;base64,{{ img.data }}" alt="Etiqueta GHS">
+    </div>
+    {% endfor %}
+
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+                window.close();
+            }, 500); // 500ms delay to ensure giant base64 buffers are fully decoded by the DOM engine
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  sga-web:
+    build:
+      context: ..
+      dockerfile: sga_web/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-sga-production-secret-change-me}
+    volumes:
+      - ../unified_db:/app/unified_db:ro
+      - ../assets:/app/assets:ro
+      - ../users.json:/app/users.json
+      - ./generated_labels:/app/sga_web/generated_labels
+    restart: unless-stopped
+
+  # Optional: Nginx reverse proxy
+  # nginx:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #   depends_on:
+  #     - sga-web

@@ -1,0 +1,165 @@
+╔═══════════════════════════════════════════════════════════════╗
+║         GUÍA RÁPIDA - SISTEMA DE USUARIOS SGA                 ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────┐
+│ 🔐 PRIMERA VEZ - CREDENCIALES POR DEFECTO                     │
+├──────────────────────────────────────────────────────────────┤
+│  Usuario:     admin                                          │
+│  Contraseña:  admin123                                       │
+│                                                              │
+│  ⚠️  Cambie esta contraseña inmediatamente después del login │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ 👥 ROLES DE USUARIO                                           │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ADMINISTRADOR (admin)                                       │
+│   ✅ Acceso completo                                          │
+│   ✅ Gestionar usuarios                                       │
+│   ✅ Todas las operaciones                                    │
+│                                                              │
+│  OPERADOR (operator)                                         │
+│   ✅ Importar pedidos SAP                                     │
+│   ✅ Generar etiquetas                                        │
+│   ✅ Ver historial                                            │
+│   ❌ No gestiona usuarios                                     │
+│                                                              │
+│  VISUALIZADOR (viewer)                                       │
+│   ✅ Ver historial                                            │
+│   ✅ Consultar base de datos                                  │
+│   ❌ No puede hacer cambios                                   │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ 🔧 ACCIONES COMUNES                                           │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Cambiar mi contraseña:                                      │
+│    Menú lateral → USUARIO → 🔑 Cambiar Contraseña            │
+│                                                              │
+│  Gestionar usuarios (solo admin):                           │
+│    Menú lateral → USUARIO → 👥 Gestionar Usuarios            │
+│                                                              │
+│  Cerrar sesión:                                              │
+│    Menú lateral → USUARIO → 🚪 Cerrar Sesión                 │
+│                                                              │
+│  Ver quién hizo qué:                                         │
+│    Menú principal → ⧗ Historial (columna "Usuario")         │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ ➕ CREAR NUEVO USUARIO (Solo Administradores)                 │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. Abrir: USUARIO → 👥 Gestionar Usuarios                   │
+│  2. Click: ➕ Nuevo Usuario                                   │
+│  3. Completar:                                               │
+│     - Usuario* (mín. 3 caracteres)                          │
+│     - Nombre Completo*                                       │
+│     - Email (opcional)                                       │
+│     - Rol* (admin/operator/viewer)                          │
+│     - Contraseña* (mín. 6 caracteres)                       │
+│     - Confirmar Contraseña*                                  │
+│  4. Click: Guardar                                           │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ ✏️ EDITAR USUARIO (Solo Administradores)                      │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. Abrir: USUARIO → 👥 Gestionar Usuarios                   │
+│  2. Seleccionar usuario de la lista                         │
+│  3. Click: ✏️ Editar (o doble click)                         │
+│  4. Modificar campos deseados                               │
+│  5. Click: Guardar                                           │
+│                                                              │
+│  Nota: No se puede cambiar el nombre de usuario             │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ 🗑️ ELIMINAR USUARIO (Solo Administradores)                    │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. Abrir: USUARIO → 👥 Gestionar Usuarios                   │
+│  2. Seleccionar usuario                                      │
+│  3. Click: 🗑️ Eliminar                                       │
+│  4. Confirmar acción                                         │
+│                                                              │
+│  ⚠️  No puede eliminar su propia cuenta                      │
+│  ⚠️  Debe haber al menos 1 administrador                     │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ 🆘 PROBLEMAS COMUNES                                          │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ❌ Olvidé la contraseña de admin                            │
+│     1. Cerrar la aplicación                                 │
+│     2. Eliminar archivo: users.json                         │
+│     3. Reiniciar aplicación                                 │
+│     4. Usar: admin / admin123                               │
+│                                                              │
+│  ❌ No puedo iniciar sesión                                  │
+│     - Verificar credenciales                                │
+│     - Primera vez: admin / admin123                         │
+│     - Contactar administrador                               │
+│                                                              │
+│  ❌ No veo "Gestionar Usuarios"                              │
+│     - Solo visible para Administradores                     │
+│     - Verificar su rol en USUARIO                           │
+│                                                              │
+│  ❌ Error al crear usuario                                   │
+│     - Usuario: mínimo 3 caracteres                          │
+│     - Contraseña: mínimo 6 caracteres                       │
+│     - Nombre de usuario debe ser único                      │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ 📊 AUDITORÍA                                                  │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Todas las acciones quedan registradas con:                 │
+│   • Fecha y hora exacta                                     │
+│   • Usuario que realizó la acción                           │
+│   • Tipo de operación                                       │
+│   • Detalles de la operación                                │
+│                                                              │
+│  Ver en: Menú → ⧗ Historial                                 │
+│  Buscar por usuario o filtrar resultados                    │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ 🔒 SEGURIDAD                                                  │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ✅ Contraseñas encriptadas con SHA-256                       │
+│  ✅ Salt único por usuario                                    │
+│  ✅ Nunca se almacenan en texto plano                         │
+│  ✅ Sesión permanece activa durante ejecución                 │
+│  ✅ Historial completo de acciones                            │
+│                                                              │
+│  Buenas prácticas:                                           │
+│   • Cambiar contraseña por defecto                          │
+│   • Usar contraseñas de 8+ caracteres                       │
+│   • No compartir credenciales                               │
+│   • Cerrar sesión al terminar                               │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│ 📁 ARCHIVOS DEL SISTEMA                                       │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  users.json          - Base de datos de usuarios            │
+│  history.json        - Registro con info de usuarios        │
+│  user_manager.py     - Core de gestión                      │
+│  login_dialog.py     - Interfaz de login                    │
+│                                                              │
+│  ⚠️  No editar users.json manualmente                        │
+└──────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════╗
+║  Sistema SGA v1.0 - Gestión de Etiquetas GHS                 ║
+║  Quimica Boss - Control de Usuarios Implementado             ║
+╚═══════════════════════════════════════════════════════════════╝

@@ -1,0 +1,176 @@
+{
+  "product_id": "VAR-QB00109",
+  "chemical_name": "LESS QB S/P",
+  "cas_number": "",
+  "signal_word": "",
+  "product_type": "liquido",
+  "type_source": "excel",
+  "default_container": "",
+  "notes": "",
+  "tara_overrides": {
+    "0.5": 0.09,
+    "1.0": 0.09,
+    "2.0": 0.24,
+    "3.0": 0.24,
+    "4.0": 0.24,
+    "5.0": 0.28,
+    "6.0": 0.48,
+    "7.0": 0.48,
+    "8.0": 0.48,
+    "9.0": 0.48,
+    "10.0": 0.48,
+    "11.0": 0.9,
+    "12.0": 0.9,
+    "13.0": 0.9,
+    "14.0": 0.9,
+    "15.0": 0.9,
+    "16.0": 0.9,
+    "17.0": 0.9,
+    "18.0": 0.9,
+    "19.0": 0.9,
+    "20.0": 0.9,
+    "23.7": 1.3,
+    "25.0": 1.3,
+    "50.0": 2.2
+  },
+  "lote": "TLC-170625M",
+  "lotes_info": {
+    "TLC-170625M": {
+      "fecha_elaboracion": "2026-06-17",
+      "fecha_inspeccion": "2027-06-17"
+    },
+    "TLC-170326M": {
+      "fecha_elaboracion": "2026-03-17",
+      "fecha_inspeccion": "2027-03-17"
+    }
+  },
+  "tara_history": [
+    {
+      "peso_neto": 0.5,
+      "tara_kg": 0.09
+    },
+    {
+      "peso_neto": 1.0,
+      "tara_kg": 0.09
+    },
+    {
+      "peso_neto": 2.0,
+      "tara_kg": 0.24
+    },
+    {
+      "peso_neto": 3.0,
+      "tara_kg": 0.24
+    },
+    {
+      "peso_neto": 4.0,
+      "tara_kg": 0.24
+    },
+    {
+      "peso_neto": 5.0,
+      "tara_kg": 0.28
+    },
+    {
+      "peso_neto": 6.0,
+      "tara_kg": 0.48
+    },
+    {
+      "peso_neto": 7.0,
+      "tara_kg": 0.48
+    },
+    {
+      "peso_neto": 8.0,
+      "tara_kg": 0.48
+    },
+    {
+      "peso_neto": 9.0,
+      "tara_kg": 0.48
+    },
+    {
+      "peso_neto": 10.0,
+      "tara_kg": 0.48
+    },
+    {
+      "peso_neto": 11.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 12.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 13.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 14.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 15.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 16.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 17.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 18.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 19.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 20.0,
+      "tara_kg": 0.9
+    },
+    {
+      "peso_neto": 23.7,
+      "tara_kg": 1.3
+    },
+    {
+      "peso_neto": 25.0,
+      "tara_kg": 1.3
+    },
+    {
+      "peso_neto": 50.0,
+      "tara_kg": 2.2
+    }
+  ],
+  "requires_attention": false,
+  "lote_date": "2026-06-17",
+  "lote_reinspection_date": "2027-06-17",
+  "lote_history": [
+    {
+      "old_lote": "TLC-170625M",
+      "new_lote": "TLC-170326M",
+      "old_date": "2026-06-17",
+      "new_date": "2026-03-17",
+      "old_elab_date": "2026-06-17",
+      "new_elab_date": "2026-03-17",
+      "old_reinsp_date": "2027-06-17",
+      "new_reinsp_date": "2027-03-17",
+      "date": "2026-04-09 18:12:08",
+      "user": "Almacen1",
+      "merma_kg": 0.2
+    },
+    {
+      "old_lote": "TLC-170625M",
+      "new_lote": "TLC-170625M",
+      "old_date": "2026-06-17",
+      "new_date": "2026-06-17",
+      "old_elab_date": "2026-06-17",
+      "new_elab_date": "2026-06-17",
+      "old_reinsp_date": "2025-06-17",
+      "new_reinsp_date": "2027-06-17",
+      "date": "2026-04-09 18:10:04",
+      "user": "Almacen1",
+      "merma_kg": 0.2
+    }
+  ]
+}

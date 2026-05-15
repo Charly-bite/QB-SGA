@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGA API Reference</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0a0e1a;--bg-card:rgba(255,255,255,.03);--glass:rgba(255,255,255,.08);--text:#f1f5f9;--text2:#94a3b8;--muted:#64748b;--blue:#3b82f6;--cyan:#06b6d4;--green:#10b981;--purple:#8b5cf6;--amber:#f59e0b;--rose:#f43f5e}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+        .bg-glow .orb{position:absolute;border-radius:50%;filter:blur(140px);opacity:.1;animation:fl 25s ease-in-out infinite}
+        .bg-glow .orb:nth-child(1){width:500px;height:500px;background:#f59e0b;top:-5%;right:10%}
+        .bg-glow .orb:nth-child(2){width:400px;height:400px;background:#f43f5e;bottom:-5%;left:10%;animation-delay:-10s}
+        @keyframes fl{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-25px) scale(1.04)}}
+        .container{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+        .top-bar{display:flex;align-items:center;padding:24px 0 0}
+        .back-link{display:inline-flex;align-items:center;gap:8px;color:var(--text2);text-decoration:none;font-size:.88rem;font-weight:600;transition:color .2s}
+        .back-link:hover{color:var(--blue)}
+        .back-link svg{width:16px;height:16px}
+        header{padding:32px 0 8px;text-align:center}
+        header h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;letter-spacing:-1px;margin-bottom:8px;background:linear-gradient(135deg,#f1f5f9 30%,#94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        header p{color:var(--text2);font-size:.95rem;margin-bottom:32px}
+
+        /* Controls */
+        .controls{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px;align-items:center}
+        .search-box{position:relative;flex:1;min-width:200px}
+        .search-box input{width:100%;background:var(--bg-card);border:1px solid var(--glass);border-radius:10px;padding:10px 14px 10px 40px;color:var(--text);font-family:'Inter',sans-serif;font-size:.85rem;outline:none;transition:border-color .2s}
+        .search-box input:focus{border-color:rgba(59,130,246,.4)}
+        .search-box input::placeholder{color:var(--muted)}
+        .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+
+        .filter-btn{background:var(--bg-card);border:1px solid var(--glass);border-radius:10px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s}
+        .filter-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .filter-btn.active{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.3);color:var(--blue)}
+
+        .route-count{font-size:.82rem;color:var(--muted);font-weight:500;margin-left:auto}
+
+        /* Table */
+        .table-wrap{background:var(--bg-card);border:1px solid var(--glass);border-radius:16px;overflow:hidden;margin-bottom:56px}
+        table{width:100%;border-collapse:collapse}
+        thead{background:rgba(255,255,255,.03)}
+        th{padding:12px 16px;text-align:left;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--glass);white-space:nowrap}
+        td{padding:12px 16px;font-size:.84rem;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:top}
+        tr:last-child td{border-bottom:none}
+        tr:hover td{background:rgba(255,255,255,.02)}
+
+        /* Blueprint header row */
+        .bp-row td{background:rgba(255,255,255,.02);padding:10px 16px;border-bottom:1px solid var(--glass)}
+        .bp-name{font-weight:800;font-size:.92rem;display:flex;align-items:center;gap:10px}
+        .bp-prefix{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);font-weight:500}
+
+        /* Method badges */
+        .method{display:inline-block;padding:3px 8px;border-radius:6px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;font-family:'JetBrains Mono',monospace;min-width:48px;text-align:center}
+        .method-GET{background:rgba(59,130,246,.15);color:#60a5fa}
+        .method-POST{background:rgba(16,185,129,.15);color:#34d399}
+        .method-PUT{background:rgba(245,158,11,.15);color:#fbbf24}
+        .method-DELETE{background:rgba(244,63,94,.15);color:#fb7185}
+
+        /* Auth badges */
+        .auth{display:inline-block;padding:3px 8px;border-radius:6px;font-size:.68rem;font-weight:700;letter-spacing:.3px}
+        .auth-public{background:rgba(6,182,212,.12);color:var(--cyan)}
+        .auth-login{background:rgba(139,92,246,.12);color:#a78bfa}
+        .auth-operator{background:rgba(245,158,11,.12);color:#fbbf24}
+        .auth-admin{background:rgba(244,63,94,.12);color:#fb7185}
+
+        .url{font-family:'JetBrains Mono',monospace;font-size:.8rem;font-weight:500;color:var(--cyan);word-break:break-all}
+        .desc-cell{color:var(--text2);font-size:.82rem;line-height:1.5}
+
+        .no-results{text-align:center;padding:48px 16px;color:var(--muted);font-size:.9rem}
+
+        footer{text-align:center;padding:32px 0;color:var(--muted);font-size:.8rem;border-top:1px solid var(--glass)}
+        footer a{color:var(--blue);text-decoration:none}
+
+        @media(max-width:768px){
+            th:nth-child(4),td:nth-child(4){display:none}
+            .url{font-size:.72rem}
+            td{padding:8px 10px}
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"><div class="orb"></div><div class="orb"></div></div>
+    <div class="container">
+        <div class="top-bar">
+            <a href="index.html" class="back-link">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back to Docs
+            </a>
+        </div>
+        <header>
+            <h1>API Reference</h1>
+            <p>All Flask routes in the SGA application — searchable and filterable.</p>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" id="apiSearch" placeholder="Search routes, methods, descriptions…">
+            </div>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="GET">GET</button>
+            <button class="filter-btn" data-filter="POST">POST</button>
+            <button class="filter-btn" data-filter="PUT">PUT</button>
+            <button class="filter-btn" data-filter="DELETE">DELETE</button>
+            <span class="route-count" id="routeCount"></span>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>URL</th>
+                        <th>Auth</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="routeTable"></tbody>
+            </table>
+            <div class="no-results hidden" id="noResults">No routes found matching your search.</div>
+        </div>
+    </div>
+
+    <footer><div class="container"><a href="index.html">← Back to Documentation Hub</a></div></footer>
+
+    <script>
+        const routes = [
+            // ---- Auth ----
+            { bp: 'auth', prefix: '', methods: ['GET','POST'], url: '/login', auth: 'public', desc: 'User login page and form handler' },
+            { bp: 'auth', prefix: '', methods: ['GET'], url: '/logout', auth: 'login', desc: 'Logout and clear session' },
+            { bp: 'auth', prefix: '', methods: ['GET','POST'], url: '/change-password', auth: 'login', desc: 'Change password form' },
+
+            // ---- Main ----
+            { bp: 'main', prefix: '', methods: ['GET'], url: '/', auth: 'login', desc: 'Main dashboard with system overview & quick actions' },
+            { bp: 'main', prefix: '', methods: ['GET'], url: '/health', auth: 'public', desc: 'Health check endpoint (Docker / monitoring)' },
+            { bp: 'main', prefix: '', methods: ['GET'], url: '/favicon.ico', auth: 'public', desc: 'Favicon redirect to company logo' },
+
+            // ---- Labels ----
+            { bp: 'labels', prefix: '/labels', methods: ['GET'], url: '/labels/', auth: 'login', desc: 'Label generation main page with barcode scanner' },
+            { bp: 'labels', prefix: '/labels', methods: ['GET'], url: '/labels/queue', auth: 'login', desc: 'Get current print queue from session' },
+            { bp: 'labels', prefix: '/labels', methods: ['POST'], url: '/labels/queue/add', auth: 'operator', desc: 'Add product to print queue (resolves product data, tare weight, batch)' },
+            { bp: 'labels', prefix: '/labels', methods: ['DELETE'], url: '/labels/queue/remove/<id>', auth: 'login', desc: 'Remove item from print queue' },
+            { bp: 'labels', prefix: '/labels', methods: ['POST'], url: '/labels/queue/clear', auth: 'login', desc: 'Clear entire print queue' },
+            { bp: 'labels', prefix: '/labels', methods: ['PUT'], url: '/labels/queue/update/<id>', auth: 'login', desc: 'Update queue item (batch, qty, weight)' },
+            { bp: 'labels', prefix: '/labels', methods: ['GET'], url: '/labels/preview/<id>', auth: 'login', desc: 'Generate and return label PDF preview' },
+            { bp: 'labels', prefix: '/labels', methods: ['POST'], url: '/labels/generate', auth: 'operator', desc: 'Generate merged PDF for all selected labels' },
+            { bp: 'labels', prefix: '/labels', methods: ['POST'], url: '/labels/generate_print', auth: 'operator', desc: 'Generate 300 DPI PNG images for browser print' },
+            { bp: 'labels', prefix: '/labels', methods: ['POST'], url: '/labels/generate_images', auth: 'operator', desc: 'Generate base64 images for Print Agent (JSON API)' },
+            { bp: 'labels', prefix: '/labels', methods: ['POST'], url: '/labels/sap/load', auth: 'login', desc: 'Load order items from SAP by order number' },
+            { bp: 'labels', prefix: '/labels', methods: ['POST'], url: '/labels/api/quick-add-product', auth: 'operator', desc: 'Quick-add a new product to the database' },
+
+            // ---- Products ----
+            { bp: 'products', prefix: '/products', methods: ['GET'], url: '/products/', auth: 'login', desc: 'Product listing with search & pagination' },
+            { bp: 'products', prefix: '/products', methods: ['GET'], url: '/products/<code>', auth: 'login', desc: 'Product detail view' },
+            { bp: 'products', prefix: '/products', methods: ['POST'], url: '/products/add', auth: 'operator', desc: 'Add new product to database' },
+            { bp: 'products', prefix: '/products', methods: ['POST'], url: '/products/<code>/edit', auth: 'admin', desc: 'Edit existing product' },
+            { bp: 'products', prefix: '/products', methods: ['GET'], url: '/products/api/search', auth: 'login', desc: 'REST search with fuzzy matching' },
+
+            // ---- Orders ----
+            { bp: 'orders', prefix: '/orders', methods: ['GET'], url: '/orders/', auth: 'login', desc: 'Order status dashboard with filters' },
+            { bp: 'orders', prefix: '/orders', methods: ['GET'], url: '/orders/<id>', auth: 'login', desc: 'Order detail view with status history' },
+            { bp: 'orders', prefix: '/orders', methods: ['POST'], url: '/orders/<id>/status', auth: 'operator', desc: 'Update order status (with audit trail)' },
+            { bp: 'orders', prefix: '/orders', methods: ['POST'], url: '/orders/import-sap', auth: 'login', desc: 'Import single order from SAP' },
+            { bp: 'orders', prefix: '/orders', methods: ['POST'], url: '/orders/load-recent-sap', auth: 'operator', desc: 'Bulk import recent SAP orders' },
+            { bp: 'orders', prefix: '/orders', methods: ['POST'], url: '/orders/sync-sap', auth: 'operator', desc: 'Batch sync SAP status for all orders' },
+            { bp: 'orders', prefix: '/orders', methods: ['POST'], url: '/orders/add', auth: 'operator', desc: 'Add manual order' },
+            { bp: 'orders', prefix: '/orders', methods: ['DELETE'], url: '/orders/<id>/delete', auth: 'admin', desc: 'Delete order (admin only)' },
+            { bp: 'orders', prefix: '/orders', methods: ['GET'], url: '/orders/visor', auth: 'login', desc: 'Sales team visor dashboard' },
+            { bp: 'orders', prefix: '/orders', methods: ['POST'], url: '/orders/visor/sync', auth: 'login', desc: 'Lightweight SAP sync for visor' },
+            { bp: 'orders', prefix: '/orders', methods: ['GET'], url: '/orders/api/active', auth: 'login', desc: 'Get active orders as JSON' },
+            { bp: 'orders', prefix: '/orders', methods: ['GET'], url: '/orders/api/refresh', auth: 'login', desc: 'Combined sync + refresh endpoint' },
+            { bp: 'orders', prefix: '/orders', methods: ['GET'], url: '/orders/monitor', auth: 'public', desc: 'Public control tower dashboard' },
+            { bp: 'orders', prefix: '/orders', methods: ['GET'], url: '/orders/api/public/active', auth: 'public', desc: 'Public API for monitor (token-protected)' },
+            { bp: 'orders', prefix: '/orders', methods: ['POST'], url: '/orders/api/public/sync', auth: 'public', desc: 'Public API to trigger SAP sync (token-protected)' },
+
+            // ---- Users ----
+            { bp: 'users', prefix: '/users', methods: ['GET'], url: '/users/', auth: 'admin', desc: 'User management dashboard' },
+            { bp: 'users', prefix: '/users', methods: ['POST'], url: '/users/create', auth: 'admin', desc: 'Create new user' },
+            { bp: 'users', prefix: '/users', methods: ['POST'], url: '/users/<username>/update', auth: 'admin', desc: 'Update user details' },
+            { bp: 'users', prefix: '/users', methods: ['DELETE'], url: '/users/<username>/delete', auth: 'admin', desc: 'Delete user' },
+
+            // ---- API ----
+            { bp: 'api', prefix: '/api', methods: ['GET'], url: '/api/products/search', auth: 'login', desc: 'Product search API (JSON)' },
+            { bp: 'api', prefix: '/api', methods: ['GET'], url: '/api/stats', auth: 'login', desc: 'System statistics (product count, SAP status)' },
+
+            // ---- Templates ----
+            { bp: 'templates', prefix: '/templates', methods: ['GET'], url: '/templates/', auth: 'login', desc: 'Label template list' },
+            { bp: 'templates', prefix: '/templates', methods: ['GET'], url: '/templates/designer', auth: 'operator', desc: 'Visual label template designer' },
+            { bp: 'templates', prefix: '/templates', methods: ['POST'], url: '/templates/save', auth: 'operator', desc: 'Save label template' },
+            { bp: 'templates', prefix: '/templates', methods: ['DELETE'], url: '/templates/<id>/delete', auth: 'admin', desc: 'Delete label template' },
+
+            // ---- Control Interno ----
+            { bp: 'control', prefix: '/control', methods: ['GET'], url: '/control/', auth: 'login', desc: 'Internal control dashboard' },
+            { bp: 'control', prefix: '/control', methods: ['POST'], url: '/control/tara/update', auth: 'operator', desc: 'Update tare weight data' },
+            { bp: 'control', prefix: '/control', methods: ['GET'], url: '/control/api/products', auth: 'login', desc: 'Product list for control panel' },
+        ];
+
+        const bpMeta = {
+            auth:      { label: 'Auth',              color: '#f43f5e', icon: '🔐' },
+            main:      { label: 'Main',              color: '#3b82f6', icon: '🏠' },
+            labels:    { label: 'Labels',            color: '#10b981', icon: '🏷️' },
+            products:  { label: 'Products',          color: '#8b5cf6', icon: '📦' },
+            orders:    { label: 'Orders',            color: '#f59e0b', icon: '📋' },
+            users:     { label: 'Users',             color: '#06b6d4', icon: '👥' },
+            api:       { label: 'API',               color: '#64748b', icon: '⚡' },
+            templates: { label: 'Templates',         color: '#ec4899', icon: '📐' },
+            control:   { label: 'Control Interno',   color: '#14b8a6', icon: '🔍' },
+        };
+
+        const tbody = document.getElementById('routeTable');
+        const searchInput = document.getElementById('apiSearch');
+        const countEl = document.getElementById('routeCount');
+        const noResults = document.getElementById('noResults');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        let activeFilter = 'all';
+
+        function render() {
+            const q = searchInput.value.toLowerCase().trim();
+            tbody.innerHTML = '';
+            let count = 0;
+            let currentBp = null;
+
+            routes.forEach(r => {
+                // Filter by method
+                if (activeFilter !== 'all' && !r.methods.includes(activeFilter)) return;
+
+                // Search filter
+                if (q) {
+                    const match = (r.url + ' ' + r.desc + ' ' + r.bp + ' ' + r.methods.join(' ')).toLowerCase().includes(q);
+                    if (!match) return;
+                }
+
+                // Blueprint header
+                if (r.bp !== currentBp) {
+                    currentBp = r.bp;
+                    const meta = bpMeta[r.bp] || { label: r.bp, color: '#64748b', icon: '📁' };
+                    const bpRow = document.createElement('tr');
+                    bpRow.className = 'bp-row';
+                    bpRow.innerHTML = `<td colspan="4"><div class="bp-name">
+                        <span>${meta.icon}</span>
+                        <span>${meta.label}</span>
+                        <span class="bp-prefix">${r.prefix || '/'}</span>
+                    </div></td>`;
+                    tbody.appendChild(bpRow);
+                }
+
+                const tr = document.createElement('tr');
+                const methodsHtml = r.methods.map(m => `<span class="method method-${m}">${m}</span>`).join(' ');
+
+                const authMap = {
+                    public: { cls: 'auth-public', label: 'Public' },
+                    login: { cls: 'auth-login', label: 'Login' },
+                    operator: { cls: 'auth-operator', label: 'Operator+' },
+                    admin: { cls: 'auth-admin', label: 'Admin' },
+                };
+                const a = authMap[r.auth] || authMap.login;
+
+                tr.innerHTML = `
+                    <td>${methodsHtml}</td>
+                    <td class="url">${r.url}</td>
+                    <td><span class="auth ${a.cls}">${a.label}</span></td>
+                    <td class="desc-cell">${r.desc}</td>
+                `;
+                tbody.appendChild(tr);
+                count++;
+            });
+
+            countEl.textContent = count + ' route' + (count !== 1 ? 's' : '');
+            noResults.classList.toggle('hidden', count > 0);
+        }
+
+        searchInput.addEventListener('input', render);
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.dataset.filter;
+                render();
+            });
+        });
+
+        render();
+    </script>
+</body>
+</html>

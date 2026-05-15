@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}Base de Datos{% endblock %}
+{% block page_title %}Base de Datos de Productos{% endblock %}
+
+{% block content %}
+
+<!-- Tabs -->
+<div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden">
+    <div class="flex border-b border-slate-200">
+        <a href="{{ url_for('products.index', tab='all', search=search) }}" 
+           class="flex-1 text-center py-4 text-sm font-medium transition-colors {% if tab != 'pending' %} border-b-2 border-blue-600 text-blue-600 bg-blue-50/50 {% else %} text-slate-500 hover:text-slate-700 hover:bg-slate-50 {% endif %}">
+           <div class="flex items-center justify-center gap-2">
+               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+               Todos los Productos
+           </div>
+        </a>
+        <a href="{{ url_for('products.index', tab='pending', search=search) }}" 
+           class="flex-1 text-center py-4 text-sm font-medium transition-colors {% if tab == 'pending' %} border-b-2 border-amber-500 text-amber-700 bg-amber-50/50 {% else %} text-slate-500 hover:text-slate-700 hover:bg-slate-50 {% endif %}">
+           <div class="flex items-center justify-center gap-2">
+               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+               Pendientes Laboratorio (GHS)
+           </div>
+        </a>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="p-6">
+        <form id="search-form" action="" class="flex flex-wrap items-end gap-4">
+            <input type="hidden" name="tab" value="{{ tab|default('all') }}">
+
+            <div class="flex-1 min-w-[300px]">
+            <label class="block text-sm font-medium text-slate-700 mb-1">Buscar</label>
+            <div class="relative">
+                <input type="text" id="search-input" name="search" value="{{ search }}"
+                       placeholder="Código, nombre, CAS..."
+                       autocomplete="off"
+                       class="w-full px-4 py-2 pr-10 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                <button type="submit" class="absolute right-2 top-2 text-slate-400 hover:text-slate-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        {% if can_edit %}
+        <a href="{{ url_for('products.add') }}"
+           class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+            + Nuevo Producto
+        </a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Results Table -->
+<div id="products-container" class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b">
+        <span class="text-slate-600">{{ total }} productos encontrados</span>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-slate-50">
+                <tr class="text-left text-sm text-slate-600">
+                    <th class="px-6 py-3">Código</th>
+                    <th class="px-6 py-3">Nombre Químico</th>
+                    <th class="px-6 py-3">CAS</th>
+                    <th class="px-6 py-3">Señal</th>
+                    <th class="px-6 py-3">Pictogramas</th>
+                    <th class="px-6 py-3 text-right">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                    <td class="px-6 py-4">
+                        <span class="font-mono text-sm bg-slate-100 px-2 py-1 rounded">
+                            {{ product.get('product_id', '-') }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <a href="{{ url_for('products.detail', code=product.get('product_id', '')) }}"
+                           class="font-medium text-slate-800 hover:text-blue-600">
+                            {{ product.get('chemical_name', '-') }}
+                        </a>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600">
+                        {{ product.get('cas_number', '-') }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {% set signal = product.get('signal_word', '') %}
+                        {% if signal %}
+                        <span class="px-2 py-1 rounded text-xs font-medium
+                            {% if 'PELIGRO' in signal|upper %}bg-red-100 text-red-700
+                            {% elif 'ATENCIÓN' in signal|upper or 'ATENCION' in signal|upper %}bg-yellow-100 text-yellow-700
+                            {% else %}bg-slate-100 text-slate-600{% endif %}">
+                            {{ signal }}
+                        </span>
+                        {% else %}
+                        <span class="text-slate-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex gap-1">
+                            {% set pictograms = product.get('pictograms', []) %}
+                            {% if pictograms %}
+                                {% for pic in pictograms[:4] %}
+                                <img src="{{ url_for('api.get_pictogram', name=pic) }}" 
+                                     alt="{{ pic }}"
+                                     class="w-8 h-8 ghs-pictogram"
+                                     onerror="this.style.display='none'">
+                                {% endfor %}
+                            {% else %}
+                            <span class="text-slate-400 text-sm">Sin pictogramas</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{{ url_for('products.detail', code=product.get('product_id', '')) }}"
+                               class="inline-flex items-center text-blue-600 hover:text-blue-800 text-sm">
+                                Ver
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </a>
+                            {% if can_edit %}
+                            <button onclick="confirmDelete('{{ product.get('product_id', '') }}', '{{ product.get('chemical_name', '') | e }}')"
+                                class="inline-flex items-center text-red-500 hover:text-red-700 text-sm ml-2"
+                                title="Eliminar producto">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                        No se encontraron productos
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    {% if total_pages > 1 %}
+    <div class="px-6 py-4 border-t flex items-center justify-between">
+        <span class="text-sm text-slate-600">
+            Página {{ page }} de {{ total_pages }}
+        </span>
+        <div class="flex gap-2">
+            {% if page > 1 %}
+            <a href="?page={{ page - 1 }}&search={{ search }}&tab={{ tab|default('all') }}"
+               class="px-3 py-1 border rounded hover:bg-slate-50">Anterior</a>
+            {% endif %}
+            
+            {% for p in range(1, total_pages + 1) %}
+                {% if p == page %}
+                <span class="px-3 py-1 bg-blue-600 text-white rounded">{{ p }}</span>
+                {% elif p <= 3 or p > total_pages - 3 or (p >= page - 2 and p <= page + 2) %}
+                <a href="?page={{ p }}&search={{ search }}&tab={{ tab|default('all') }}"
+                   class="px-3 py-1 border rounded hover:bg-slate-50">{{ p }}</a>
+                {% elif p == 4 or p == total_pages - 3 %}
+                <span class="px-2">...</span>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page < total_pages %}
+            <a href="?page={{ page + 1 }}&search={{ search }}&tab={{ tab|default('all') }}"
+               class="px-3 py-1 border rounded hover:bg-slate-50">Siguiente</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl p-6 max-w-md mx-4">
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">Eliminar Producto</h3>
+            <p class="text-slate-600 mb-1">¿Estás seguro de que deseas eliminar este producto?</p>
+            <p id="deleteProductName" class="font-semibold text-slate-800 mb-4"></p>
+            <p class="text-sm text-red-500 mb-6">Esta acción no se puede deshacer.</p>
+            <div class="flex gap-3 justify-center">
+                <button onclick="closeDeleteModal()"
+                    class="px-5 py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg transition-colors">
+                    Cancelar
+                </button>
+                <button id="confirmDeleteBtn" onclick="executeDelete()"
+                    class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let deleteCode = '';
+
+function confirmDelete(code, name) {
+    deleteCode = code;
+    document.getElementById('deleteProductName').textContent = `${code} - ${name}`;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+    deleteCode = '';
+}
+
+function executeDelete() {
+    if (!deleteCode || deleteCode.trim() === '') {
+        alert('Error: Código de producto no válido');
+        closeDeleteModal();
+        return;
+    }
+    
+    const btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="w-4 h-4 mr-2 animate-spin" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Eliminando...';
+    
+    fetch(`/products/${deleteCode}/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'No se pudo eliminar'));
+            btn.disabled = false;
+            btn.innerHTML = 'Eliminar';
+            closeDeleteModal();
+        }
+    })
+    .catch(err => {
+        alert('Error de conexión: ' + err.message);
+        btn.disabled = false;
+        btn.innerHTML = 'Eliminar';
+        closeDeleteModal();
+    });
+}
+
+// Live Search implementation
+let searchTimeout;
+const searchInput = document.getElementById('search-input');
+const productsContainer = document.getElementById('products-container');
+const form = document.getElementById('search-form');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    performSearch();
+});
+
+searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(performSearch, 300);
+});
+
+function performSearch(url) {
+    const searchVal = encodeURIComponent(searchInput.value);
+    const tabUrl = new URLSearchParams(window.location.search).get('tab') || 'all';
+    
+    // Si no se provee url, es una búsqueda nueva (página 1)
+    const fetchUrl = url || `{{ url_for('products.index') }}?search=${searchVal}&tab=${tabUrl}`;
+
+    fetch(fetchUrl)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newContainer = doc.getElementById('products-container');
+            
+            if (newContainer) {
+                productsContainer.innerHTML = newContainer.innerHTML;
+                attachPaginationEvents();
+            }
+            
+            // Opcional: Actualizar el URL en el navegador sin recargar (comentado si quieres que siempre sea /products/)
+            if(!url) {
+                // history.pushState({}, '', fetchUrl); // No queremos '?search=...' visible
+                // Solo guardamos si no queremos que se vea
+                history.replaceState({}, '', window.location.pathname + (tabUrl !== 'all' ? '?tab=' + tabUrl : ''));
+            } else {
+                history.replaceState({}, '', url.replace(/&search=[^&]*/, '').replace(/\?search=[^&]*&/, '?'));
+            }
+        });
+}
+
+function attachPaginationEvents() {
+    const paginationLinks = productsContainer.querySelectorAll('a[href*="page="]');
+    paginationLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                return;
+            }
+            e.preventDefault();
+            performSearch(this.href);
+        });
+    });
+}
+
+// Inicializar eventos de paginación
+document.addEventListener('DOMContentLoaded', function() {
+    attachPaginationEvents();
+    // Limpiar el url si recargó con search
+    const currentUrl = new URL(window.location.href);
+    if(currentUrl.searchParams.has('search')) {
+        currentUrl.searchParams.delete('search');
+        history.replaceState({}, '', currentUrl.toString());
+    }
+});
+</script>
+{% endblock %}

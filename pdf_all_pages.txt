@@ -1,0 +1,1784 @@
+
+================================================================================
+PAGE 1
+================================================================================
+TTP-2610MT Series  
+Industrial  Barcode Printers  
+User M anual  Series Lists:  
+TTP-2610MT / TTP -368MT  
+´ü«Thermal Transfer  
+´ü«Direct Thermal  
+
+
+================================================================================
+PAGE 2
+================================================================================
+ 
+ I 
+Copyright Information  
+ 
+┬® 2021 TSC Auto ID Technology Co., Ltd.   
+The copyright in this manual, the software and firmware in the printer described are owned by TSC Auto ID Technology Co., Ltd.  
+All rights reserved.  
+CG Triumvirate is a trademark of Agfa Corporation. CG Triumvirate Bold Condensed font is under license from the Monotype 
+Corporation. Windows is a registered trademark of Microsoft Corporation.  
+All other trademarks are the property of their respective own ers. Information in this document is subject to change without 
+notice and does not represent a commitment on the part of TSC Auto ID Technology Co. No part of this manual may be 
+reproduced or transmitted in any form or by any means, for any purpose other t han the purchaserÔÇÖs personal use, without the 
+expressed written permission of TSC Auto ID Technology Co.   
+  
+
+
+================================================================================
+PAGE 3
+================================================================================
+ 
+ II 
+Table of Contents  
+1. Introduction  ................................ ................................ ................................ ................................ ................................ ................................ .......1 
+1.1 Product Specification  ................................ ................................ ................................ ................................ ................................ ................... 2 
+1.1.1 Pr inter Optional Features  ................................ ................................ ................................ ................................ ................................ ......4 
+1.2 General Specification  ................................ ................................ ................................ ................................ ................................ ................... 5 
+1.3 Print Specification  ................................ ................................ ................................ ................................ ................................ ........................ 5 
+1.4 Ribbon Specification  ................................ ................................ ................................ ................................ ................................ .................... 6 
+1.5 Media Specification  ................................ ................................ ................................ ................................ ................................ ...................... 6 
+2. Operati on Overview  ................................ ................................ ................................ ................................ ................................ ........................... 7 
+2.1 Unpacking and Inspection  ................................ ................................ ................................ ................................ ................................ ............ 7 
+2.2 Printer Overview  ................................ ................................ ................................ ................................ ................................ .......................... 8 
+2.2.1 Front View  ................................ ................................ ................................ ................................ ................................ ............................. 8 
+2.2.2 Interior Vie w ................................ ................................ ................................ ................................ ................................ .......................... 9 
+2.2.3 Rear View  ................................ ................................ ................................ ................................ ................................ ............................  10 
+2.3 Operator Control  ................................ ................................ ................................ ................................ ................................ ........................  10 
+2.3.1 LED Indication and Keypads  ................................ ................................ ................................ ................................ ...............................  12 
+2.3.2 Touch Screen Manipulation  ................................ ................................ ................................ ................................ ................................ . 13 
+3. Setup  ................................ ................................ ................................ ................................ ................................ ................................ ...............  14 
+3.1 Setting up the printer  ................................ ................................ ................................ ................................ ................................ ..................  14 
+3.2 Loading the Ribbon  ................................ ................................ ................................ ................................ ................................ ....................  15 
+
+================================================================================
+PAGE 4
+================================================================================
+ 
+ III 
+3.3 Loadin g the Media  ................................ ................................ ................................ ................................ ................................ .....................  17 
+3.4 Loading the Media in Fan -fold / External Mode (Option)  ................................ ................................ ................................ ............................  20 
+3.5 Loading the Media in Cutter Mode (Option) ................................ ................................ ................................ ................................ ................  21 
+3.6 Loading the Media in Peel -off Mode (Option)  ................................ ................................ ................................ ................................ .............  22 
+4. Knob Adjustment  ................................ ................................ ................................ ................................ ................................ .............................  24 
+4.1 Mechanism Fine Adjustment to Avoid Ribbon Wrinkles ................................ ................................ ................................ ..............................  25 
+5. TSC Console  ................................ ................................ ................................ ................................ ................................ ................................ ... 29 
+5.1 Start TSC Console  ................................ ................................ ................................ ................................ ................................ .....................  29 
+5.2 Setup Et hernet Interface  ................................ ................................ ................................ ................................ ................................ ............  31 
+5.3 Set WiFi and Add to TSC Console Interface  ................................ ................................ ................................ ................................ ..............  33 
+5.4 Initialize the Printer WiFi Setting  ................................ ................................ ................................ ................................ ................................  36 
+5.5 Printer Function  ................................ ................................ ................................ ................................ ................................ .........................  37 
+5.6 Setting Post-Print Action  ................................ ................................ ................................ ................................ ................................ ............  38 
+6. LCD Menu Function ................................ ................................ ................................ ................................ ................................ .........................  39 
+6.1 Enter the Menu  ................................ ................................ ................................ ................................ ................................ ..........................  39 
+6.2 Menu Overv iew ................................ ................................ ................................ ................................ ................................ ..........................  40 
+6.3 TSPL  ................................ ................................ ................................ ................................ ................................ ................................ ..........  41 
+6.4 ZPL2  ................................ ................................ ................................ ................................ ................................ ................................ ..........  43 
+6.5 Sensor  ................................ ................................ ................................ ................................ ................................ ................................ ....... 46 
+
+================================================================================
+PAGE 5
+================================================================================
+ 
+ IV 
+6.6 Interface  ................................ ................................ ................................ ................................ ................................ ................................ ..... 47 
+6.6.1 Serial Comm ................................ ................................ ................................ ................................ ................................ ........................  48 
+6.6.2 Ehernet  ................................ ................................ ................................ ................................ ................................ ................................  49 
+6.7 File Manager  ................................ ................................ ................................ ................................ ................................ ..............................  50 
+6.8 Diagnostic  ................................ ................................ ................................ ................................ ................................ ................................ .. 51 
+6.9 Advanced  ................................ ................................ ................................ ................................ ................................ ................................ ... 52 
+6.10 Service  ................................ ................................ ................................ ................................ ................................ ................................ ..... 53 
+7. TroubleShooting  ................................ ................................ ................................ ................................ ................................ ..............................  54 
+8. Maintenance  ................................ ................................ ................................ ................................ ................................ ................................ .... 57 
+9. Angency Compli ance and Approvals  ................................ ................................ ................................ ................................ ...............................  59 
+10. Revise History  ................................ ................................ ................................ ................................ ................................ ...............................  62 
+ 
+  
+ 
+
+================================================================================
+PAGE 6
+================================================================================
+ 
+ 1 
+1. Introduction  
+ 
+Thank you very much for purchasing TSC bar code printer.  
+ 
+The TTP-2610MT Series Printers are  designed with die -casting aluminum chassis and print mechanism, metal cover with large 
+clear media view window, which ensuring to work for the extreme and heavy duty industrial environment and applications.  
+ 
+With back -lit graphic LCD display, printer status can be managed easier and operated more user friendly. The moveable sensor 
+design can accept wide range of label media. All of the most frequently used bar code formats are included. Fonts and bar cod es 
+can be printed in a ny one of the four directio ns. TTP -2610MT Series are built-in the high quality, high performance MONOTYPE 
+IMAGING┬«  True Type font engine and one CG Triumvirate Bold Condensed smooth font. With flexible firmware design, user can 
+also download the True Type Font from PC into printer m emory for printing labels. It also provides a choice of five different sizes of 
+alphanumeric bitmap font, OCR -A and OCR -B fon ts. By integrating rich features.  
+ 
+This document  provides an easy reference f or operating the MH241  series. TSC printers include th e Windows labeling software for 
+creating your label template. For system integration, the TSPL/TSPL2 printer programming manual or SDKs can be found on TSC 
+website at : https://www.tscprinters.com . 
+  
+
+================================================================================
+PAGE 7
+================================================================================
+ 
+ 2 
+1.1 Product Specification  
+Product standard  feature  203 dpi 
+models  300 dpi  
+models  
+Thermal transfer / or direct thermal  V V 
+High quality die -cast aluminum design  V V 
+Metal cover with large clear media view window  V V 
+Transmissive gap sensor (position adjustable  from 4ÔÇØ~8ÔÇØ) V V 
+Reflective black mark sensor position full web adjustable  V V 
+Transmissive ribbon end sensor  V V 
+Ribbon encoder sensor ( Support color ribbon ) V V 
+Head open sensor  V V 
+Resistive Touch Screen , 16 bits Color, 480 x 272 pixels, with back lights  V V 
+Control panel with 6 operation buttons  V V 
+LED indicators  V V 
+Real time clock  V V 
+Internal Ethernet print server (10/100 Mbps) interface  V V 
+USB 2.0 client ( High  speed mode)  V V 
+Serial RS -232C (2400 -115200 bps) interface  V V 
+USB host interface,  for scanner or PC keyboard  V V 
+Centronics (SPP mode)  V V 
+256 MB DDR2  SDRAM memory  V V 
+512 MB FLASH memory  V V 
+SD Flash memory card slot for Flash memory expansion, up to 32GB  V V 
+32-bit RISC high performance processor (BGA 536MHz)  V V 
+Internal 8 alpha -numeric bitmap fonts  V V 
+Fonts and bar codes can be printed in any one of the four directions (0, 90,180, 270 degree)  V V 
+Internal Monotype Imaging┬« true type font engine with one CG Triumvirate Bold Condensed V V 
+
+================================================================================
+PAGE 8
+================================================================================
+ 
+ 3 
+scalable font  
+Downloadable fonts from PC to printer memory  V V 
+Bar code, graphics/image printing  
+ 
+1D bar code : 
+Code128 subsets A.B.C, Code128UCC, EAN128, Interleave 2 of 5, Code 39, Code 93, EAN -13, EAN -
+8, Codabar , POSTNET, UPC -A, UPC -E, EAN and UPC 2(5) digits, MSI, PLESSEY, China Post, 
+ITF14, EAN14, Code 11, TELPEN, PLANET, Code 49, Deutsche Post Identcode, Deutsche Post 
+Leitcode, LOGMARS   
+ 
+2D bar code:  
+CODABLOCK F mode, DataMatrix, Maxicode, PDF -417, Aztec, Micr oPDF417, QR code, RSS 
+Barcode (GS1 Databar)   
+ 
+Supported Image:  
+BITMAP, BMP, PCX (Max. 256 colors graphics)  V V 
+  
+
+================================================================================
+PAGE 9
+================================================================================
+ 
+ 4 
+1.1.1 Printer Optional Features  
+The printer offers the following optional features.  
+Product option feature  User 
+option  Dealer  
+option  Factory 
+option  
+Applicator I/O interface  (GPIO)    V 
+Peel-off module   V  
+Regular cutter (Rotary cutter)  
+Max. paper width:178mm  
+Media thickness: 0.06 ~ 0.25mm  
+Media type: receipt, tag, and label liner w/o glue   V  
+KP-200 Plus  series  keyboard  V   
+KU-007 Plus programmable smart keyboard  V   
+Bluetooth module (Serial interface)  V   
+802.11 a/b/g/n wireless module  
+(Slot-in; For TTP -2610MT only )  V  
+Note: Except for the linerless cutter, all regular/heavy duty/care label cutters DO NOT cut on media with glue.  
+ 
+ 
+ 
+ 
+ 
+
+================================================================================
+PAGE 10
+================================================================================
+ 
+ 5 
+1.2 General  Specification  
+General Specifications  
+Physical dimensions  355 mm (W) x 337 mm (H) x 5 20 mm (D)  
+Weight  21.5 kg 
+Power  Internal switching power supply  
+Input:  AC 100-240V, 3.0A,  50-60Hz  
+Output: DC 24V, 8.33A, 20 0W 
+Environmental condition  Operation: 5 ~ 40╦ÜC (41 ~ 104╦ÜF), 2 0~85% non -condensing  
+Storage: -40 ~ 60 ╦ÜC ( -40 ~ 140╦ÜF), 10~90% non -condensing  
+Environmental concern  Comply with RoHS, WEEE  
+ 
+1.3 Print  Specification  
+Print Specifications  203 dpi 
+models  300 dpi  
+models  
+Print head resolution  
+(dots per inch/mm)  203 dots/inch  
+(8 dots/mm)  300 dots/inch  
+(12 dots/mm)  
+Printing method  Thermal transfer / or direct thermal  
+Dot size  
+(width x length)  0.125 x 0.125 mm  
+(1 mm = 8 dots)  0.084 x 0.084 mm  
+(1 mm = 12 dots)  
+Print speed  
+(inche s per second)  Up to 12 ips  
+(11~12 ips for special  media)  Up to 10 ips  
+(9-10 ips for special media)  
+Max. print width  168 mm (6.61ÔÇØ)  168 mm (6.61ÔÇØ)  
+Max. print length  11,430  mm ( 450ÔÇØ) 5,080  mm ( 200ÔÇØ) 
+Printout bias  Vertical: 1 mm max.  
+Horizontal: 1 mm max.  
+ 
+  
+
+================================================================================
+PAGE 11
+================================================================================
+ 
+ 6 
+1.4 Ribbon  Specification  
+Ribbon  Specifications  
+Ribbon outside diameter  Max. OD 90 mm 
+Ribbon length  450 meter  
+Ribbon core inside diameter  1ÔÇØ core (25.4 mm)  
+Ribbon width  50.8~178 mm (2ÔÇØ~7ÔÇØ)  
+Ribbon wound type  Ink coated inside/ outside  
+Note: Support color ribbon  
+1.5 Media  Specification  
+Media Specifications  203 dpi models  300 dpi models  
+Label roll capacity  208.3 mm (8.2ÔÇØ)  OD 
+Media alignment  Edge alignment  
+Media type  Continuous, die -cut, black mark, fan -fold, notch  
+Media wound type  Printing face outside wound  
+Media width  50.8 ~ 172.7 mm (2ÔÇØ ~ 6.8ÔÇØ)  
+Media width (cutter mode)  0.06 ~ 0.254 mm (2.36 ~ 10 mil)  
+Media thickness  76.2 mm (3ÔÇØ)  
+Media core diameter  Min. 10 mm (0.39ÔÇØ)  
+Media  length  25.4~5,080 mm (1ÔÇØ ~ 200ÔÇØ)  
+Media  length  
+(cutter mode)  25.4~152.4 mm (1ÔÇØ~6ÔÇØ)  
+Gap height  Min. 2 mm  
+Black mark height  Min. 2  mm 
+Black mark width  Min. 8 mm (0.31ÔÇØ)  
+ 
+
+================================================================================
+PAGE 12
+================================================================================
+ 
+ 7 
+2. Operation Overview  
+ 
+2.1 Unpacking and Inspection  
+ 
+This printer has been specially packaged to withstand damage during  shipping. Please carefully inspect the packaging and 
+printer upon receiving the bar code printer. Please retain the packaging materials in case you need to reship the printer.  
+ 
+Unpack ing the printer, the following items are included in the carton.   
+ 
+´ü« 1 Printer unit  
+´ü« 1 Quick  installation guide  
+´ü« 1 Power cord  
+´ü« 1 USB interface cable  
+´ü« 1 Paper core (for ribbon rewind)  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   If any parts are missing, please contact the Customer Service Department of your purchased reseller or distributor.  
+  
+
+
+================================================================================
+PAGE 13
+================================================================================
+ 
+ 8 
+1. LED indicators  
+2. Touch screen  
+3. Operation buttons  
+4. Media viewer  
+5. Paper exit chute  
+6. Printer  right side c over opener  
+ 2.2 Printer Overview  
+2.2.1 Front View  
+ 
+ 
+ 
+  
+          
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+2 
+1 
+4 
+5 
+3 
+6 
+
+================================================================================
+PAGE 14
+================================================================================
+ 
+ 9 
+2.2.2  Interior View   
+ 
+ 
+ 
+ 
+ 
+ 
+  
+1. Ribbon rewind spindle  
+2. Ribbon supply spindle  
+3. Print head pressure adjustment knobs  
+4. Z axis mechanism adjustment knob  
+5. Print head release lever  
+6. Media guide bar  
+7. Rear label guide  
+8. Label roll guard  
+9. Label supply spindle  
+10. Damper  
+11. Print head  
+12. Ribbon sensor  
+13. Gap sensor  
+14. Platen roller  
+15. Black mark sensor  
+16. Front label guide  
+ 
+7 
+6 
+1 
+2 
+3 
+4 
+10 
+12 
+8 
+5 
+9 
+14 
+ 16 
+11 
+13 
+15 
+
+================================================================================
+PAGE 15
+================================================================================
+ 
+ 10 
+2.2.3  Rear View  
+            
+ 
+1. External label entrance chute  
+2. Power switch  
+3. Power cord socket  
+4. Ethernet interface  
+5. micro SD card slot  
+6. USB interface  
+7. USB host  
+8. RS-232C interface  
+9. GPIO interface (Option)  
+10. Centronics  interface (Option)  
+11.  
+Note:  The interface picture here is for reference only. Please refer to the product specification for the interfaces availability.   
+4 
+5 
+6 
+7 
+10 
+9 
+8 
+2 
+3 1 
+
+================================================================================
+PAGE 16
+================================================================================
+ 
+ 11 
+2.3 Operator Control   
+ 
+ 
+  
+LEDs 
+Printer model  
+Icons  
+Firmware version  
+Keys  Touch screen  
+
+================================================================================
+PAGE 17
+================================================================================
+ 
+ 12 
+2.3.1 LED Indication and Key pads 
+ 
+ 
+  LED Status  Indication  
+POWER  Off Printer power off  
+On Printer power on  
+ON-LINE  On Printer is ready  
+Blinking  Printer is paused  
+Printer is downloading data  
+ERROR  Off Printer is ready  
+On Carriage open or cutter error  
+Blinking  No paper, paper jam or no ribbon  
+Keys  Function  
+PAUSE  Pause/Resume the printing process  
+MENU  1. Enter the menu  
+2. Exit from a menu or cancel a setting  and return to the previous  menu  
+FEED  Advances one label  
+UP Scroll up the menu list  
+SELECT  Enter /Select cursor located  option  
+DOWN  Scroll down the menu list  
+
+================================================================================
+PAGE 18
+================================================================================
+ 
+ 13 
+2.3.2 Touch Screen Manipulation  
+ 
+ 
+Tap an item to open/use it.  
+ 
+ 
+                 
+ 
+ 
+  
+Selected  Item (Red) 
+ 
+ 
+Retu rn 
+ 
+Next Page  
+ 
+Scroll down  
+ 
+Scroll up  
+ Up Page  
+ 
+
+================================================================================
+PAGE 19
+================================================================================
+ 
+ 14 
+3. Setup  
+ 
+3.1 Setting up the printer  
+ 
+ 
+ 
+ 
+1. Place the printer on  flat surface.  
+ 
+2. Make sure the printer is p ower off.  
+ 
+3. Connect the printer to the computer with the provided USB cable.  
+ 
+4. Plug in the power cord . 
+ 
+´üÁ Note: Please switch OFF  the printer before plug ging  in the power cord to printer power jack.   
+ 
+  
+
+================================================================================
+PAGE 20
+================================================================================
+ 
+ 15 
+3.2 Loading the Ribbon  
+ 1. Lift the handle to open  the 
+printer right side cover . 
+Push the  print head 
+release  lever  to open  the 
+print head mechanism.  
+ 2. Install the ribbon and 
+paper core onto the 
+ribbon supply spindle 
+and ribbon rewind 
+spindle.  
+ 3. Thread the ribbon through 
+the ribbon sensor slot and 
+then through the open 
+space in between print 
+head and platen.  
+ 4. Wind the ribbon 
+clockwise about 3~5 
+circles onto the ribbon 
+rewind spindle until it 
+is smooth and 
+properly stretched.  
+ 
+Ribbon 
+sensor  
+
+
+================================================================================
+PAGE 21
+================================================================================
+ 
+ 16 
+ 
+  
+ 5. Close the print head 
+mechanism making 
+sure the latches are 
+engaged securely.  
+Ribbon Loading P ath 
+   
+  
+Ink coated outside  Ink coated inside  
+
+================================================================================
+PAGE 22
+================================================================================
+ 
+ 17 
+3.3 Loading the Medi a 
+ 1. Lift the handle to open the printer right side cover. 
+Push the print head release lever to open the print 
+head mechanism.  
+ 2. Remove one  label roll guard  from the label spindle . 
+ 3. Place the roll of media on the label supply spindle 
+and push it to the end of label spindle. Install the 
+label roll guard gently to fit the width of label roll.  
+
+
+================================================================================
+PAGE 23
+================================================================================
+ 
+ 18 
+ 4. Pull label roll leading edge forward through the 
+media guide bar, damper, media sensor and place 
+the label leading edge onto the platen roller. Adjust 
+the rear label guide (green) to fit the width of the 
+label.  
+   
+    5. Making sure the label is into both label guides.  
+   
+ 6. Close the print head mechanism. Make sure the 
+latches are engaged securely.  
+7. Using the front display panel, set media sensor 
+type and calibrate the selected sensor.  
+ 
+
+
+================================================================================
+PAGE 24
+================================================================================
+ 
+ 19 
+ 
+ 
+ 
+ 
+ 
+ 
+Loading  path for  media  
+ 
+  
+
+
+================================================================================
+PAGE 25
+================================================================================
+ 
+ 20 
+3.4 Loading the Media  in Fan-fold / External  Mode (Option)  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+1. Open the printer right side cover . 
+2. Insert  the fan-fold media through  the bottom 
+or rear e xternal label entrance chute.  
+3. Please refer to section 3.3  loading media  
+Note : Please calibrate the gap/black mark 
+sensor when changing media.  
+ 
+Loading  path for  fan-fold labels 
+
+
+================================================================================
+PAGE 26
+================================================================================
+ 
+ 21 
+3.5 Loading the Media  in Cutter Mode (Option)  
+ 1. Lift the handle to open  the printer right side cover . 
+Push the  print head release  lever  to open  the print 
+head mechani sm.Please refer to section 3.3  to load 
+media.  
+ 2. Lead the media through the cutter paper opening.  
+Adjust the label guide to fit the width of the label.  
+ 3. Close the print head mechanism making sure the 
+latches are engaged properly.  
+4. Using the front display panel, set the printer setting  
+to cutter mode. Press the FEED button to test.  
+ 
+
+
+================================================================================
+PAGE 27
+================================================================================
+ 
+ 22 
+3.6 Loading the Media in Peel-off Mode (Option)   
+ 1. Install the label and calibrate the selected sensor.  
+2. Install the paper core on internal rewind spindle.  
+ 3. Pulling the lower cover of print head up as picture 
+showed.  
+ 
+ 
+ 4. Place the label through the peel -off cover slot and 
+platen roller.  
+
+
+================================================================================
+PAGE 28
+================================================================================
+ 
+ 23 
+ 5. Please note the direction of label (printing side facing 
+up). 
+ 
+ 
+  6. Paste the media on the paper core and rolling it 
+counterclockwise for 3 to 5 circles until the liner is 
+completely stretched.  
+    7. Pulling the lower cover down to close the print head  
+and test the function in peel -off mode  
+Note : 
+*Please calibrate the gap/black mark sensor when 
+changing media.  
+
+
+================================================================================
+PAGE 29
+================================================================================
+ 
+ 24 
+4. Knob Adjustment  
+ 
+ 
+ 
+ 
+There are conditions that will need to adjust the print head pressure.  
+ 
+´ü« Print with thick media  
+If media thickness is larger than 0.19 mm, the larger pressure is required to 
+get good quality printout.  
+ 
+´ü« Ribbon wrinkle presented on the media  
+ 
+There are  5 levels  of pressure for adjustment. Level 1 is the minimum pressure and 
+level 5 is the maximum pressure. Please refer to next section for more information.  
+ 
+ 
+ 
+ 
+
+================================================================================
+PAGE 30
+================================================================================
+ 
+ 25 
+4.1 Mechanism Fine Adjustment to Avoid Ribbon Wrinkles  
+ 
+Ribbon wrinkle  is related to the media width, thickn ess, print head pressure balance, ribbon film characteristics, print darkness 
+settingÔÇªetc. In case the ribbon wrinkle happens, please follow the instructions below to adjust the printer parts.  
+ 
+  
+Adjustable  Printer  Parts  
+ 
+ There are 5 levels of  print head pressure adjustment knob  settings.  The lowest 
+pressure index  is 1 and t he highest pressure index  is 5. 
+
+
+================================================================================
+PAGE 31
+================================================================================
+ 
+ 26 
+Wrinkle happens from label lower right to upper left direction          
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+´ü« Decrease  the left side print head pressure adjustment knobs setting 1 level per each adjustment then print the label again to 
+check  if wrinkle is gone . 
+ 
+´ü« If the left side print head adjustment knobs level  has been set to index 1 (the lowest index),  please increase the right side 
+print head pressure.  
+ 
+´ü« If the right side print head adjustment knob setting has been set to 5 (the highest pressure index) the wrinkle canÔÇÖt be avoid, 
+please  
+Feed Direction  Miffle/ Right knobs  
+
+================================================================================
+PAGE 32
+================================================================================
+ 
+ 27 
+Wrinkle h appens from label lower left to upper right direction         
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+´ü« Decrease the right side print head pressure adjustment knobs setting 1 level per each adjustment  then print the label again 
+to check if wrinkle is gone.  
+ 
+´ü« If the right side print head adjustment knobs  setting has been set to index 1 (the lowest pressure index), please increase the 
+left side print head pressure . 
+ 
+´ü« If the left side print head adjustment knob setting has been set to 5 (the highest pressure index) the wrinkle canÔÇÖt be avoid ed, 
+please increase the middle  print head pressure  knob . 
+Feed Direction  Left / Middle knobs  
+
+================================================================================
+PAGE 33
+================================================================================
+ 
+ 28 
+ Pressure knob adjustment reference:   
+ 
+ 
+6ÔÇØ label  
+ 
+Left index  Middle index  Right index  
+2 1 1 
+3 1 1 
+4 1 1 
+5 1 1 
+5 2 1 
+5 3 1 
+5 4 1 
+5 5 1 
+ 
+3ÔÇØlabel  
+Left index  Middle index  Right index  
+2 2 1 
+3 3 1 
+4 4 1 
+5 5 1 
+ 
+ 
+ 
+
+================================================================================
+PAGE 34
+================================================================================
+ 
+ 29 
+5. TSC Console  
+TSC Console is a management tool combining  the Printer Management, Diagnostic Tool, CommTool  and Printer Webpage settings, 
+which enables you to adjust printerÔÇÖs settings/status; change printersÔÇÖ settings; download graphics,  deploy fonts, graphics, label 
+templates or upgrade the fi rmware to the group of printers, and send additional commands to pr inters at the same time . 
+ÔÇ╗ Printer firmware version before A2.12 will only use 9100 Port as command port; Printer firmware after A2.12 will use 
+6101 Port as command port.  
+ 
+5.1 Start TSC Console     
+ 
+1. Double click TSC Console icon to start the software.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+2. Manually add the devices by clicking Printer > Add Printers . 
+ 
+ 
+ 
+ 
+
+
+================================================================================
+PAGE 35
+================================================================================
+ 
+ 30 
+ 
+3. Select the current interface of the printer.  
+  
+ 
+4. The printer will be added to TSC Console ÔÇÖs interface.  
+ 
+5. Select the printer and set the settings.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+´ü« For more information, please refer to  TSC Console User Manual .  
+
+
+================================================================================
+PAGE 36
+================================================================================
+ 
+ 31 
+5.2 Setup Ethernet Interface  
+ 
+´ü« Use USB  or COM  to establish the interface on TSC Console . 
+ 
+ 
+ 
+´ü« Double click to enter the Printer Configuration Page > Click Ethernet  tab > Check the IP Address.   
+ 
+       
+
+
+================================================================================
+PAGE 37
+================================================================================
+ 
+ 32 
+´ü« Return to  TSC Console  main page > Click Add Printer  on the top left of the window.  
+ 
+ 
+ 
+´ü« Choose Network  > Key in the  IP Address > Click Discover  to establish the Ehternet interface.  
+    
+ 
+´ü« The notification will pop up > Click OK to close the window > The Ethernert  interface will be shown on TSC Console .  
+   
+  
+
+
+================================================================================
+PAGE 38
+================================================================================
+ 
+ 33 
+5.3 Set WiFi and Add to TSC Console Interface  
+ 
+´ü« Use USB  or COM Port  to set up the interface.  
+(refer to chp.5.1)  
+´ü« Double click to enter the printer configuration page.  
+ 
+´ü« Click Get to receive printerÔÇÖs information.  
+´ü« Click Wi-Fi to the wi -fi setting page.   
+ 
+1 2 
+
+================================================================================
+PAGE 39
+================================================================================
+ 
+ 34 
+For WPA -Personal   
+I. Fill-in the SSID . 
+II. Select the Encryption  option to WPA -Personal.  
+III. Fill-in the Key . 
+IV. Select DHCP  to ON. (For OFF option , please fill -in the 
+IP Address, Subnet Mask and Gateway)  
+V. After setting, click the Set button.  
+ 
+Note:  
+Before setting, the entered field will be shown in yellow  for 
+reminding . 
+On DHCP, user can change the printer name by another 
+model name in ÔÇ£Printer Name ÔÇØ field.  
+User also can change the raw port in ÔÇ£Raw Port ÔÇØ field.  
+ 
+For WPA -Enterprise  
+I. Fill-in the SSID . 
+II. Select the Encryption  option to WPA2 -Enterprise . 
+III. Select DHCP to ON (For OFF option , please fill -in the IP 
+Address, Subnet Mask and Gateway)  
+IV. Select the EAP Type option. (For EAP-TLS option, 
+please upload the CA and Key for mutual authentication, 
+integrity -protected cipher  suite negotiation, and key 
+exchange between two endpoints. ) 
+V. After setting, click the Set button.  
+Note:  
+Before setting, the entered field will be shown in yellow  for 
+reminding . 
+On DHCP, user can change the printer name by another 
+model name in ÔÇ£Printer Name ÔÇØ field.  
+User also can change the raw port in ÔÇ£Raw Port ÔÇØ field.   
+1 
+2 
+3 2 1 
+
+================================================================================
+PAGE 40
+================================================================================
+ 
+ 35 
+´ü« After clicking Set button , it'll pop -up the window tip 
+as below shown . 
+ 
+´ü« IP address will be shown in the ÔÇ£IP address ÔÇØ field 
+and the Wi -Fi logo and IP address will be displayed 
+on the LCD control panel . 
+Note:  
+IP address should be shown within about 5~15 
+seconds after printer turn on. If not, please refer to 
+steps below to i nitialize the printer  Wi-Fi module 
+settings then to setup it again.   
+´ü« Remove the  cable between the computer and the 
+printer.  
+´ü« Go to main page, click Add Printer  to add t he 
+printer via Network . 
+´ü« Select the  printer and enter the setting page by 
+double clicking  the printer.  
+´ü« Click the Print Test Page  button to print the test 
+page via Wi -Fi interface.  
+ 
+ 
+
+
+================================================================================
+PAGE 41
+================================================================================
+ 
+ 36 
+5.4 Initialize the Printer  WiFi Setting  
+1. Return to the main page of TSC Console.  
+ 
+2. Click Functions  to expand the page.  
+3. Click Wi-Fi Default to initialize the printer Wi -Fi module setting to factory  default  setting.  
+ 
+
+
+================================================================================
+PAGE 42
+================================================================================
+ 
+ 37 
+5.5 Printer Function  
+ 
+Printer Function  could be found in Printer Configuration . ÔÇ£Printer Function ÔÇØ will be shown on the left side of the window . 
+ 
+ 
+ 
+  Function s Description  
+Calibrate Sensor  Detect media types and the size of the label  
+RTC Setup  Synchronize printer with Real Time Clock on PC  
+Factory Default  Initialize the printer to default settings  
+Reset Printer  Reboot printer  
+Print Test Page  Print test page according to the specified label size and sensor type.  
+Configuration  Page  Print printer configurations  
+Dump Text  Activate the printer to dump mode  
+Ignore  AUTO.BAS  Ignore AUTO.BAS file when printer boot up.  
+Exit Line Mode  Exit the line mode to page mode  
+Enter Line Mode  Leave page mode and enter line mode  
+Reset WiFi  Restore the WiFi settings to defaults.  
+
+
+================================================================================
+PAGE 43
+================================================================================
+ 
+ 38 
+5.6 Setting Post -Print Action  
+When the printer is equipped with other opton kits, ex: cutter, peeler, rewinder,  please select the mode after finishing the calibration.  
+ 
+Follow below procedure to set the post action for the printing:  
+Refer Chp 5.1 to Connect the printer with  TSC Console  > Double click  the printer > The Printer Configuration Page  will pop up > Click 
+Get to load information > Go to Common Tab > Find Post -Print Action  > Select the mode  depends on usersÔÇÖ application > Click Set. 
+ 
+  
+
+
+================================================================================
+PAGE 44
+================================================================================
+ 
+ 39 
+6. LCD Menu Function  
+ 
+6.1 Enter the Men u 
+ 
+ 
+  ´ü« By touch display:  
+Tap the ÔÇ£Menu ÔÇØ icon on LCD to enter the main menu.  
+ 
+ 
+´ü« By Keys:  
+Press  the ÔÇ£MENU ÔÇØ button  and press the ÔÇ£SELECT ÔÇØ button to enter the 
+main menu.  
+ 
+
+================================================================================
+PAGE 45
+================================================================================
+ 
+ 40 
+6.2 Menu Overview  
+ 
+There are 8  categories on the menu. Users can eas ily set the settings of the printer without connecting the computer. Please refer 
+to following sections for more details.  
+ 
+  
+Service  : To restore printer settings to defaults  and 
+checking information for printer.  
+ File Manager  : To check and manage printerÔÇÖs 
+memory storage.  
+Advanced  : To set LCD, initialization, cutter 
+type,ÔÇªetc.  Sensor  : To calibrate the selected media sensor.  
+ 
+Interface  : To set the printer interface settings.  Diagnostic  : To check printer and help users to 
+troubleshoot the problems.   
+ZPL2  : To set up the printer settings ZPL2 . 
+ TSPL  : To set up the printer settings for TSPL  
+ 
+
+================================================================================
+PAGE 46
+================================================================================
+ 
+ 41 
+6.3 TSPL  
+ 
+TSPL  category can set up the printer settings for TSPL.   
+  SettingTSPLSpeed
+Density
+Direction
+Print modeNone
+Batch Mode
+Peeler Mode
+Cutter Mode
+Cutter BatchOffset
+Shift X
+Shift Y
+Reference X
+Reference Y
+Code Page
+Country
+
+================================================================================
+PAGE 47
+================================================================================
+ 
+ 42 
+ 
+ 
+Note: If printing from enclosed software/driver, the software/driver will send out the commands, which will overwrite the set tings set 
+from the panel.  
+ 
+  Item Description  Default  
+Speed  Set the print speed. Setting range: 2~14 for 203dpi; 2~12 for 300dpi; 1~6 for 600dpi  6 
+Density  Set the printing darkness.  8 
+Direction  Set the printout direction. Setting Value: 0 and 1.  
+Direction 0: 
+  Direction 1:
+  0 
+Print mode  Set the print mode. There are 5  modes in total:  
+None:  Next label top of form is aligned to the print head burn line location. (Tear Off Mode)  
+Batch Mode: Once finishing the printing process, label will be fed to the tear plate location.  
+Peeler Mode: Enable the label peel off mode.  
+Cutter Mode : Enable the label cutter mode.  
+Cutter Batch: Cut the label once at the end of the printing job.  Batch Mode  
+Offset  Adjust media stop location. Available value setting range: -999 dots to 999 dots.  0 dot  
+Shift X  
+Adjust print position.  Available value setting range: -999 dots to 999 dots.  0 dot  
+Shift Y  0 dot  
+Reference X  Set the origin of printer coordinate system horizontally and vertically. Available setting range: 0 dot to 999 
+dots.  0 dot  
+Reference Y  0 dot  
+Code page  Set the code  page of international character set.  850 
+Country  Set the country code. Available setting value range: 1 to 358.  001 
+
+================================================================================
+PAGE 48
+================================================================================
+ 
+ 43 
+6.4 ZPL2  
+ 
+This ÔÇ£ZPL2ÔÇØ category can set up the printer settings for ZPL2.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  Menu ZPL2Darkness
+Print Speed
+Tear Off
+Print ModeTear Off
+Peeler Off
+Cutter Print Width
+List Fonts
+List Images
+List Formats
+List Setup
+Control Prefix
+Format Prefix
+Delimiter Char
+Media Power UpFeed
+Calibration
+Length
+No Motion
+Head CloseFeed
+Calibration
+Length
+No MotionLabel Top
+Left Position
+Reprint ModeEnabled
+Disabled
+Format ConvertNone
+150 -> 300
+150 -> 600
+200 -> 600
+300 -> 600
+
+================================================================================
+PAGE 49
+================================================================================
+ 
+ 44 
+ 
+Item Description  Default  
+Density  Set the printing darkness. Available setting range: 0 to 30.  16 
+Print Speed  Set the print spe ed. Available  setting range is 2~18 for 203dpi and 2~14  for 300dpi ; 1.5~6 
+for 300dpi. . N/A 
+Tear Off  Adjust media stop location. Available setting value range: -120~120 dots.  0 dot  
+Print mode  Set the print mode. There are 4  modes:  
+Tear Off:  Next label top of form is aligned to the print head heating line location.  
+Peeler Off : Enable the label peel off mode.  
+Cutter : Enable the label cutter mode  Tear Off  
+Print Width  Set the print width. Available setting range:  2 ~ 999 dots.  812 
+List Fonts  Print the current fonts list from the memory devices to the label.  N/A 
+List Images  Print current printer available images list stored at the memory device to the label.  N/A 
+List Formats  Print current printer available formats list from the memory devices to the label.  N/A 
+List Setup  Print current printer configuration to the label.  N/A 
+Control Prefix  Set control prefix character.  N/A 
+Format Prefix  Set format prefix character.  N/A 
+Delimiter Char  Set delimiter character.  N/A 
+
+================================================================================
+PAGE 50
+================================================================================
+ 
+ 45 
+Media Power Up  Set the action of the media when turning on the printer.  
+Feed:  Printer will advance one label.  
+Calibration:  Printer will make calibration.  
+Length:  Printer determine length and feed label.  
+No Motion:  Printer will not move media.  No Motion  
+Head Close  Set the ac tion of the media when closing the print head.  
+Feed:  Printer will advance one label.  
+Calibration:  Printer will make calibration.  
+Length:  Printer determine length and feed label.  
+No Motion:  Printer will not move media.  No Motion  
+Label Top  Adjust print position vertically on the label. Value range: -120 to +120 dots.  0 
+Left Position  Adjust print position horizontally on the label. Value range: -9999 to +9999 dots.  0 
+Reprint Mode  Reprint the last label by pressing  button on printerÔÇÖs control panel.  Disabled  
+Format Convert  Select the bitmap scaling factor. The first number is the original dots per inch (dpi) value; the 
+second the dpi which you would like to scale.  None  
+ 
+Note: printing from other software/drive will overwrite the setting s set from the  panel.  
+  
+
+
+================================================================================
+PAGE 51
+================================================================================
+ 
+ 46 
+6.5 Sensor  
+This option is used to calibrate the selected sensor. We recommend calibrate the sensor before p rinting when changing the me dia. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Item Description  Default  
+Auto Calibration  Set the media sensor type and calibrate the selected sensor automatically.  N/A 
+Manual Calibration  In case Auto Calibration does not work, please use ÔÇ£ManualÔÇØ function to set the paper length and 
+gap/bline size to complete the calibration setting.  N/A 
+Threshold Detect  Set sensor sensitivity in fixed or auto.  Auto  
+Maximum Length  Set the maximum length for label calibration.  254 
+mm 
+Advanced  Set the minimum paper length and maximum gap/bline length for auto -calibratIon.  N/A Menu SensorAuto CalibrationGap
+Black Mark
+Continuous
+Preprint
+Manual Calibration StandardGap
+Black Mark
+Continuous
+Threshold DetectAuto
+Fixed
+Maximum Length
+Advanced
+
+================================================================================
+PAGE 52
+================================================================================
+ 
+ 47 
+6.6 Interface  
+Interface can set the printer interface settings.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  Menu InterfaceSerial
+Ethernet
+Wi-Fi
+Bluetooth
+
+================================================================================
+PAGE 53
+================================================================================
+ 
+ 48 
+6.6.1 Serial Comm  
+ 
+Serial comm  can set the printer RS -232 settings.   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+ 
+ 
+Item Description  Default  
+Baud Rate  Set the RS -232 baud rate.  9600  
+Parity  Set the RS -232 parity.  None  
+Data Bits  Set the RS-232 Data Bits.  8 
+Stop Bit(s)  Set RS-232 Stop Bits.  1 
+ 
+  Menu Interface SerialBaud Rate1200 bps
+2400 bps
+4800 bps
+9600 bps
+19200 bps
+38400 bps
+57600 bps
+115200 bps
+ParityNone
+Odd
+Even
+Data Bits7
+8
+Stop Bit(s)1
+2
+
+================================================================================
+PAGE 54
+================================================================================
+ 
+ 49 
+6.6.2 Ehernet  
+ 
+Ethernet  configure s internal Ethernet configuration  and check s the printerÔÇÖs Ethernet module status, and reset the Ethernet module.  
+ 
+ 
+Item Description  Default  
+Status  Check the Ethernet IP address and MAC setting status.  N/A 
+Config.  DHCP:  On or OFF the DHCP (Dynamic Host Configuration Protocol) network protocol.  
+Static IP:  Use this menu to set the printerÔÇÖs IP address, subnet mask and gateway.  DHCP  
+ 
+  Menu Interface EthernetStatus
+Config
+
+================================================================================
+PAGE 55
+================================================================================
+ 
+ 50 
+6.7 File Manager  
+ 
+File Manager  is used to check the printer available memory, show the files list, delete the files or run the files that saved in the 
+printer DRAM/Flash/Card memory.  
+ 
+  Menu File ManagerDRAM
+FLASH
+
+================================================================================
+PAGE 56
+================================================================================
+ 
+ 51 
+6.8 Diagnostic  
+ 
+ 
+Item Description  
+Print Config.  Print current printer configuration to the label. The configuration printout contains print head test pattern, which is useful 
+for checking the dot damage on the print head heater.  
+Dump Mode  Captures the data from the communications port and prints out the data received by printer. In the dump  mode, all 
+characters will be printed in 2 columns. The left side characters are received from your system and right side data are 
+the corresponding hexadecimal value of the characters. It allows users or engineers to verify and debug the program.  
+Dump mod e requires 4ÔÇØ wide paper width.  
+Print Head  Check print headÔÇÖs temperature and bad dots.  
+Display  Check LCDÔÇÖs color state.  
+Sensor  Check sensors intensity and reading state.  
+ 
+  Menu DiagnosticPrint Config.
+Dump Mode
+Print Head
+Display
+SensorDiag Gap
+Diag Black Mark
+Diag Ribbon End
+Diag Media
+
+
+================================================================================
+PAGE 57
+================================================================================
+ 
+ 52 
+6.9 Advanced  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Menu AdvancedDisplay Brightness
+Touchscreen Calibration
+Date & Time
+Cutter Type
+Language
+Item Description  
+Display Brightness  This item is used to setup the brightness for display.  
+Touchscreen Calibration  This item is used to calibrate the center of the cross for best result for touchscreen.  
+Date & Time  This item is used to setup the date and time  on display . 
+Cutter Type  This item is used to set the cutter type.  
+Language  This item is used to setup the  language on display . 
+
+================================================================================
+PAGE 58
+================================================================================
+ 
+ 53 
+6.10 Service  
+This feature is used to restore printer settings to defaults  and checking information for printer.  
+ 
+ 
+  Menu ServiceInitialization
+Printer Information
+Contact us
+Item Description  
+Initialization  This feature is used to restore printer settings to defaults . 
+Printer Information  This feature is used to  check printer serial number, printed mileage(m), labels(pcs.) and cutting counter.  
+Contact us  This feature is used to  check the contact information for tech support service  
+
+================================================================================
+PAGE 59
+================================================================================
+ 
+ 54 
+7. TroubleShooting  
+ 
+Problem  Possible Cause  Recovery Procedure  
+Power indicator does not illuminate  ´ü« The power cord is not properly connected.  
+´ü« The power switch is closed.  ´ü« Plug the power cord in printer and outlet.  
+´ü« Switch the printer on.  
+Carriage Open  ´ü« The printer carriage is open.  ´ü« Close the print carriage.  
+Not Printing  ´ü« Check if interface cable is well connected.  
+´ü« Check if wireless or Bluetooth device is well 
+connected.  
+´ü« The port in the Windows driver is not 
+correct.  ´ü« Re-connect cable to interface or change a new cable.  
+´ü« Reset the wireless device setting.  
+´ü« Select the correct printer port in the driver.  
+´ü« Clean the printhead.  
+´ü« PrintheadÔÇÖs harness connector is not well connected with 
+printhead. Turn off the printer and plug the connector 
+again.  
+´ü« Check your pro gram if there is a command - PRINT at the 
+end of the file and there must have CRLF at the end of 
+each command line.  
+No print on the label  ´ü« Label or ribbon is loaded not correctly.  
+´ü« Use wrong type paper or ribbon  ´ü« Follow the instructions in loading the media and ribbon.  
+´ü« Ribbon and media are not compatible.  
+´ü« Verify the ribbon -inked side.  
+´ü« The print density setting is incorrect.  
+No Ribbon  ´ü« Running out of ribbon.  
+´ü« The ribbon is installed incorrectly.  ´ü« Supply a new ribbon roll.  
+´ü« Refer to userÔÇÖs manual to reinstall the ribbon.  
+No Paper  ´ü« Running out of label.  
+´ü« The label is installed incorrectly.  
+´ü« Gap/black mark sensor is not calibrated.  ´ü« Supply a new label roll.  
+´ü« Refer to userÔÇÖs manual to reinstall the label roll.  
+´ü« Calibrate the gap/black mark sensor.  
+Paper Jam  ´ü« Gap/black mark  sensor is not set properly.  
+´ü« Make sure label size is set properly.  
+´ü« Labels may be stuck inside the printer ´ü« Calibrate the media sensor.  
+´ü« Set media size correctly.  
+´ü« Remove the stuck label inside the printer mechanism.  
+
+================================================================================
+PAGE 60
+================================================================================
+ 
+ 55 
+mechanism.  
+Take Label  ´ü« Peel function is enabled.  ´ü« If peeler module is installed, please remove the label.  
+´ü« If there is no peeler module in front of the printer, please 
+switch off the printer and install it.  
+´ü« Check if the connector is plugging correctly.  
+CanÔÇÖt downloading the file to 
+memory (FLASH / DRAM/CARD)  ´ü« The space of memory is full.  ´ü« Delete unused files in the memory.  
+Poor Print Quality  ´ü« Ribbon and media is loaded incorrectly.  
+´ü« Dust or adhesive accumulation on the print 
+head.  
+´ü« Print density is not set properly.  
+´ü« Printhead element is damaged.  
+´ü« Ribbon and media are incompatible.  
+´ü« The printhead pressure is not set properly.  ´ü« Reload the supply.  
+´ü« Clean the print head.  
+´ü« Clean the platen roller.  
+´ü« Adjust the print density and print speed.  
+´ü« Run printer self -test and check the print head test pattern 
+if there is dot missing in the pattern.  
+´ü« Change proper ribbon or proper label media.  
+´ü« Adjust the printhead pressure adjustment knob.  
+´ü« The release lever does not latch the printhead properly.  
+Missing printing on the left or right 
+side of label  ´ü« Wrong label size setup.  ´ü« Set the correct label size.  
+Gray line on the blank label  ´ü« The print head is dirty.  
+´ü« The platen roller is dirty.  ´ü« Clean the print head.  
+´ü« Clean the platen roller.  
+´ü« (Please refer to chapter 8)  
+Irregular printing  ´ü« The printer is in Hex Dump mode.  
+´ü« The RS -232 setting is incorrect.  ´ü« Turn off and on the printer to skip the dump mode.  
+´ü« Re-set the RS -232 setting.  
+Label feeding is not stable (skew) 
+when printing  ´ü« The media guide does not touch the edge 
+of the media.  ´ü« If the label is moving to the right side, please move the 
+label guide to left.  
+´ü« If the label is moving to the left side, please move the 
+label guide to right.  
+Skip labels when printing  ´ü« Label size is not specified properly.  ´ü« Check if label size is setup correctly.  
+
+================================================================================
+PAGE 61
+================================================================================
+ 
+ 56 
+´ü« Sensor sensitivity is not set properly.  
+´ü« The media sensor is covered with dust.  ´ü« Calibrate the sensor by Auto Gap or Manual Gap options.  
+´ü« Clear the GAP/Black mark sensor by blower.  
+Wrinkle Problem  ´ü« Printhead pressure is incorrect.  
+´ü« Ribbon installation is incorrect.  
+´ü« Media installation is incorrect.  
+´ü« Print density is incorrect.  
+´ü« Media feeding is incorrect.  ´ü« Please refer to the chapter 4.  
+´ü« Please set the suitable density to have good print quality.  
+´ü« Make sure the label guide touch the edge of the media 
+guide.  
+RTC time is incorrect when reboot 
+the printer  ´ü« The battery has run down.  ´ü« Check if there is a battery on the main board.  
+The left side printout position is 
+incorrect  ´ü« Wrong label size setup.  
+´ü« The parameter Shift X in LCD menu is 
+incorrect.  ´ü« Set the correct label size.  
+´ü« Press [Menu] ´âá[Setting] ´âá [Shift X] t o fine tune the 
+parameter of Shift X.  
+The printing position of small label 
+is incorrect  ´ü« Media sensor sensitivity is not set properly.  
+´ü« Label size is incorrect.  
+´ü« The parameter Shift Y in the LCD menu is 
+incorrect.  
+´ü« The vertical offset setting in the driver is  
+incorrect.  ´ü« Calibrate the sensor sensitivity again.  
+´ü« Set the correct label size and gap size.  
+´ü« Press [Menu] ´âá[Setting] ´âá [Shift Y]  ´âá to fine tune the 
+parameter of Shift Y.  
+´ü« Set the vertical offset in the driver if youÔÇÖre using 
+BarTender.  
+LCD panel is dark a nd keys are not 
+working  ´ü« The cable between main PCB and LCD 
+panel is loose.  ´ü« Check if the cable between main PCB and LCD is 
+secured or not.  
+LCD panel is dark but the LEDs are 
+light  ´ü« The printer initialization is unsuccessful.  ´ü« Turn OFF and ON the printer again.  
+´ü« Initialize the printer.  
+Ribbon encoder sensor doesnÔÇÖt 
+work  ´ü« The ribbon encoder sensor connector is 
+loose.  ´ü« Fasten the connector.  
+Ribbon end sensor doesnÔÇÖt work  ´ü« The connector is loose.  
+´ü« The ribbon sensor hole is covered with 
+dust.  ´ü« Check the connector.  
+´ü« Clear the dust in the sensor hole by the blower.  
+Cutter is not working  ´ü« The connector is loose.  ´ü« Plug in the connect cable correctly.  
+
+================================================================================
+PAGE 62
+================================================================================
+ 
+ 57 
+8. Maintenance  
+ 
+This session presents the clean tools and methods to maintain the printer.  
+´ü« For Cleaning  
+Depending  on the media  used,  the printer  may accumulate  residues  (media  dust,  adhesives,  etc.) as a by-product  of normal  
+printing.  To maintain  the best printing  quality,  you should  remove  these  residues  by cleaning  the printer  periodically. Regularly 
+clean the print head and supply sensors once change a new media to keep the printer at the optimized performance and extend 
+printer life.  
+´ü« For Disinfecting  
+Sanitize your printer to protect yourself and others and can help prevent the spread of viruses.  
+´ü« Important  
+- Set the printer  power switch to O (Off) prior to performing any cleaning or disinfecting tasks. Leave the power cord 
+connected to keep the printer grounded and to reduce the risk of electrostatic damage.  
+- Do not wear rings or other metallic objects while cleaning any inte rior area of the printer.  
+- Use only the cleaning agents recommended in this document. Use of other agents may damage the printer and void its 
+warranty.  
+- Do not spray or drip liquid cleaning solutions directly into the printer. Apply the solution on a clean l int-free cloth and then 
+apply the dampened cloth to the printer.  
+- Do not use canned air in the interior of the printer as it can blow dust and debris onto sensors and other critical 
+components.  
+- Only use a vacuum cleaner with a nozzle and hose that are condu ctive and grounded to drain off static build up.  
+- All reference in these procedures for use of isopropyl alcohol requires that a 99% or greater isopropyl alcohol content be 
+used to reduce the risk of moisture corrosion to the printhead.  
+- Do not touch printhe ad by hand. If you touch it careless, please use 99% Isopropyl alcohol to clean it.  
+- Always taking personal precaution when using any cleaning agent.  
+  
+
+================================================================================
+PAGE 63
+================================================================================
+ 
+ 58 
+Cleaning Tools  
+´ü« Cotton swab  
+´ü« Lint-free cloth  
+´ü« Brush with soft non -metallic bristles  
+´ü« Vacuum cleaner  
+´ü« 75% Ethan ol (for disinfecting)  
+´ü« 99% Isopropyl alcohol (for printhead and platen roller cleaning)  
+´ü« Genuine printhead cleaning pen  
+´ü« Mild detergent (without chlorine)  
+ 
+Cleaning Process :  
+ 
+Printer Part  Method  Interval  
+Print Head  I. Always turn off the printer before cleaning the printhead.  
+II. Allow the printhead to cool for at least one minute.  
+III. Use a cotton swab and 99% Isopropyl Alcohol or genuine print head cleaning pen to 
+clean the print head surface.  Clean the print head when 
+changi ng a new label roll.  
+Platen Roller  I. Turn off the printer.  
+II. Rotate the platen roller and wipe it thoroughly with the lint -free 99% Isopropyl Alcohol.  Clean the platen roller 
+when changing a new 
+label roll  
+Peel Bar  Use the lint -free cloth with 99% Isopropyl Alcohol to wipe it.  As needed  
+Sensor  Use brush with soft non -metallic bristles or a vacuum cleaner, to remove paper dust.  
+Clean upper and lower media sensors to ensure reliable Top of Form and Paper Out sensing.  Monthly  
+Exterior  Clean the exterior surfaces with a clean, lint -free cloth (water -dampened cloth). If necessary, 
+use a mild detergent or desktop cleaning solution then use the 75% Ethanol to wipe it.  As needed  
+Interior  Clean the interior of the printer by removing any dirt and lint with a vacuum cleaner, as 
+described above, or use a brush with soft non -metallic bristles then use the 75% Ethanol to 
+wipe it.  As needed  
+ 
+
+================================================================================
+PAGE 64
+================================================================================
+ 
+ 59 
+9. Angency Compli ance and Approvals  
+ 
+ EN 55022   (Class A) 
+EN 55024  
+EN 61000 -3-2 / EN 61000 -3-3 
+EN 60950 -1 
+ 
+This is a class A product. In a domestic environment this product may cause radio interference in which case 
+the user may be required to take adequate measures.  
+ FCC CFR Title 47 Part 15B, Class A  
+ICES -003, Class A  
+ 
+This equipment has been tested and found to comply with the limits for a Class A digital device, pursuant to 
+Part 15 of the FCC Rules. These limits are designed to provide reasonable protection against harmful 
+interference when the equipment is operated in a commercial environment.  
+This equipment generates, uses, and can radiate radio frequency energy and, if not installed and used in 
+accordance with the manufacturerÔÇÖs instruction manual, may cause harmful interference with radio 
+communications. Operation of this equipment in a residential area is likely to cause harmful interference, in 
+which  case you will be required to correct the interference at your own expense.  
+   
+This Class A digital apparatus complies with Canadian ICES -003. 
+Cet appareil num├®rique de la classe A est conform ├á la norme NMB -003 du Canada.  
+ AS/NZS CISPR 22  ( Class A) 
+ GB-4943.1 
+GB9254   (Class A)  
+GB17625 .1 
+µ¡ñõ©║ A þ║ºõ║ºÕôü´╝îÕ£¿þöƒµ┤╗þÄ»Õóâõ©¡´╝îÞ»Ñõ║ºÕôüÕÅ»Þâ¢õ╝ÜÚÇáµêÉµùáþ║┐þöÁÕ╣▓µë░´╝îÕ£¿Þ┐ÖþºìµâàÕåÁõ©ï´╝îÕÅ»Þâ¢Ú£ÇÞªüþö¿µêÀÕ»╣Õ╣▓µë░ÚççÕÅûÕêç
+Õ«×ÕÅ»ÞíîþÜäµÄ¬µû¢ÒÇé  
+ 
+ 
+Wichtige Sicherheits -Hinweise  
+
+
+================================================================================
+PAGE 65
+================================================================================
+ 
+ 60 
+ 
+1. Bitte lesen Sie diese Hinweis sorgf├ñltig durch.  
+2. Heben Sie diese Anleitung f┼▒r den sp├ñteren Gebrauch auf.  
+3. Vor jedem Reinigen ist das Ger├ñt vom Stromentz zu trennen. Verwenden Sie keine Fl├╝ssig -oder Aerosolreiniger. Am besten 
+eignet sich ein angefeuchtetes Tuch zur Reinigung.  
+4. Die Netzanschlu├ƒ -Steckdose soll nahe de m Ger├ñt angebracht und leicht zug├ñnglich sein.  
+5. Das Ger├ñt ist vor Feuchtigkeit zu sch┼▒tzen.  
+6. Bei der Aufstellung des Ger├ñtes ist auf sicheren Stand zu achten. Ein Kippen oder Fallen k├Ânnte Besch├ñdigungen hervorrufen . 
+7. Beachten Sie beim Anschlu├ƒ ans S tromnetz die Anschlu├ƒwerte.  
+8. Dieses Ger├ñt kann bis zu einer Au├ƒentemperatur von maximal 40 Ôäâ betrieben werden.  
+ 
+ 
+CAUTION  
+Risk of explosion if battery is replaced by an incorrect type.  
+Dispose of used batteries according to the instructions.  
+ 
+ÔÇ£VORSICHTÔÇØ  
+Explosionsgefahr  bei unsachgem├ñ├ƒen  Austaush der Batterie. Ersatz nur durch denselben oder  
+einem vom Hersteller empfohlenem ├ñhnlichen Typ. Entsorgung  gebrauchter Batterien nach Angabren des Herstellers.  
+  
+
+================================================================================
+PAGE 66
+================================================================================
+ 
+ 61 
+ 
+CAUTION:   
+Any changes or modifications not expressl y approved by the grantee of this device could  void the user's authority to operate the 
+equipment.  
+ 
+CAUTION  
+1. HAZARDOUS MOVING PARTS IN CUTTER MODULE. KEEP FINGER AND OTHER 
+BODY PARTS AWAY.  
+2. THE MAIN BOARD INCLUDES REAL TIME CLOCK FEATURE HAS LITHIUM BATTERY 
+CR2032 INSTALLED. RISK OF EXPLOSION IF BATTERY IS REPLACED BY AN 
+INCORRECT TYPE.  
+3. DISPOSE OF USED BATTERIES ACCORDING TO THE  MANUFACTURER  
+INSTRUCTIONS.  
+ 
+ 
+ 
+ 
+ 
+CAUTION:  
+This equipment is not suitable for use in locations where ch ildren are likely to be present . 
+ 
+  
+
+
+================================================================================
+PAGE 67
+================================================================================
+ 
+ 62 
+10. Revise History  
+ 
+Date  Content  Editor  
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 

@@ -1,0 +1,25 @@
+{
+    "system": "SGA_Production",
+    "database_type": "Microsoft SQL Server",
+    "driver": "ODBC Driver 17 for SQL Server",
+    "server": "192.168.2.237",
+    "database": "SGA_Database",
+    "authentication": {
+        "type": "SQL Server Authentication",
+        "username": "sga_app_user",
+        "password": "QuimicaBoss_2026!"
+    },
+    "connection_strings": {
+        "sqlalchemy": "mssql+pyodbc://sga_app_user:QuimicaBoss_2026!@192.168.2.237/SGA_Database?driver=ODBC+Driver+17+for+SQL+Server&TrustServerCertificate=yes",
+        "pyodbc": "DRIVER={ODBC Driver 17 for SQL Server};SERVER=192.168.2.237;DATABASE=SGA_Database;UID=sga_app_user;PWD=QuimicaBoss_2026!;TrustServerCertificate=yes"
+    },
+    "required_packages": [
+        "pyodbc",
+        "sqlalchemy",
+        "pandas"
+    ],
+    "tables": [
+        "order_status",
+        "products_master"
+    ]
+}

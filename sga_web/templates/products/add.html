@@ -1,0 +1,174 @@
+<!-- products/add.html -->
+{% extends "base.html" %}
+
+{% block title %}Agregar Producto{% endblock %}
+{% block page_title %}Agregar Nuevo Producto{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl" x-data="productEditor()">
+    <!-- Back button -->
+    <a href="{{ url_for('products.index') }}" 
+       class="inline-flex items-center text-slate-600 hover:text-slate-800 mb-6">
+        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Cancelar y Volver
+    </a>
+
+    <div class="bg-white rounded-xl shadow-sm p-8">
+        <form @submit.prevent="saveProduct">
+            
+            <!-- Basic Info -->
+            <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-2">Información Básica</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Internal Code (Writable for new product) -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Código Interno</label>
+                    <input type="text" x-model="formData['Codigo interno']" required
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        placeholder="ej. IFF-QB00123">
+                </div>
+
+                <!-- Chemical Name -->
+                <div class="col-span-1 md:col-span-2">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Nombre Químico</label>
+                    <input type="text" x-model="formData['Chemical Name']" required
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        placeholder="Nombre completo del producto">
+                </div>
+
+                <!-- CAS -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Número CAS</label>
+                    <input type="text" x-model="formData['CAS Number']"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                </div>
+
+                <!-- Signal Word -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Palabra de Advertencia</label>
+                    <select x-model="formData['Signal Word']"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                        <option value="">Seleccionar...</option>
+                        <option value="PELIGRO">PELIGRO</option>
+                        <option value="ATENCIÓN">ATENCIÓN</option>
+                        <option value="NO APLICABLE">NO APLICABLE</option>
+                    </select>
+                </div>
+
+                <!-- Emergency Phone -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Teléfono de Emergencia</label>
+                    <input type="text" x-model="formData['Emergencia']"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        placeholder="ej. 01 800 002 1400">
+                </div>
+            </div>
+
+            <!-- GHS Codes -->
+            <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-2 pt-4">Códigos GHS</h3>
+            <div class="grid grid-cols-1 gap-6 mb-6">
+                <!-- H Statements -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Indicaciones de Peligro (H) <span class="text-xs text-slate-500 font-normal">(Separados por coma, ej: H225, H319)</span></label>
+                    <textarea x-model="formData['H-Statements']" rows="3"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-mono text-sm"></textarea>
+                </div>
+
+                <!-- P Statements -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Consejos de Prudencia (P) <span class="text-xs text-slate-500 font-normal">(Separados por coma, ej: P210, P305)</span></label>
+                    <textarea x-model="formData['Consejos (Frases P)']" rows="3"
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-mono text-sm"></textarea>
+                </div>
+            </div>
+
+            <!-- Pictograms -->
+            <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b pb-2 pt-4">Pictogramas</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                <template x-for="pic in pictogramsList" :key="pic">
+                    <label class="flex flex-col items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-50 transition-colors"
+                        :class="{'border-blue-500 bg-blue-50': formData[pic] === 'X', 'border-slate-200': formData[pic] !== 'X'}">
+                        <input type="checkbox" class="hidden" 
+                            :checked="formData[pic] === 'X'"
+                            @change="formData[pic] = $event.target.checked ? 'X' : ''">
+                        
+                        <div class="w-12 h-12 flex items-center justify-center mb-2">
+                             <img :src="'/api/pictograms/' + pic" :alt="pic" class="w-full h-full object-contain">
+                        </div>
+                        <span x-text="pic" class="text-xs text-center font-semibold text-slate-700"></span>
+                    </label>
+                </template>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-end gap-3 pt-4 border-t">
+                <a href="{{ url_for('products.index') }}" 
+                   class="px-5 py-2.5 text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-colors">
+                    Cancelar
+                </a>
+                <button type="submit" :disabled="saving"
+                    class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-sm transition-all flex items-center disabled:opacity-70 disabled:cursor-not-allowed">
+                    <span x-show="saving" class="mr-2 animate-spin">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    </span>
+                    <span x-text="saving ? 'Guardando...' : 'Crear Producto'"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function productEditor() {
+    return {
+        saving: false,
+        pictogramsList: [
+            'Exclamación', 'Corrosión', 'Peligro para la salud', 'Calavera', 
+            'Llama', 'Ambiente', 'Llama sobre círculo', 'Bomba explotando', 'Cilindro de gas'
+        ],
+        formData: {
+            'Codigo interno': '',
+            'Chemical Name': '',
+            'CAS Number': '',
+            'Signal Word': '',
+            'Emergencia': '',
+            'H-Statements': '',
+            'Consejos (Frases P)': '',
+            
+            // Initialize pictograms
+            {% for pic in ['Exclamación', 'Corrosión', 'Peligro para la salud', 'Calavera', 'Llama', 'Ambiente', 'Llama sobre círculo', 'Bomba explotando', 'Cilindro de gas'] %}
+            '{{ pic }}': '',
+            {% endfor %}
+        },
+        
+        async saveProduct() {
+            this.saving = true;
+            try {
+                const res = await fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.formData)
+                });
+                
+                const data = await res.json();
+                
+                if (res.ok && data.success) {
+                    // Redirect to detail of new product
+                    window.location.href = "/products/" + data.code;
+                } else {
+                    alert('Error: ' + (data.error || 'No se pudo guardar'));
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Error de conexión');
+            } finally {
+                this.saving = false;
+            }
+        }
+    }
+}
+</script>
+{% endblock %}

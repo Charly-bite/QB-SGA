@@ -1,0 +1,98 @@
+{
+  "sql_migration_plan": {
+    "title": "SGA Microsoft SQL Server Migration Plan",
+    "description": "Migration of flat-file database (CSV/JSON) to a robust relational database in Microsoft SQL Server (Express or Standard).",
+    "phases": [
+      {
+        "phase_id": 1,
+        "name": "SQL Server Setup",
+        "tasks": [
+          {
+            "task": "Install Database Engine",
+            "description": "Install Microsoft SQL Server Express or Standard on target machine."
+          },
+          {
+            "task": "Create Database",
+            "description": "Create the new database 'SGA_Database' in SQL Server. Enable Mixed Mode Authentication to allow an isolated application SQL user."
+          },
+          {
+            "task": "System ODBC & Drivers",
+            "description": "Install `ODBC Driver 17 for SQL Server` on the host machine. Run `pip install pyodbc sqlalchemy` in the virtual environment to support fast DataFrame transfers via Pandas."
+          }
+        ]
+      },
+      {
+        "phase_id": 2,
+        "name": "Schema Implementation (DDL)",
+        "tasks": [
+          {
+            "task": "Catalog Tables (Master Data)",
+            "description": "Create tables for fixed catalogs: `h_statements`, `p_statements`, and `pictograms`. These represent the absolute master dictionary of GHS codes."
+          },
+          {
+            "task": "Product Master Table",
+            "description": "Create `products_master` table with columns like `product_id` (Primary Key), `name`, `signal_word`, `un_number`, `cas_number`."
+          },
+          {
+            "task": "Relational Foreign Key Tables",
+            "description": "Create junction tables mapping Products to GHS elements: `product_hazards` (FK ProductID -> FK H-Code), `product_precautions` (FK -> FK P-Code), `product_pictograms` (FK -> FK PictogramName), and `product_variants` (mapping father SKUs to son SKUs)."
+          },
+          {
+            "task": "Batch & Lot Tracking Tables",
+            "description": "Create `product_lotes` table specifically extracted from `product_classifications.json` to handle batch control (1-to-many relation: ProductID -> Lote Number, Elaboration Date, Inspection Date)."
+          },
+          {
+            "task": "State Application Tables",
+            "description": "Replace JSON files with SQL Tables: `users` (Authentication), `print_history` (Audit Log), and `order_statuses` (Live state tracker substitute for order_status_db.json)."
+          }
+        ]
+      },
+      {
+        "phase_id": 3,
+        "name": "Data Seeding & Migration Tooling",
+        "tasks": [
+          {
+            "task": "Develop Migration Script",
+            "description": "Create `sql_migrator.py` to parse current CSVs and dump them cleanly into SQL using `pd.to_sql(name, engine, if_exists='append', index=False)`. It must handle data type casting (e.g., ensuring H-codes stay as Strings, not floats)."
+          },
+          {
+            "task": "Parse Product Classifications",
+            "description": "Convert `product_classifications.json` into SQL rows, effectively absorbing dynamic tara weights and manual overrides into the `products_master`."
+          }
+        ]
+      },
+      {
+        "phase_id": 4,
+        "name": "Application Architecture Refactoring",
+        "tasks": [
+          {
+            "task": "Update Config Files",
+            "description": "Add SQL Connection Strings to `db_client_config.json`."
+          },
+          {
+            "task": "Refactor Database Client",
+            "description": "Completely overhaul `database_client.py` and `smart_label.py`. Instead of iterating through loaded pandas global state, formulate `SELECT` and `JOIN` statements via SQLAlchemy."
+          },
+          {
+            "task": "Refactor Managers",
+            "description": "Update `user_manager.py`, `history_manager.py`, and `tara_weight_manager.py` to perform SQL `UPDATE`/`INSERT` commands instead of JSON `json.dump()` file overwrites."
+          }
+        ]
+      },
+      {
+        "phase_id": 5,
+        "name": "Testing & Deprecation",
+        "tasks": [
+          {
+            "task": "Parallel Run",
+            "description": "Run identical label generation logic. Compare SQL return output vs old flat-file return output using `pytest` asserting dictionary matches."
+          },
+          {
+            "task": "Deprecate File System",
+            "description": "Once validated in production, archive `unified_db/` folder to cold storage. Clean up legacy JSON files across the local operational directories."
+          }
+        ]
+      }
+    ]
+  }
+}

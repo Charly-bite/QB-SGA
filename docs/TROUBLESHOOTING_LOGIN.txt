@@ -1,0 +1,145 @@
+╔═══════════════════════════════════════════════════════════════╗
+║         SOLUCIÓN DE PROBLEMAS - LOGIN NO APARECE              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✅ PROBLEMA SOLUCIONADO
+
+El sistema ha sido refactorizado para evitar que la consola se
+quede bloqueada. Ahora el login aparece ANTES de crear la ventana
+principal.
+
+┌───────────────────────────────────────────────────────────────┐
+│ 🔧 CAMBIOS REALIZADOS                                          │
+├───────────────────────────────────────────────────────────────┤
+│                                                                │
+│  1. Login se muestra en ventana temporal independiente        │
+│  2. Ventana principal solo se crea DESPUÉS del login exitoso  │
+│  3. Eliminada la complejidad de callbacks asíncronos          │
+│  4. Mejor manejo de errores y cierre de ventanas              │
+│                                                                │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ 🚀 CÓMO INICIAR EL SISTEMA                                     │
+├───────────────────────────────────────────────────────────────┤
+│                                                                │
+│  Método 1: Script de inicio                                   │
+│    ./start                                                     │
+│                                                                │
+│  Método 2: Directamente con Python                            │
+│    python3 ghs_label_gui.py                                   │
+│                                                                │
+│  ¿Qué debería pasar?                                          │
+│    1. Aparece ventana de login (pequeña, centrada)           │
+│    2. Ingresa: admin / admin123                               │
+│    3. Se cierra ventana de login                              │
+│    4. Aparece ventana principal del SGA                       │
+│                                                                │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ 🧪 PROBAR SOLO EL LOGIN                                        │
+├───────────────────────────────────────────────────────────────┤
+│                                                                │
+│  Si quieres probar que el login funciona sin cargar toda      │
+│  la aplicación:                                               │
+│                                                                │
+│    python3 test_login_standalone.py                           │
+│                                                                │
+│  Este script:                                                 │
+│    • Muestra solo la ventana de login                        │
+│    • No carga la aplicación completa                         │
+│    • Más rápido para probar                                  │
+│    • Muestra mensaje de éxito si funciona                    │
+│                                                                │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ ⚠️ SI AÚN NO APARECE EL LOGIN                                 │
+├───────────────────────────────────────────────────────────────┤
+│                                                                │
+│  1. Verificar que tienes instalado Tkinter:                  │
+│     python3 -c "import tkinter; print('OK')"                 │
+│                                                                │
+│  2. Verificar que tienes las dependencias:                    │
+│     pip install Pillow                                        │
+│                                                                │
+│  3. Limpiar archivos temporales:                             │
+│     rm -f users.json __pycache__/*.pyc                       │
+│     python3 ghs_label_gui.py                                 │
+│                                                                │
+│  4. Verificar permisos de ejecución:                         │
+│     chmod +x start                                            │
+│     ./start                                                   │
+│                                                                │
+│  5. Buscar errores en consola:                               │
+│     python3 ghs_label_gui.py 2>&1 | tee error.log           │
+│                                                                │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ 🔍 DIAGNÓSTICO PASO A PASO                                     │
+├───────────────────────────────────────────────────────────────┤
+│                                                                │
+│  Paso 1: Verificar imports                                    │
+│    python3 -c "import user_manager; print('✓')"              │
+│    python3 -c "import login_dialog; print('✓')"              │
+│                                                                │
+│  Paso 2: Probar login solo                                   │
+│    python3 test_login_standalone.py                          │
+│                                                                │
+│  Paso 3: Si lo anterior funciona, probar app completa        │
+│    python3 ghs_label_gui.py                                  │
+│                                                                │
+│  Si algún paso falla, anota el error exacto y revisa el log  │
+│                                                                │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ 💡 PROBLEMAS COMUNES Y SOLUCIONES                              │
+├───────────────────────────────────────────────────────────────┤
+│                                                                │
+│  Problema: "Display not found" o "No module named _tkinter"  │
+│  Solución: Tkinter no está instalado                         │
+│    • Ubuntu/Debian: sudo apt install python3-tk              │
+│    • Fedora/RHEL: sudo dnf install python3-tkinter           │
+│    • Arch: sudo pacman -S tk                                 │
+│                                                                │
+│  Problema: Login aparece pero está en blanco                 │
+│  Solución: Problema con Pillow                                │
+│    pip install --upgrade Pillow                               │
+│                                                                │
+│  Problema: Console se queda en "Default admin account..."    │
+│  Solución: SOLUCIONADO con la nueva versión                  │
+│    Actualiza los archivos y reinicia                         │
+│                                                                │
+│  Problema: "Password incorrect" con admin/admin123           │
+│  Solución: users.json puede estar corrupto                   │
+│    rm users.json                                              │
+│    python3 ghs_label_gui.py                                  │
+│                                                                │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ 📞 INFORMACIÓN DE SOPORTE                                      │
+├───────────────────────────────────────────────────────────────┤
+│                                                                │
+│  Archivos modificados en esta corrección:                    │
+│    • ghs_label_gui.py (login refactorizado)                  │
+│    • login_dialog.py (mejoras de visibilidad)                │
+│                                                                │
+│  Archivos de prueba creados:                                 │
+│    • test_login_standalone.py                                 │
+│    • test_login.py                                            │
+│                                                                │
+│  Si necesitas más ayuda:                                     │
+│    1. Ejecuta: python3 ghs_label_gui.py 2>&1 > debug.log    │
+│    2. Envía el archivo debug.log                             │
+│    3. Indica tu sistema operativo y versión de Python        │
+│                                                                │
+└───────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════╗
+║  El sistema ahora debería funcionar correctamente.            ║
+║  El login aparecerá inmediatamente al iniciar.                ║
+╚═══════════════════════════════════════════════════════════════╝

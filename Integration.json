@@ -1,0 +1,651 @@
+{
+  "_metadata": {
+    "title": "SGA × SAP HANA Integration Master Plan",
+    "version": "1.0",
+    "created": "2026-02-23",
+    "author": "SGA Development Team",
+    "sap_host": "20.0.1.9:30015",
+    "sap_schema": "SBO_QUIMICABOSS",
+    "sap_driver": "hdbcli (SAP HANA Python Client)",
+    "total_sap_tables_available": 3052,
+    "total_items_in_sap": 1151,
+    "batch_managed_items": 833
+  },
+
+  "database_discovery": {
+    "schema": "SBO_QUIMICABOSS",
+    "other_schemas_available": [
+      "PRUEBAS_QUIMICABOSS",
+      "TEST_QUIMICABOSS",
+      "SAP_REST_API",
+      "SBOCOMMON"
+    ],
+    "key_tables": {
+      "item_master": {
+        "OITM": { "description": "Item Master Data", "rows": 1151, "status": "AVAILABLE" },
+        "OITB": { "description": "Item Groups (ASHLAND, BASF, IFF, LUBRIZOL, etc.)", "rows": 21, "status": "AVAILABLE" },
+        "OITW": { "description": "Item Warehouse Info (Stock per warehouse)", "rows": 8057, "status": "AVAILABLE" },
+        "ITM1": { "description": "Item Prices (across 7 price lists)", "rows": 8057, "status": "AVAILABLE" },
+        "ITM12": { "description": "Item Barcodes", "rows": 0, "status": "EMPTY" }
+      },
+      "batch_serial": {
+        "OBTN": { "description": "Batch Number Master (MnfDate, ExpDate, DistNumber)", "rows": 3461, "status": "AVAILABLE" },
+        "OBTQ": { "description": "Batch Number Quantities per Warehouse", "rows": 5677, "status": "AVAILABLE" },
+        "OBTW": { "description": "Batch Number Warehouse info", "rows": 5677, "status": "AVAILABLE" },
+        "OIBT": { "description": "Item Batch Stock per Warehouse (live quantities)", "rows": 5677, "status": "AVAILABLE" },
+        "IBT1": { "description": "Batch Transaction Lines (batch↔document links)", "rows": 48740, "status": "AVAILABLE" }
+      },
+      "sales": {
+        "ORDR": { "description": "Sales Order Headers", "rows": 12295, "status": "AVAILABLE" },
+        "RDR1": { "description": "Sales Order Lines (with U_KilosPre, U_Tara, U_NumEtiqueta, U_Presentacion)", "rows": 33866, "status": "AVAILABLE" },
+        "OQUT": { "description": "Sales Quotation Headers", "rows": 15318, "status": "AVAILABLE" },
+        "QUT1": { "description": "Sales Quotation Lines", "rows": 44074, "status": "AVAILABLE" }
+      },
+      "delivery_shipping": {
+        "ODLN": { "description": "Delivery Note Headers (has Address, TrackNo)", "rows": 11512, "status": "AVAILABLE" },
+        "DLN1": { "description": "Delivery Note Lines (U_Tara, U_NumEtiqueta)", "rows": 29059, "status": "AVAILABLE" }
+      },
+      "invoicing": {
+        "OINV": { "description": "A/R Invoice Headers", "rows": 12779, "status": "AVAILABLE" },
+        "INV1": { "description": "A/R Invoice Lines", "rows": 30881, "status": "AVAILABLE" }
+      },
+      "purchasing": {
+        "OPOR": { "description": "Purchase Order Headers", "rows": 1144, "status": "AVAILABLE" },
+        "POR1": { "description": "Purchase Order Lines", "rows": 2591, "status": "AVAILABLE" },
+        "OPDN": { "description": "Goods Receipt PO (inbound receiving)", "rows": 1336, "status": "AVAILABLE" },
+        "PDN1": { "description": "Goods Receipt PO Lines", "rows": 2700, "status": "AVAILABLE" }
+      },
+      "inventory_movements": {
+        "OIGN": { "description": "Goods Issue Headers", "rows": 668, "status": "AVAILABLE" },
+        "IGN1": { "description": "Goods Issue Lines", "rows": 3447, "status": "AVAILABLE" },
+        "OIGE": { "description": "Goods Receipt Headers", "rows": 650, "status": "AVAILABLE" },
+        "IGE1": { "description": "Goods Receipt Lines", "rows": 1938, "status": "AVAILABLE" },
+        "OWTR": { "description": "Stock Transfer Headers", "rows": 971, "status": "AVAILABLE" },
+        "WTR1": { "description": "Stock Transfer Lines", "rows": 3582, "status": "AVAILABLE" }
+      },
+      "production": {
+        "OWOR": { "description": "Production Order Headers (672 orders, includes StartDate, DueDate, Status)", "rows": 672, "status": "AVAILABLE" },
+        "WOR1": { "description": "Production Order Lines (BOM components)", "rows": 2012, "status": "AVAILABLE" },
+        "OITT": { "description": "Bill of Materials Header (96 BOMs)", "rows": 96, "status": "AVAILABLE" },
+        "ITT1": { "description": "Bill of Materials Lines (276 components)", "rows": 276, "status": "AVAILABLE" }
+      },
+      "business_partners": {
+        "OCRD": { "description": "Business Partners (Customers & Suppliers)", "rows": 2087, "status": "AVAILABLE" },
+        "CRD1": { "description": "BP Addresses", "rows": 2833, "status": "AVAILABLE" }
+      },
+      "warehouse_bins": {
+        "OWHS": { "description": "Warehouses (01=General, 02=Fuera Espec, 03=MTY, 04=Irapuato, 05=Produccion, 06=Recepcion, 07=Perfumeria)", "rows": 7, "status": "AVAILABLE" },
+        "OBIN": { "description": "Bin Locations (shelving A-01 through A-14, etc.)", "rows": 493, "status": "AVAILABLE" }
+      },
+      "quality_control": {
+        "OIQR": { "description": "Quality Control Tests", "rows": 5, "status": "MINIMAL" },
+        "OIQC": { "description": "Quality Control Setup", "rows": 0, "status": "NOT_FOUND" }
+      },
+      "inventory_counting": {
+        "OINC": { "description": "Inventory Counting Headers", "rows": 11, "status": "AVAILABLE" },
+        "INC1": { "description": "Inventory Counting Lines", "rows": 1001, "status": "AVAILABLE" }
+      },
+      "attachments": {
+        "ATC1": { "description": "Document Attachments (SDS, COA PDFs linked to items)", "rows": 24644, "status": "AVAILABLE" }
+      },
+      "users": {
+        "OUSR": { "description": "SAP System Users", "rows": 47, "status": "AVAILABLE" }
+      }
+    },
+    "ghs_udfs_on_OITM": {
+      "U_Word": { "type": "NVARCHAR(30)", "purpose": "GHS Signal Word (PELIGRO/ATENCION/ADVERTENCIA/No Aplicable)", "coverage": "388/1151 (33%)" },
+      "U_Peligro": { "type": "NCLOB", "purpose": "H-Statements (Hazard phrases, comma-separated codes or full text)", "coverage": "~388 items" },
+      "U_Prudencia": { "type": "NCLOB", "purpose": "P-Statements (Precautionary phrases)", "coverage": "~388 items" },
+      "U_Pictograma1": { "type": "NVARCHAR(10)", "purpose": "GHS Pictogram 1 code (G=flame, H=health, I=environment, E=corrosion, etc.)", "coverage": "406/1151 (35%)" },
+      "U_Pictograma2": { "type": "NVARCHAR(10)", "purpose": "GHS Pictogram 2 code", "coverage": "variable" },
+      "U_Pictograma3": { "type": "NVARCHAR(10)", "purpose": "GHS Pictogram 3 code", "coverage": "variable" },
+      "U_Pictograma4": { "type": "NVARCHAR(10)", "purpose": "GHS Pictogram 4 code", "coverage": "variable" },
+      "U_TS_NumCAS": { "type": "NVARCHAR(15)", "purpose": "CAS Number", "coverage": "0/1151 (0%) - NOT POPULATED" },
+      "U_TS_NomQuim": { "type": "NVARCHAR(150)", "purpose": "Chemical Name (Nombre Químico)", "coverage": "0/1151 (0%) - NOT POPULATED" },
+      "U_TS_CMATPEL": { "type": "NVARCHAR(50)", "purpose": "Hazardous Material Code (Carta Porte)", "coverage": "partial" },
+      "U_TS_CEMBAL": { "type": "NVARCHAR(10)", "purpose": "Packaging Type Code (Carta Porte)", "coverage": "partial" },
+      "U_TS_NomIngAct": { "type": "NCLOB", "purpose": "Active Ingredient Name", "coverage": "partial" },
+      "U_TS_Fabrica": { "type": "NVARCHAR(240)", "purpose": "Manufacturer Name", "coverage": "partial" },
+      "U_TS_Presentacion": { "type": "NVARCHAR(50)", "purpose": "Product Presentation/Packaging", "coverage": "partial" },
+      "U_TS_FormaFar": { "type": "NVARCHAR(250)", "purpose": "Pharmaceutical Form", "coverage": "partial" },
+      "U_TS_CondEsp": { "type": "NCLOB", "purpose": "Special Conditions (storage, handling)", "coverage": "partial" },
+      "U_TS_FrArancelaria": { "type": "NVARCHAR(50)", "purpose": "Customs Tariff Code", "coverage": "partial" },
+      "U_TS_SecCOFEP": { "type": "NVARCHAR(250)", "purpose": "COFEPRIS Sector Code", "coverage": "partial" },
+      "U_TS_RegSanFolAut": { "type": "NVARCHAR(15)", "purpose": "Sanitary Registration Number", "coverage": "partial" },
+      "U_TS_DatoFab": { "type": "NCLOB", "purpose": "Manufacturing Data", "coverage": "partial" },
+      "U_TS_UsoAutor": { "type": "NCLOB", "purpose": "Authorized Use", "coverage": "partial" },
+      "U_TS_TipoMat": { "type": "NCLOB", "purpose": "Material Type", "coverage": "partial" }
+    },
+    "sales_order_line_udfs": {
+      "U_KilosPre": { "type": "NVARCHAR", "purpose": "Pre-calculated kilograms per line" },
+      "U_NumEtiqueta": { "type": "NVARCHAR", "purpose": "Label number/count per sales order line" },
+      "U_Presentacion": { "type": "NVARCHAR", "purpose": "Product presentation for this line" },
+      "U_Tara": { "type": "NVARCHAR", "purpose": "Tare weight per line" }
+    }
+  },
+
+  "current_integration_status": {
+    "implemented": [
+      {
+        "feature": "SAP Order Loading",
+        "endpoint": "POST /labels/sap/load",
+        "sap_method": "get_order_details()",
+        "tables_used": ["ORDR", "RDR1", "OUSR"],
+        "description": "Load a SAP sales order by DocNum, enrich items with batch/tare data, return to frontend for label queue"
+      },
+      {
+        "feature": "SAP Batch Date Lookup",
+        "endpoint": "POST /labels/sap/load (inline)",
+        "sap_method": "get_batch_dates()",
+        "tables_used": ["OBTN"],
+        "description": "Fetch Fecha de Fabricación (MnfDate) and Fecha de Vencimiento (ExpDate) from batch master per item"
+      },
+      {
+        "feature": "SAP Tare Weight Fallback",
+        "endpoint": "POST /labels/sap/load (inline)",
+        "sap_method": "Direct SQL on OITM",
+        "tables_used": ["OITM"],
+        "description": "If tare weight not in local CSV, query SAP OITM BWeight1/BWeight2 (gross/tare)"
+      },
+      {
+        "feature": "SAP Order Import to Local DB",
+        "endpoint": "POST /orders/import-sap",
+        "sap_method": "get_order_details()",
+        "tables_used": ["ORDR", "RDR1"],
+        "description": "Import single SAP order into local order status tracking database"
+      },
+      {
+        "feature": "Bulk SAP Order Sync",
+        "endpoint": "POST /orders/load-recent-sap, POST /orders/sync-sap",
+        "sap_method": "get_recent_orders(), get_order_details()",
+        "tables_used": ["ORDR", "RDR1"],
+        "description": "Bulk import/sync recent orders and their SAP status (Abierto/Cerrado/Cancelado)"
+      },
+      {
+        "feature": "Sales Visor SAP Sync",
+        "endpoint": "POST /orders/visor/sync",
+        "sap_method": "get_recent_orders(limit=50, only_open=True)",
+        "tables_used": ["ORDR", "RDR1"],
+        "description": "Lightweight sync of 50 open orders for TV dashboard display"
+      },
+      {
+        "feature": "SAP Connection Test",
+        "endpoint": "GET /api/sap/test, POST /api/sap/connect",
+        "sap_method": "connect(), test_connection()",
+        "tables_used": [],
+        "description": "Manual SAP HANA connection test and reconnect from dashboard"
+      }
+    ],
+    "not_integrated": [
+      "Product master sync from SAP OITM",
+      "Real-time stock/inventory from OITW/OIBT",
+      "GHS UDF data from OITM (U_Peligro, U_Prudencia, U_Word, U_Pictograma1-4)",
+      "Delivery note integration (ODLN/DLN1)",
+      "Invoice integration (OINV/INV1)",
+      "Purchase order receiving (OPOR/OPDN)",
+      "Batch stock per warehouse (OIBT/OBTQ)",
+      "Bin location management (OBIN)",
+      "Production order tracking (OWOR/WOR1)",
+      "Bill of Materials (OITT/ITT1)",
+      "Customer address lookup (OCRD/CRD1)",
+      "Price list lookup (ITM1/OPLN)",
+      "Attachment/SDS document linking (ATC1)",
+      "Inventory counting (OINC/INC1)",
+      "Stock transfer tracking (OWTR/WTR1)",
+      "Sales order line UDFs (U_Tara, U_NumEtiqueta, U_Presentacion, U_KilosPre)"
+    ]
+  },
+
+  "integration_plan": {
+    "phase_1_quick_wins": {
+      "title": "Phase 1 — Quick Wins (1-2 weeks)",
+      "priority": "HIGH",
+      "description": "Leverage data already in SAP to immediately improve label accuracy and reduce manual work",
+      "features": [
+        {
+          "id": "P1-01",
+          "name": "GHS Data Sync from SAP UDFs",
+          "description": "Read U_Word, U_Peligro, U_Prudencia, U_Pictograma1-4 from SAP OITM and use as primary GHS data source, falling back to local unified_db CSVs only when SAP data is missing",
+          "tables": ["OITM"],
+          "columns": ["U_Word", "U_Peligro", "U_Prudencia", "U_Pictograma1", "U_Pictograma2", "U_Pictograma3", "U_Pictograma4"],
+          "effort": "Medium",
+          "impact": "HIGH — 388 items already have GHS data in SAP. Eliminates need to maintain separate CSV for these items",
+          "implementation": [
+            "Add get_item_ghs_data(item_code) method to sap_connector.py",
+            "In SmartLabelManager, try SAP UDFs first, fallback to CSV",
+            "Map SAP pictogram codes (G/H/I/E/etc.) to pictogram filenames",
+            "Handle 'No Aplicable' signal words (skip label generation for non-hazardous)"
+          ],
+          "risks": ["SAP UDF data may have encoding issues (accented chars truncated in NCLOB)", "Pictogram code mapping needs verification (single-letter codes to PNG filenames)"],
+          "can_implement": true
+        },
+        {
+          "id": "P1-02",
+          "name": "Sales Order Line UDFs for Labels",
+          "description": "Read U_Tara (tare weight), U_NumEtiqueta (label count), U_Presentacion (packaging type), and U_KilosPre (pre-calculated kg) directly from RDR1 sales order lines",
+          "tables": ["RDR1"],
+          "columns": ["U_Tara", "U_NumEtiqueta", "U_Presentacion", "U_KilosPre"],
+          "effort": "Low",
+          "impact": "HIGH — Eliminates guessing tare weight from CSV lookup. SAP already has the correct tare per order line",
+          "implementation": [
+            "Extend get_order_details() query to include U_Tara, U_NumEtiqueta, U_Presentacion, U_KilosPre from RDR1",
+            "In /labels/sap/load, use U_Tara directly instead of CSV lookup + SAP fallback",
+            "Use U_NumEtiqueta as default copy count",
+            "Display U_Presentacion in label queue UI"
+          ],
+          "risks": ["U_Tara may be stored as string, needs parsing"],
+          "can_implement": true
+        },
+        {
+          "id": "P1-03",
+          "name": "Real-Time Batch Stock per Warehouse",
+          "description": "Show which batches are available in which warehouse with live quantities, so operators select the correct batch when generating labels",
+          "tables": ["OIBT", "OBTN"],
+          "columns": ["ItemCode", "BatchNum", "WhsCode", "Quantity", "MnfDate", "ExpDate"],
+          "effort": "Medium",
+          "impact": "HIGH — Operators currently guess batch numbers. This shows exactly which batches exist in each warehouse with FeFa/FeVe dates",
+          "implementation": [
+            "Add get_item_batches(item_code, warehouse=None) to sap_connector.py joining OIBT + OBTN",
+            "Add API endpoint GET /api/sap/batches/<item_code>?warehouse=01",
+            "Add batch picker dropdown in label queue UI (replaces free-text batch input)",
+            "Auto-populate FeFa/FeVe when batch is selected"
+          ],
+          "risks": ["Query performance for items with many batches"],
+          "can_implement": true
+        },
+        {
+          "id": "P1-04",
+          "name": "Product Master Sync (SAP → Local DB)",
+          "description": "Bulk sync product master data from SAP OITM to local unified_db CSVs. This ensures new products added in SAP are automatically available for labeling",
+          "tables": ["OITM", "OITB"],
+          "columns": ["ItemCode", "ItemName", "FrgnName", "ItmsGrpCod", "SalUnitMsr", "BWeight1", "BWeight2", "SWeight1", "ManBtchNum", "DfltWH"],
+          "effort": "Medium",
+          "impact": "MEDIUM — Currently 1,151 SAP items but local CSV may not have all. Sync eliminates manual product entry",
+          "implementation": [
+            "Add sync_products_from_sap() endpoint that queries OITM + OITB",
+            "Map SAP fields to products_master.csv columns",
+            "Merge with existing CSV (don't overwrite GHS data from local DB)",
+            "Add 'Last SAP Sync' timestamp to dashboard",
+            "Support incremental sync via UpdateDate filter"
+          ],
+          "risks": ["Must not overwrite local GHS CSV data that SAP doesn't have"],
+          "can_implement": true
+        }
+      ]
+    },
+
+    "phase_2_core_integration": {
+      "title": "Phase 2 — Core Business Integration (2-4 weeks)",
+      "priority": "MEDIUM-HIGH",
+      "description": "Deeply connect SGA with SAP business processes for inventory, deliveries, and production",
+      "features": [
+        {
+          "id": "P2-01",
+          "name": "Real-Time Inventory Dashboard",
+          "description": "Live stock levels per item per warehouse from SAP, with batch breakdown. Shows total available, committed, and on-order quantities",
+          "tables": ["OITM", "OITW", "OIBT", "OBTQ"],
+          "effort": "Medium",
+          "impact": "HIGH — Warehouse operators can see stock without opening SAP client",
+          "implementation": [
+            "Add get_stock_levels(item_code=None, warehouse=None) to sap_connector.py",
+            "New route /inventory/ with warehouse selector",
+            "Show stock cards: OnHand from OITM, per-warehouse from OITW, per-batch from OIBT",
+            "Color-code low stock items (below MinLevel from OITM)",
+            "Add stock summary to dashboard widgets"
+          ],
+          "can_implement": true
+        },
+        {
+          "id": "P2-02",
+          "name": "Delivery Note Integration",
+          "description": "When labels are printed for a SAP order, auto-create or link to the delivery note. Show which batches were assigned to each delivery",
+          "tables": ["ODLN", "DLN1", "IBT1"],
+          "columns": ["DocNum", "CardName", "Address", "TrackNo", "ItemCode", "BatchNum", "Quantity"],
+          "effort": "High",
+          "impact": "HIGH — Links label printing to the shipping process. Proves batch traceability from label → delivery → customer",
+          "implementation": [
+            "Add get_delivery_notes(order_number) to sap_connector.py via OriginNum link",
+            "Show delivery status in order detail page",
+            "Display batch allocations per delivery (from IBT1 WHERE BaseType=15)",
+            "Track which batches were labeled vs delivered",
+            "Optionally write back label-print event as delivery note comment"
+          ],
+          "risks": ["SAP DI API required for creating documents (read-only via SQL is safe, writing requires SAP Service Layer or DI API)"],
+          "can_implement_read": true,
+          "can_implement_write": false,
+          "write_requirement": "SAP Service Layer or DI API (not available via direct SQL)"
+        },
+        {
+          "id": "P2-03",
+          "name": "Production Order Tracking",
+          "description": "Track production orders (OWOR) in SGA. Show which items are being produced, their status, and link to label printing once production is complete",
+          "tables": ["OWOR", "WOR1", "OITT", "ITT1"],
+          "effort": "Medium",
+          "impact": "MEDIUM — 672 production orders exist. Links manufacturing to labeling workflow",
+          "implementation": [
+            "Add get_production_orders(status=None, item_code=None) to sap_connector.py",
+            "New route /production/ with status filters (Planned/Released/Closed)",
+            "Show BOM components per production order (WOR1 lines)",
+            "When production order is Released, auto-suggest label generation for output item",
+            "Link production batch to OBTN for traceability"
+          ],
+          "can_implement": true
+        },
+        {
+          "id": "P2-04",
+          "name": "Customer-Specific Label Profiles",
+          "description": "Some customers may require specific label formats or additional regulatory info. Link customer code from OCRD to label template preferences",
+          "tables": ["OCRD", "CRD1"],
+          "columns": ["CardCode", "CardName", "Address", "City", "Country"],
+          "effort": "Medium",
+          "impact": "MEDIUM — Enables per-customer label customization automatically when loading SAP orders",
+          "implementation": [
+            "Add customer_code field to label template selection",
+            "When loading SAP order, auto-select template by customer preferences",
+            "Store customer → template mapping in local config",
+            "Show customer info (name, address, RFC) in order detail"
+          ],
+          "can_implement": true
+        },
+        {
+          "id": "P2-05",
+          "name": "Inbound Receiving Labels (Purchase Orders)",
+          "description": "When goods arrive (OPDN), auto-generate receiving labels with batch info, supplier name, and incoming inspection dates",
+          "tables": ["OPDN", "PDN1", "OPOR", "POR1", "OBTN"],
+          "effort": "Medium",
+          "impact": "MEDIUM — 1,336 goods receipts exist. Labels for incoming material with supplier batch → internal batch mapping",
+          "implementation": [
+            "Add get_goods_receipts(days_back=30) to sap_connector.py",
+            "New endpoint POST /labels/receiving/load to load a goods receipt",
+            "Generate receiving labels with: ItemCode, Supplier Batch, Internal Batch, MnfDate, ExpDate, Warehouse",
+            "Link to bin location assignment"
+          ],
+          "can_implement": true
+        }
+      ]
+    },
+
+    "phase_3_advanced": {
+      "title": "Phase 3 — Advanced Integration (1-2 months)",
+      "priority": "MEDIUM",
+      "description": "Advanced features that require deeper SAP integration or business process changes",
+      "features": [
+        {
+          "id": "P3-01",
+          "name": "Bin Location Tracking",
+          "description": "Integrate bin locations (OBIN) with SGA. When scanning a product, show its physical location in the warehouse and suggest bin placement",
+          "tables": ["OBIN", "OIBQ"],
+          "effort": "High",
+          "impact": "HIGH for warehouse operations — 493 bin locations available. Enables pick/put-away optimization",
+          "implementation": [
+            "Add get_bin_locations(warehouse=None) and get_item_bin(item_code) to sap_connector.py",
+            "Show bin location on label detail and in inventory dashboard",
+            "Add bin location QR code to GHS labels (optional template field)",
+            "Scan-to-locate: scan barcode → show bin location"
+          ],
+          "can_implement": true
+        },
+        {
+          "id": "P3-02",
+          "name": "Bill of Materials (BOM) Hazard Roll-up",
+          "description": "For compound/mixed products (OITT/ITT1), automatically aggregate GHS hazard data from component items to generate the mixture label",
+          "tables": ["OITT", "ITT1", "OITM"],
+          "effort": "Very High",
+          "impact": "HIGH for regulatory compliance — 96 BOMs exist. Auto-calculates mixture hazard classification per GHS rules",
+          "implementation": [
+            "Add get_bom(item_code) to sap_connector.py",
+            "For each BOM component, fetch GHS data (U_Peligro, U_Word, etc.)",
+            "Apply GHS mixture classification rules (additivity, cutoff concentrations)",
+            "Generate combined hazard profile for the finished product",
+            "Flag BOM products that need label review when components change"
+          ],
+          "risks": ["GHS mixture classification rules are complex (requires Chapter 3 GHS logic)", "May need chemist review for accuracy"],
+          "can_implement": true,
+          "requires_domain_expertise": true
+        },
+        {
+          "id": "P3-03",
+          "name": "Full Batch Traceability Chain",
+          "description": "Complete traceability from purchase → receipt → production → label → delivery using IBT1 transaction lines. Answer: 'Which customer received batch X?'",
+          "tables": ["IBT1", "OBTN", "OPDN", "PDN1", "OWOR", "WOR1", "ODLN", "DLN1"],
+          "effort": "High",
+          "impact": "CRITICAL for recalls — Given a batch number, trace forward (who received it) and backward (where it came from)",
+          "implementation": [
+            "Add trace_batch(item_code, batch_number, direction='forward') to sap_connector.py",
+            "Query IBT1 for all documents touching this batch (BaseType: 20=GR PO, 59=Goods Receipt, 60=Goods Issue, 15=Delivery, 202=Production)",
+            "Build traceability tree: Supplier → Receipt → Production → Label → Delivery → Customer",
+            "New route /traceability/<batch> with visual chain diagram",
+            "Recall assistant: select batch → show all affected customers and deliveries"
+          ],
+          "can_implement": true
+        },
+        {
+          "id": "P3-04",
+          "name": "SDS/CoA Document Attachment Linking",
+          "description": "Link Safety Data Sheets (SDS) and Certificates of Analysis (CoA) from SAP attachments (ATC1) to products, making them accessible in the SGA web interface",
+          "tables": ["ATC1", "OITM"],
+          "columns": ["AbsEntry", "FileName", "FileExt", "srcPath", "trgtPath"],
+          "effort": "Medium",
+          "impact": "MEDIUM — 24,644 attachments exist in SAP. Direct access to SDS/CoA without opening SAP client",
+          "implementation": [
+            "Add get_item_attachments(item_code) to sap_connector.py via OITM.AtcEntry → ATC1",
+            "Show attachment list on product detail page (filter for PDF/DOC)",
+            "Serve attachment files via SGA web (read from SAP file share path)",
+            "Optionally embed SDS link/QR code on GHS label"
+          ],
+          "risks": ["File paths in ATC1 may reference SAP server file system — need network access to attachment folder"],
+          "can_implement": true
+        },
+        {
+          "id": "P3-05",
+          "name": "Stock Transfer Labels",
+          "description": "When stock is transferred between warehouses (OWTR/WTR1), auto-generate transfer labels with source→destination warehouse, batch info, and bin location",
+          "tables": ["OWTR", "WTR1", "IBT1"],
+          "effort": "Medium",
+          "impact": "MEDIUM — 971 transfers recorded. Ensures batch labels are updated when items move between warehouses",
+          "implementation": [
+            "Add get_stock_transfers(days_back=30) to sap_connector.py",
+            "New endpoint for loading transfer documents into label queue",
+            "Transfer label template: source warehouse → destination warehouse + batch"
+          ],
+          "can_implement": true
+        },
+        {
+          "id": "P3-06",
+          "name": "Expiry Date Watchdog & Alerts",
+          "description": "Monitor batch expiry dates (OBTN.ExpDate) and alert when batches are approaching expiration. Suggest relabeling or quarantine actions",
+          "tables": ["OBTN", "OIBT", "OBTQ"],
+          "effort": "Medium",
+          "impact": "HIGH for compliance — Proactive expiry management prevents shipping expired material",
+          "implementation": [
+            "Scheduled job queries OBTN WHERE ExpDate < CURRENT_DATE + 30 days AND status=active",
+            "Dashboard widget showing batches expiring soon (30/60/90 days)",
+            "Email/notification alerts for critical expiry items",
+            "Link to re-inspection label generation",
+            "Batch status update (quarantine expired batches)"
+          ],
+          "can_implement": true
+        }
+      ]
+    },
+
+    "phase_4_write_back": {
+      "title": "Phase 4 — SAP Write-Back Features (requires SAP Service Layer)",
+      "priority": "LOW",
+      "description": "Features that require WRITING data back to SAP. These need SAP Service Layer or DI API access, which is NOT available via direct hdbcli SQL queries (read-only). These are listed for planning but cannot be implemented with current direct DB connection",
+      "features": [
+        {
+          "id": "P4-01",
+          "name": "Auto-Create Delivery Notes from SGA",
+          "description": "When labels are printed and verified, automatically create a delivery note (ODLN) in SAP",
+          "tables": ["ODLN", "DLN1"],
+          "effort": "Very High",
+          "impact": "HIGH — Bridges the gap between label printing and shipping documentation",
+          "can_implement": false,
+          "requirement": "SAP Service Layer REST API or SAP DI API (COM/.NET). Cannot INSERT into SAP tables directly via SQL — SAP validation and posting logic would be bypassed",
+          "alternative": "For now, show a 'Ready to Ship' status in SGA that warehouse supervisors use as a signal to create the delivery in SAP client"
+        },
+        {
+          "id": "P4-02",
+          "name": "Write Batch Info from Label Back to SAP",
+          "description": "When a new batch is assigned during labeling, write the batch number back to SAP OBTN or update batch attributes",
+          "tables": ["OBTN"],
+          "effort": "High",
+          "can_implement": false,
+          "requirement": "SAP Service Layer or DI API",
+          "alternative": "Export batch assignments as CSV report for SAP data import"
+        },
+        {
+          "id": "P4-03",
+          "name": "Update Order Status from SGA",
+          "description": "When all items in an order are labeled and ready, update the SAP order status or add a comment",
+          "tables": ["ORDR"],
+          "effort": "Medium",
+          "can_implement": false,
+          "requirement": "SAP Service Layer or DI API",
+          "alternative": "Use the existing local order_status tracking and sync SAP status read-only"
+        },
+        {
+          "id": "P4-04",
+          "name": "Populate GHS UDFs in SAP from SGA",
+          "description": "When GHS data is entered/updated in SGA's local database, push it back to SAP OITM UDFs (U_Peligro, U_Word, etc.)",
+          "tables": ["OITM"],
+          "effort": "High",
+          "can_implement": false,
+          "requirement": "SAP Service Layer or DI API",
+          "alternative": "Export GHS data as structured file for SAP import via DTW (Data Transfer Workbench)"
+        }
+      ]
+    }
+  },
+
+  "technical_recommendations": {
+    "connection_improvements": [
+      {
+        "id": "T-01",
+        "title": "Connection Pool / Singleton Pattern",
+        "description": "Current code reconnects on every endpoint. Implement a connection pool or singleton with auto-reconnect and health checks",
+        "effort": "Low",
+        "priority": "HIGH"
+      },
+      {
+        "id": "T-02",
+        "title": "Refactor Raw SQL in labels.py",
+        "description": "The tare weight fallback query in labels.py uses raw SQL directly on OITM via cursor. Move this to a sap_connector.py method (get_item_weights) for consistency",
+        "effort": "Low",
+        "priority": "MEDIUM"
+      },
+      {
+        "id": "T-03",
+        "title": "Add Authentication to Public Sync Endpoint",
+        "description": "POST /orders/api/public/sync triggers unauthenticated SAP queries — add API key or rate limiting to prevent abuse",
+        "effort": "Low",
+        "priority": "HIGH (security)"
+      },
+      {
+        "id": "T-04",
+        "title": "SAP Query Caching Layer",
+        "description": "Add Redis or in-memory TTL cache for frequently accessed SAP data (product master, stock levels) to reduce database load. Cache 5-15 minutes for stock, 1 hour for product master",
+        "effort": "Medium",
+        "priority": "MEDIUM"
+      },
+      {
+        "id": "T-05",
+        "title": "SAP Service Layer Evaluation",
+        "description": "Evaluate setting up SAP Business One Service Layer (REST API) on the SAP server for Phase 4 write-back features. Service Layer runs on the same server and provides safe document creation with full SAP validation",
+        "effort": "High (infrastructure)",
+        "priority": "LOW (future)"
+      }
+    ],
+    "data_quality": [
+      {
+        "id": "D-01",
+        "title": "Populate U_TS_NumCAS and U_TS_NomQuim in SAP",
+        "description": "CAS Number and Chemical Name UDFs are 0% populated in SAP. SGA's local CSV has this data. Plan a bulk upload via SAP DTW to populate these fields",
+        "effort": "Low (data entry)",
+        "data_source": "unified_db/products_master.csv → SAP OITM UDFs"
+      },
+      {
+        "id": "D-02",
+        "title": "Standardize Pictogram Code Mapping",
+        "description": "SAP uses single-letter codes (G, H, I, E) for pictograms while SGA uses full names (flame, health_hazard, etc.). Create and maintain a mapping table",
+        "sap_codes_observed": {
+          "G": "flame (GHS02)",
+          "H": "health_hazard (GHS08)",
+          "I": "environment (GHS09)",
+          "E": "corrosion (GHS05)",
+          "g": "exclamation_mark (GHS07)",
+          "h": "skull_crossbones (GHS06)",
+          "1": "No pictogram / not applicable"
+        }
+      },
+      {
+        "id": "D-03",
+        "title": "Batch Date Quality Review",
+        "description": "Some OBTN rows have MnfDate in the future (2027-2029) which appear to be data entry errors. Add validation when displaying batch dates in SGA",
+        "example": "VAR-QB00056 batch DAV05/25 has MnfDate=2029-07-04 which is likely incorrect"
+      }
+    ]
+  },
+
+  "warehouses": {
+    "01": { "name": "ALMACÉN GENERAL", "location": "Guadalajara" },
+    "02": { "name": "ALMACEN FUERA DE ESPECIFICACION", "location": "Guadalajara", "note": "Out-of-spec / quarantine" },
+    "03": { "name": "ALMACÉN DE MONTERREY", "location": "Monterrey" },
+    "04": { "name": "ALMACÉN DE IRAPUATO", "location": "Irapuato" },
+    "05": { "name": "ALMACÉN DE PRODUCCION", "location": "Guadalajara", "note": "Production/mixing" },
+    "06": { "name": "ALMACÉN DE RECEPCIÓN", "location": "Guadalajara", "note": "Inbound receiving" },
+    "07": { "name": "ALMACÉN DE PERFUMERÍA", "location": "Guadalajara", "note": "Fragrances" }
+  },
+
+  "item_groups": {
+    "101": "ASHLAND",
+    "102": "BASF",
+    "103": "IFF",
+    "104": "LUBRIZOL",
+    "105": "QUIMIKAO",
+    "106": "VARIOS",
+    "107": "GASTOS",
+    "108": "ACTIVO FIJO",
+    "109": "SERVICIOS",
+    "110": "ARM",
+    "111": "APC",
+    "112": "CSM",
+    "113": "DET",
+    "115": "EIOS",
+    "116": "FNF",
+    "117": "INP",
+    "118": "PETROCIT",
+    "119": "PRD",
+    "120": "SCP",
+    "121": "SVT",
+    "122": "QBOSS"
+  },
+
+  "implementation_priority_matrix": {
+    "high_impact_low_effort": ["P1-02 (Order Line UDFs)", "T-02 (Refactor raw SQL)", "T-03 (Auth public endpoint)"],
+    "high_impact_medium_effort": ["P1-01 (GHS UDF Sync)", "P1-03 (Batch Stock Picker)", "P2-01 (Inventory Dashboard)", "P3-06 (Expiry Watchdog)"],
+    "high_impact_high_effort": ["P2-02 (Delivery Integration)", "P3-02 (BOM Hazard Roll-up)", "P3-03 (Full Traceability)"],
+    "medium_impact_low_effort": ["P1-04 (Product Sync)", "T-01 (Connection Pool)"],
+    "medium_impact_medium_effort": ["P2-03 (Production Orders)", "P2-04 (Customer Profiles)", "P2-05 (Receiving Labels)", "P3-04 (SDS Documents)", "P3-05 (Transfer Labels)"],
+    "blocked_needs_service_layer": ["P4-01 (Create Deliveries)", "P4-02 (Write Batches)", "P4-03 (Update Orders)", "P4-04 (Push GHS to SAP)"]
+  },
+
+  "recommended_execution_order": [
+    { "order": 1, "id": "T-03", "name": "Secure public sync endpoint", "why": "Security fix — do first" },
+    { "order": 2, "id": "P1-02", "name": "Order Line UDFs (U_Tara, U_NumEtiqueta)", "why": "Immediate accuracy improvement, low effort" },
+    { "order": 3, "id": "T-02", "name": "Refactor raw SQL to sap_connector", "why": "Clean architecture before adding more queries" },
+    { "order": 4, "id": "P1-03", "name": "Batch stock picker from SAP", "why": "Eliminates batch guessing, operators love this" },
+    { "order": 5, "id": "P1-01", "name": "GHS data from SAP UDFs", "why": "Single source of truth for GHS data" },
+    { "order": 6, "id": "P1-04", "name": "Product master sync", "why": "Keeps product list in sync with SAP" },
+    { "order": 7, "id": "P3-06", "name": "Expiry date watchdog", "why": "Compliance critical, uses existing OBTN data" },
+    { "order": 8, "id": "P2-01", "name": "Inventory dashboard", "why": "High visibility feature for warehouse" },
+    { "order": 9, "id": "P2-03", "name": "Production order tracking", "why": "Links manufacturing to labeling" },
+    { "order": 10, "id": "P2-02", "name": "Delivery note integration (read-only)", "why": "Traceability milestone" },
+    { "order": 11, "id": "P3-03", "name": "Full batch traceability", "why": "Regulatory compliance cornerstone" },
+    { "order": 12, "id": "P3-01", "name": "Bin location tracking", "why": "Warehouse optimization" },
+    { "order": 13, "id": "P3-02", "name": "BOM hazard roll-up", "why": "Advanced — needs chemistry knowledge" },
+    { "order": 14, "id": "P3-04", "name": "SDS/CoA document linking", "why": "Nice-to-have for complete product view" },
+    { "order": 15, "id": "T-05", "name": "Evaluate SAP Service Layer", "why": "Unlocks Phase 4 write-back features" }
+  ]
+}

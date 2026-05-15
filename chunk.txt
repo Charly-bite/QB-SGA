@@ -1,0 +1,33 @@
+placed = 0
+                for idx in range(count):
+                    picto_name = picto_names[idx]
+                    path = self.manager.get_pictogram_path(picto_name)
+                    if not path:
+                        logging.warning(f"Dynamic pictogram: no path for '{picto_name}'")
+                        continue
+
+                    picto_img = self._get_pil_image_cached(path)
+                    picto_img = picto_img.resize((picto_px, picto_px),
+                                                  PILImage.Resampling.LANCZOS)
+
+                    ox, oy = positions[idx]
+                    paste_x = cx_img + ox - picto_px // 2
+                    paste_y = cy_img + oy - picto_px // 2
+                    composite.paste(picto_img, (paste_x, paste_y), picto_img)
+                    placed += 1
+
+                if placed == 0:
+                    return
+
+                # Auto-crop to content bounding box (maximises size)
+                bbox = composite.getbbox()
+                if not bbox:
+                    return
+                composite = composite.crop(bbox)
+                logging.info(f"Dynamic pictogram composite: {placed}/{count} placed, crop={composite.size}")
+
+                # Create ImageReader instead of tempfile
+                from reportlab.lib.utils import ImageReader
+                bg = PILImage.new('RGB', composite.size, (255, 255, 255))
+                bg.paste(composite, (0, 0), composite)
+                draw_img = ImageReader(bg)

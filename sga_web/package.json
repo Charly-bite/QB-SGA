@@ -1,0 +1,19 @@
+{
+  "name": "sga_web",
+  "version": "1.0.0",
+  "description": "Web version of the GHS Label System (Sistema Global Armonizado) for warehouse operations.",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx tailwindcss -i static/css/input.css -o static/css/tailwind.css --minify && npx tailwindcss -i static/css/monitor-input.css -o static/css/monitor.css --minify",
+    "watch:css": "npx tailwindcss -i static/css/input.css -o static/css/tailwind.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.2.1",
+    "tailwindcss": "^4.2.1"
+  }
+}

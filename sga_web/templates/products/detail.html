@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.get('product_name', product.get('name', 'Producto')) }}{% endblock %}
+{% block page_title %}Detalle de Producto{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl">
+    <!-- Back button -->
+    <a href="{{ url_for('products.index') }}" 
+       class="inline-flex items-center text-slate-600 hover:text-slate-800 mb-6">
+        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Volver a Base de Datos
+    </a>
+    
+    <!-- Product Header -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800 mb-2">
+                    {{ product.get('product_name', product.get('name', 'Sin nombre')) }}
+                </h1>
+                <div class="flex items-center gap-4 text-sm text-slate-600">
+                    <span class="font-mono bg-slate-100 px-2 py-1 rounded">
+                        {{ product.get('product_id', product.get('internal_code', '-')) }}
+                    </span>
+                    <span>CAS: {{ product.get('cas', '-') }}</span>
+                </div>
+            </div>
+            
+            {% set signal = product.get('signal_word', '') %}
+            {% if signal %}
+            <span class="px-4 py-2 rounded-lg text-lg font-bold
+                {% if 'PELIGRO' in signal|upper %}bg-red-100 text-red-700 border-2 border-red-300
+                {% elif 'ATENCIÓN' in signal|upper or 'ATENCION' in signal|upper %}bg-yellow-100 text-yellow-700 border-2 border-yellow-300
+                {% else %}bg-slate-100 text-slate-600{% endif %}">
+                {{ signal }}
+            </span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Pictograms -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-semibold text-slate-800 mb-4">Pictogramas GHS</h3>
+            <div class="flex flex-wrap gap-4">
+                {% for pic in pictograms %}
+                <div class="text-center">
+                    <img src="{{ url_for('api.get_pictogram', name=pic) }}" 
+                         alt="{{ pic }}"
+                         class="w-20 h-20 ghs-pictogram mx-auto mb-2"
+                         onerror="this.parentElement.style.display='none'">
+                    <span class="text-xs text-slate-500">{{ pic }}</span>
+                </div>
+                {% else %}
+                <p class="text-slate-500">Sin pictogramas asignados</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="font-semibold text-slate-800 mb-4">Acciones</h3>
+            <div class="space-y-3">
+                <button onclick="generateLabel('{{ product.get('product_id', product.get('internal_code', '')) }}')"
+                   class="flex items-center justify-center w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                    </svg>
+                    <span id="genLabelText">Generar Etiqueta</span>
+                </button>
+                
+                {% if can_edit %}
+                <a href="{{ url_for('products.edit', code=product.get('product_id', product.get('internal_code', ''))) }}"
+                   class="flex items-center justify-center w-full py-3 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Editar Producto
+                </a>
+                
+                <button onclick="confirmDelete('{{ product.get('product_id', product.get('internal_code', '')) }}', '{{ product.get('product_name', product.get('name', '')) | e }}')"
+                   class="flex items-center justify-center w-full py-3 border border-red-300 hover:bg-red-50 text-red-600 rounded-lg transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Eliminar Producto
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- H Statements -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mt-6">
+        <h3 class="font-semibold text-slate-800 mb-4">
+            <span class="text-red-600">⚠</span> Indicaciones de Peligro (Frases H)
+        </h3>
+        <div class="space-y-2">
+            {% if h_statements %}
+                {% for code, text in zip(product.get('h_codes', []), h_statements) %}
+                <div class="flex items-start p-3 bg-red-50 rounded-lg border border-red-100">
+                    <span class="font-mono text-sm font-bold text-red-700 mr-3 min-w-[60px]">{{ code }}</span>
+                    <span class="text-slate-700">{{ text }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+            <p class="text-slate-500">Sin indicaciones de peligro</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- P Statements -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mt-6">
+        <h3 class="font-semibold text-slate-800 mb-4">
+            <span class="text-blue-600">ℹ</span> Consejos de Prudencia (Frases P)
+        </h3>
+        <div class="space-y-2">
+            {% if p_statements %}
+                {% for code, text in zip(product.get('p_codes', []), p_statements) %}
+                <div class="flex items-start p-3 bg-blue-50 rounded-lg border border-blue-100">
+                    <span class="font-mono text-sm font-bold text-blue-700 mr-3 min-w-[60px]">{{ code }}</span>
+                    <span class="text-slate-700">{{ text }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+            <p class="text-slate-500">Sin consejos de prudencia</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl p-6 max-w-md mx-4">
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">Eliminar Producto</h3>
+            <p class="text-slate-600 mb-1">¿Estás seguro de que deseas eliminar este producto?</p>
+            <p id="deleteProductName" class="font-semibold text-slate-800 mb-4"></p>
+            <p class="text-sm text-red-500 mb-6">Esta acción no se puede deshacer.</p>
+            <div class="flex gap-3 justify-center">
+                <button onclick="closeDeleteModal()"
+                    class="px-5 py-2.5 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg transition-colors">
+                    Cancelar
+                </button>
+                <button id="confirmDeleteBtn" onclick="executeDelete()"
+                    class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let deleteCode = '';
+
+function generateLabel(code) {
+    const btn = document.getElementById('genLabelText');
+    btn.textContent = 'Generando...';
+    
+    fetch(`/products/${code}/generate_label`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => { throw new Error(data.error || 'Error al generar'); });
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        // Open PDF in new tab for printing
+        const url = URL.createObjectURL(blob);
+        const printWindow = window.open(url, '_blank');
+        if (printWindow) {
+            printWindow.addEventListener('load', () => {
+                printWindow.print();
+            });
+        }
+        btn.textContent = 'Generar Etiqueta';
+    })
+    .catch(err => {
+        alert('Error: ' + err.message);
+        btn.textContent = 'Generar Etiqueta';
+    });
+}
+
+function confirmDelete(code, name) {
+    deleteCode = code;
+    document.getElementById('deleteProductName').textContent = `${code} - ${name}`;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+    deleteCode = '';
+}
+
+function executeDelete() {
+    if (!deleteCode || deleteCode.trim() === '') {
+        alert('Error: Código de producto no válido');
+        closeDeleteModal();
+        return;
+    }
+    
+    const btn = document.getElementById('confirmDeleteBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="w-4 h-4 mr-2 animate-spin" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Eliminando...';
+    
+    fetch(`/products/${deleteCode}/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = '/products/';
+        } else {
+            alert('Error: ' + (data.error || 'No se pudo eliminar'));
+            btn.disabled = false;
+            btn.innerHTML = 'Eliminar';
+            closeDeleteModal();
+        }
+    })
+    .catch(err => {
+        alert('Error de conexión: ' + err.message);
+        btn.disabled = false;
+        btn.innerHTML = 'Eliminar';
+        closeDeleteModal();
+    });
+}
+</script>
+{% endblock %}

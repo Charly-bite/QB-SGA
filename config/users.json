@@ -1,0 +1,38 @@
+{
+    "users": [
+        {
+            "username": "admin",
+            "password_hash": "01d0492d904c1902659deb43b03e7146$6f8fbfbf4b74f71e102458b77beea0630ff21ce1ed58b46f728737f6a59d4c4e",
+            "salt": "default_salt",
+            "role": "admin",
+            "full_name": "Administrator",
+            "email": "",
+            "created_at": "2026-01-19T09:27:01.577184",
+            "last_login": "2026-01-19T11:00:17.022871",
+            "is_active": true,
+            "must_change_password": false
+        },
+        {
+            "username": "Prueba",
+            "password_hash": "e4ffb4448eb4d1701e9dc87fff3ec97f$c15e8ea08dfd0df0f17378459125184e72ed70081a45f8f565fc41a6aa5ddc66",
+            "role": "admin",
+            "full_name": "Prueba",
+            "email": "Prueba",
+            "created_at": "2026-01-19T09:29:24.975486",
+            "last_login": "2026-01-19T09:29:42.150367",
+            "is_active": true,
+            "must_change_password": false
+        },
+        {
+            "username": "Almacen1",
+            "password_hash": "eb94bd9a89b99d3414b19ef6a1298632$dbedf1aff1b2036f09effcb4826a6f7485d5c86a512bd6145adec56319ba24c9",
+            "role": "operator",
+            "full_name": "Almacen1",
+            "email": "",
+            "created_at": "2026-01-19T09:33:14.670545",
+            "last_login": "2026-01-19T09:33:43.170728",
+            "is_active": true,
+            "must_change_password": false
+        }
+    ]
+}

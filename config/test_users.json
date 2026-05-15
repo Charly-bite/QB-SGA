@@ -1,0 +1,16 @@
+{
+    "users": [
+        {
+            "username": "admin",
+            "password_hash": "6f75127590e7c449b02aeee8efdb96fa$563451c87bf8cf6a32109d1b1eee633255e66e8d6d419e7247888dd89b756594",
+            "salt": "default_salt",
+            "role": "admin",
+            "full_name": "Administrator",
+            "email": "",
+            "created_at": "2026-01-19T09:05:44.159898",
+            "last_login": null,
+            "is_active": true,
+            "must_change_password": true
+        }
+    ]
+}

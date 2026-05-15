@@ -1,0 +1,20 @@
+{
+  "product_id": "VAR-QB00109",
+  "chemical_name": "LESS QB S/P",
+  "cas_number": "",
+  "signal_word": "",
+  "product_type": "liquido",
+  "type_source": "excel",
+  "default_container": "",
+  "notes": "",
+  "tara_overrides": {},
+  "lote": "TLC-170625M",
+  "lotes_info": {
+    "TLC-170625M": {
+      "fecha_elaboracion": "2026-06-17",
+      "fecha_inspeccion": "2025-06-17"
+    }
+  },
+  "lote_date": "2026-06-17",
+  "lote_reinspection_date": "2025-06-17"
+}

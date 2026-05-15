@@ -1,0 +1,80 @@
+1. **MAJESTIC BLUE 935** [IFF-QB00057]
+   HDS: HDS - MAJESTIC BLUE 935.PDF
+   - → H-codes in DB but NOT found in HDS: H227, H303, H411
+
+2. **LAVENDER MISTICA** [IFF-QB00251]
+   HDS: HDS - LAVENDER FRESH.pdf
+   - → H-codes in DB but NOT found in HDS: H336
+
+3. **ASFIER N480L** [KAO-QB00010]
+   HDS: HDS - ASFIER N480L.pdf
+   - → H-codes in DB but NOT found in HDS: H400, H410
+
+4. **KAOAMIN 14 L** [KAO-QB00014]
+   HDS: HDS - KAOAMIN 12.pdf
+   - → H-codes in DB but NOT found in HDS: H351, H373, H400, H410
+
+5. **DANOX 511-B** [KAO-QB00029]
+   HDS: HDS - DANOX 511-B.pdf
+   - → H-codes in DB but NOT found in HDS: H400, H411
+
+6. **TETRANYL BC-80T** [KAO-QB00078]
+   HDS: HDS - TETRANYL BC-80T.pdf
+   - → DB CAS '64-17-5' not found in HDS CAS numbers: 61789-71-7, 67-63-0
+
+7. **SCHERCEMOL 318 S/P** [LUB-QB00058]
+   HDS: HDS - SCHERCEMOL 1818.pdf
+   - → DB CAS '68171-33-5' not found in HDS CAS numbers: 27458-93-1, 41669-30-1
+
+8. **SILSENSE BIO5 S/P** [LUB-QB00066]
+   HDS: HDS - SILSENSE COPOLYOL.pdf
+   - → DB CAS '8042-47-5' not found in HDS CAS numbers: 27274-31-3
+   - → DB CAS '79-10-7' not found in HDS CAS numbers: 27274-31-3
+
+9. **ABRILLANTADOR OPTICO LIQUIDO** [VAR-QB00002]
+   HDS: HDS - ABRILLANTADOR OPTICO EN POLVO.pdf
+   - → H-codes in DB but NOT found in HDS: H319
+
+10. **ACEITE MINERAL QB 85** [VAR-QB00006]
+   HDS: HDS - ACEITE MINERAL.pdf
+   - → DB CAS '8012-95-1' not found in HDS CAS numbers: 8042-47-5
+
+11. **ALCANFOR** [VAR-QB00013]
+   HDS: HDS - ALCANFOR.pdf
+   - → H-codes in DB but NOT found in HDS: H315, H319, H335
+
+12. **ALCOHOL TRIDECILICO 6 MOLES S/P** [VAR-QB00020]
+   HDS: HDS - ALCOHOL TRIDECILICO 6M.pdf
+   - → H-codes in DB but NOT found in HDS: H313, H402
+   - → DB CAS '78330-21-9' not found in HDS CAS numbers: 127087-87-0, 9043-30-5
+
+13. **C.M.C.** [VAR-QB00032]
+   HDS: HDS - SUAVIAZUL M 75.pdf
+   - → DB CAS '9004-32-4' not found in HDS CAS numbers: 101-86-0, 106-22-9, 106-24-1, 1222-05-5, 127-51-5, 128119-70-0, 138-86-3, 140-11-4, 151-05-3, 18479-58-8, 2050-08-0, 2050-80-0, 28219-61-6, 32210-23-4, 5430-99-8, 54464-57-2, 54464-59-4, 55066-48-3, 5989-27-5, 6259-76-3, 68155-66-8, 68155-67-9, 68912-13-0, 7540-51-4, 7779-30-8, 80-54-6, 87-20-7, 88-41-5, 93-04-9
+
+14. **GLUCOPON 625 S/P** [VAR-QB00103]
+   HDS: HDS - GLUCOPON 425.pdf
+   - → H-codes in DB but NOT found in HDS: H315, H401
+
+15. **MENTHOL** [VAR-QB00113]
+   HDS: HDS - MENTHOL.pdf
+   - → H-codes in DB but NOT found in HDS: H318, H335
+
+16. **SALICILATO DE METILO** [VAR-QB00134]
+   HDS: HDS - SALICILATO DE METILO.pdf
+   - → H-codes in DB but NOT found in HDS: H227, H316, H317, H411
+
+17. **ACIDO POLIFOSFORICO 117% S/P** [VAR-QB00157]
+   HDS: HDS - ACIDO POLIFOSFORICO.pdf
+   - → H-codes in DB but NOT found in HDS: H314, H335
+
+18. **ACIDO POLIFOSFORICO 115% S/P** [VAR-QB00158]
+   HDS: HDS - ACIDO POLIFOSFORICO.pdf
+   - → H-codes in DB but NOT found in HDS: H314, H335
+
+19. **C.M.C. 10,000** [VAR-QB00180]
+   HDS: HDS - ALCOHOL LÁURICO 10 M.docx
+   - → DB CAS '2836-32-0' not found in HDS CAS numbers: 9002-92-0
+   - → DB CAS '7647-14-5' not found in HDS CAS numbers: 9002-92-0
+   - → DB CAS '9004-32-4' not found in HDS CAS numbers: 9002-92-0
+

@@ -1,0 +1,123 @@
+{
+  "migration_plan": {
+    "title": "SGA Development to Production Migration Plan",
+    "source_environment": "Local Development Workstation",
+    "target_environment": "Production Server (192.168.2.237)",
+    "description": "Migration of the GHS Label System and connected services to the server that currently hosts the Database/SMB Share. Moving from network-based file sharing (SMB) to direct local file access architecture.",
+    "phases": [
+      {
+        "phase_id": 1,
+        "name": "Pre-Migration Assessment (Local Workstation)",
+        "tasks": [
+          {
+            "task": "Clean up the workspace",
+            "description": "Delete or ignore unnecessary files (e.g., __pycache__, .venv, .pytest_cache, .vscode)."
+          },
+          {
+            "task": "Verify Dependencies",
+            "description": "Ensure your requirements.txt is fully up-to-date. If not, generate a fresh one using: pip freeze > requirements.txt"
+          },
+          {
+            "task": "Save State Backup",
+            "description": "Backup your local unified_db, history.json, users.json, and the generated_labels directory."
+          },
+          {
+            "task": "Identify External Services",
+            "description": "The application depends on Poppler (for PDF generation / ReportLab). Prepare the Poppler binaries (like poppler-24.08.0) for transfer."
+          }
+        ]
+      },
+      {
+        "phase_id": 2,
+        "name": "Production Server Preparation (192.168.2.237)",
+        "tasks": [
+          {
+            "task": "Install Prerequisites",
+            "description": "Install the exact same version of Python (ensure 'Add Python to PATH' is checked). Install Git if you plan to clone the repository, or prepare a directory to receive the files (e.g., C:\\SGA_Production)."
+          },
+          {
+            "task": "Setup Poppler",
+            "description": "Copy the poppler-24.08.0 folder to C:\\poppler-24.08.0 on the server. Add C:\\poppler-24.08.0\\Library\\bin to the server's System Environment Variables (PATH)."
+          },
+          {
+            "task": "Firewall Rules",
+            "description": "If the GUI client or Web interface will be accessed by other machines from the server, ensure inbound ports are open (e.g., Web Server on TCP 5000, 8080)."
+          },
+          {
+            "task": "SAP HANA ODBC Drivers",
+            "description": "Ensure the SAP HANA ODBC driver (hdbcli) and related database dependencies are installed on the server so sap_connector.py can bridge to SAP."
+          }
+        ]
+      },
+      {
+        "phase_id": 3,
+        "name": "Code and Data Transfer",
+        "tasks": [
+          {
+            "task": "Transfer Codebase",
+            "description": "Copy the SGAv1.01 directory to the server (e.g., C:\\SGA_Production\\SGAv1.01). DO NOT copy the .venv folder. Python virtual environments are strictly tied to the system path they were created on."
+          },
+          {
+            "task": "Initialize Environment on Server",
+            "description": "Open a PowerShell terminal as Administrator on the server inside the new directory: python -m venv .venv -> .\\.venv\\Scripts\\Activate.ps1 -> python -m pip install --upgrade pip -> pip install -r requirements.txt"
+          }
+        ]
+      },
+      {
+        "phase_id": 4,
+        "name": "Configuration Restructuring",
+        "description": "Crucial step. Since the code is now living on the machine that hosts the Database, db_client_config.json and shared_config.json must change to reflect that it is no longer a 'client' connecting over the network.",
+        "tasks": [
+          {
+            "task": "Update shared_config.json",
+            "description": "Change 'deployment_type' from 'local' to 'server'. Change 'shared_base_path' from '\\\\192.168.2.237\\SGA_Database' to the actual local volume path where those files reside on the server (e.g., 'C:\\SGA_Database'). Update the 'network' block to disable network mounting: mount_check_enabled = false, fallback_to_local = true, server_address = 127.0.0.1."
+          },
+          {
+            "task": "Update db_client_config.json",
+            "description": "Change 'deployment_type' to 'server'. The 'primary_path' should point to the local disk path (e.g., 'C:\\SGA_Database'). Overwrite 'web_server_host' in watchdog to '127.0.0.1' or '0.0.0.0'."
+          },
+          {
+            "task": "SAP HANA Configurations",
+            "description": "Review sap_connector.py or .env vars (if any) to ensure the SAP DB credentials work from the IP of the server."
+          }
+        ]
+      },
+      {
+        "phase_id": 5,
+        "name": "Testing & Validation",
+        "tasks": [
+          {
+            "task": "Test DB Connection",
+            "description": "Run 'python test_database_system.py' to ensure local unified DB loading works."
+          },
+          {
+            "task": "Test SAP Connection",
+            "description": "Run 'python test_sap_connection.py' to confirm the HANA ODBC works from the new server."
+          },
+          {
+            "task": "Test Web Server",
+            "description": "Run 'python sga_web/app.py' and open a browser to 'http://127.0.0.1:5000'."
+          },
+          {
+            "task": "Test GUI/PDF Generation",
+            "description": "Run 'python ghs_label_gui.py', load a mock label, and print it. This will validate that Poppler is properly in the system PATH."
+          }
+        ]
+      },
+      {
+        "phase_id": 6,
+        "name": "Production Hardening",
+        "tasks": [
+          {
+            "task": "Watchdog Management",
+            "description": "Configure watchdog.py and database_server.py as Windows Services (using NSSM) or via Windows Task Scheduler (Trigger: 'On System Startup', Action: Start a program, Path: '.venv\\Scripts\\pythonw.exe', Arguments: 'watchdog.py')."
+          },
+          {
+            "task": "Scheduled Backups",
+            "description": "Ensure unified_db and config JSON backup routines are running properly via Windows Task Scheduler."
+          }
+        ]
+      }
+    ]
+  }
+}

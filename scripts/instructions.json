@@ -1,0 +1,37 @@
+{
+  "project": "SGA GHS Web Application",
+  "component": "PrintAgent.js (Frontend Client)",
+  "issue": "Unreliable connection between Web UI and Local Print Agent due to aggressive polling and tight timeouts.",
+  "recommendations": [
+    {
+      "priority": "High (Immediate Fix)",
+      "type": "HTTP Timeouts & Polling Adjustment",
+      "description": "The current Javascript implementation drops the connection if the agent takes more than 800ms to respond. Browsers and antivirus software often delay localhost requests. Furthermore, browser tab background throttling delays setInterval execution.",
+      "code_changes": [
+        {
+          "file": "static/js/PrintAgent.js (or equivalent)",
+          "action": "Modify fetch request timeout",
+          "before": "const controller = new AbortController();\nsetTimeout(() => controller.abort(), 800);\nawait fetch(..., { signal: controller.signal })",
+          "after": "const controller = new AbortController();\n// INCREASED TIMEOUT: Give Windows networking enough time to clear AV checks\nsetTimeout(() => controller.abort(), 3500);\nawait fetch(..., { signal: controller.signal })"
+        },
+        {
+          "file": "static/js/PrintAgent.js (or equivalent)",
+          "action": "Handle Document Visibility (Tab Throttling)",
+          "implementation": "Do not mark the agent as 'Offline' if the fetch fails while document.visibilityState === 'hidden'. Chrome aggressively pauses timers in background tabs, which forces false timeouts."
+        }
+      ]
+    },
+    {
+      "priority": "Medium (Architecture Upgrade)",
+      "type": "Migrate to WebSockets (WSS/WS)",
+      "description": "For absolute rock-solid reliability, replace HTTP Polling with persistent WebSockets. This eliminates CORS preflight latency completely, removes the need for interval polling, and handles reconnections natively without spamming the network tab.",
+      "code_changes": [
+        {
+          "file": "Web App Frontend",
+          "action": "Implement reconnecting WebSocket",
+          "snippet": "const ws = new WebSocket('ws://127.0.0.1:5555/ws');\nws.onopen = () => { agent.online = true; };\nws.onclose = () => { agent.online = false; setTimeout(reconnect, 5000); };\nws.onmessage = (msg) => { handleStatusUpdate(JSON.parse(msg.data)); };"
+        }
+      ]
+    }
+  ]
+}

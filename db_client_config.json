@@ -1,0 +1,51 @@
+{
+  "deployment_type": "development",
+  "server_discovery": {
+    "enabled": true,
+    "methods": [
+      "config"
+    ],
+    "timeout": 5
+  },
+  "server": {
+    "hostname": "ServerWebQB",
+    "ip_address": "192.168.2.237",
+    "share_name": "SGA_Database",
+    "username": "sga_user",
+    "password_env": "SGA_SHARE_PASS",
+    "protocol": "smb",
+    "port": 445
+  },
+  "database": {
+    "engine": "sql",
+    "sql_connection_string": "mssql+pyodbc://sga_app_user:QuimicaBoss_2026!@192.168.2.237/SGA_Database?driver=SQL+Server&TrustServerCertificate=yes",
+    "fallback_to_csv": true,
+    "primary_path": "//192.168.2.237/SGA_Database",
+    "alternate_path": "//ServerWebQB/SGA_Database",
+    "connection_string": "smb://192.168.2.237/SGA_Database",
+    "mount_on_startup": false,
+    "cache_enabled": true,
+    "cache_duration": 300
+  },
+  "fallback": {
+    "enabled": true,
+    "local_database_path": "unified_db",
+    "use_if_server_unavailable": true,
+    "sync_on_reconnect": false
+  },
+  "retry": {
+    "max_attempts": 1,
+    "delay_seconds": 1,
+    "exponential_backoff": false
+  },
+  "watchdog": {
+    "check_interval": 60,
+    "smb_reconnect_retries": 1,
+    "web_restart_threshold": 5,
+    "web_server_host": "127.0.0.1",
+    "web_server_port": 5001,
+    "web_app_script": "sga_web/run_development.py"
+  },
+  "generated_date": "2026-05-11T12:00:00.000000",
+  "version": "1.0-dev"
+}

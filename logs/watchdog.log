@@ -1,0 +1,15 @@
+2026-05-14 09:07:39 [INFO] Configuracion cargada desde C:\Users\QB_DESARROLLO\Desktop\DEVELOPMENT\db_client_config.json
+2026-05-14 09:07:39 [INFO] ==============================================================
+2026-05-14 09:07:39 [INFO]   SGA Server Watchdog
+2026-05-14 09:07:39 [INFO] ==============================================================
+2026-05-14 09:07:39 [INFO]   SMB share  : \\192.168.2.237\SGA_Database
+2026-05-14 09:07:39 [INFO]   Web server : http://127.0.0.1:5001
+2026-05-14 09:07:39 [INFO]   SAP Sync   : habilitado (1 vez por hora)
+2026-05-14 09:07:39 [INFO]   Intervalo  : 60s
+2026-05-14 09:07:39 [INFO]   Log        : C:\Users\QB_DESARROLLO\Desktop\DEVELOPMENT\logs\watchdog.log
+2026-05-14 09:07:39 [INFO]   Stats      : C:\Users\QB_DESARROLLO\Desktop\DEVELOPMENT\logs\watchdog_stats.json
+2026-05-14 09:07:39 [INFO] ==============================================================
+2026-05-14 09:07:39 [WARNING] ⚠️  SMB no disponible (fallo #1): \\192.168.2.237\SGA_Database
+2026-05-14 09:07:39 [INFO]    Servidor alcanzable en el puerto 445 — reconectando share ...
+2026-05-14 09:07:39 [INFO] Desconectando sesion existente: \\192.168.2.237\SGA_Database  ...
+2026-05-14 09:07:41 [INFO]   Intento 1/1: net use \\192.168.2.237\SGA_Database

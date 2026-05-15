@@ -1,0 +1,55 @@
+{
+  "deployment_type": "server",
+  "system_id": "admin1",
+  "system_role": "administrator",
+  "shared_base_path": "C:/Users/Administrador/SGA_Production",
+  "paths": {
+    "master_data": "${shared_base_path}",
+    "unified_db": "${shared_base_path}",
+    "original_data": "${shared_base_path}",
+    "assets": "./assets",
+    "operational": "./",
+    "config": "./",
+    "logs": "./logs",
+    "generated_labels": "./generated_labels"
+  },
+  "files": {
+    "label_queue": "${operational}/label_queue.json",
+    "history": "${operational}/history.json",
+    "users": "${config}/users.json",
+    "settings": "${config}/config_retail_sample.json",
+    "barcode_db": "${config}/mock_barcode_db.json"
+  },
+  "local_cache": {
+    "enabled": true,
+    "path": "C:/SGA_Cache",
+    "sync_interval_seconds": 300,
+    "cache_master_data": true
+  },
+  "network": {
+    "mount_check_enabled": false,
+    "mount_path": "C:/Users/Administrador/SGA_Production",
+    "server_address": "127.0.0.1",
+    "share_name": "SGA_Database",
+    "username": "Guest",
+    "fallback_to_local": true,
+    "connection_timeout_seconds": 5,
+    "comment": "SGA Database on ServerWebQB"
+  },
+  "file_locking": {
+    "enabled": true,
+    "lock_timeout_seconds": 10,
+    "retry_delay_seconds": 0.1
+  },
+  "backup": {
+    "enabled": true,
+    "backup_before_write": true,
+    "rotation_days": 7
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "${logs}/${system_id}_${date}.log",
+    "max_size_mb": 10,
+    "backup_count": 5
+  }
+}

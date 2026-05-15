@@ -1,0 +1,38 @@
+{
+  "project": "SGA",
+  "component": "sga_controller.py",
+  "review_date": "2026-04-04",
+  "improvements": {
+    "critical": [
+      {
+        "issue": "Network File Locking Fallback Vulnerability",
+        "description": "The `_load_queue()` and `_save_queue()` fallback on `open()` bypasses file locking and introduces race conditions with `label_queue.json`. `SharedFileManager` should be strictly enforced.",
+        "status": "planned"
+      }
+    ],
+    "moderate": [
+      {
+        "issue": "Missing Defensive Error Handling on SAP Calls",
+        "description": "Integration points like `queue_order()` need robust `try/except` wraps to prevent network timeouts from crashing the loop.",
+        "status": "planned"
+      },
+      {
+        "issue": "CLI Logic Coupling",
+        "description": "The `interactive_mode()` function couples view/CLI logic tightly within the backend core. It should be refactored into a separate file.",
+        "status": "planned"
+      },
+      {
+        "issue": "Unused ItemStatus Enum",
+        "description": "Status checks rely on hardcoded strings instead of the existing `ItemStatus` Enum.",
+        "status": "planned"
+      }
+    ],
+    "minor": [
+      {
+        "issue": "Inline Imports and Hardcoded Paths",
+        "description": "Scatter logic for module loading and timestamp generation. Refactor all logic globally to centralize configuration and dependency graphs.",
+        "status": "planned"
+      }
+    ]
+  }
+}

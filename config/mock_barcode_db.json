@@ -1,0 +1,19 @@
+{
+    "mappings": {
+        "750100000001": "IFF-QB00122", 
+        "750100000002": "IFF-QB00122",
+        "750100000003": "VAR-QB00005"
+    },
+    "variants": {
+        "750100000001": {
+            "description": "Menta - Presentación 1kg",
+            "pack_size": "1kg",
+            "variant_code": "P0501107A"
+        },
+        "750100000002": {
+            "description": "Menta - Presentación 20kg (Cubeta)",
+            "pack_size": "20kg",
+            "variant_code": "P0501107J"
+        }
+    }
+}

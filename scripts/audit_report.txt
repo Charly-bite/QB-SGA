@@ -1,0 +1,471 @@
+================================================================================
+  HDS DATABASE AUDIT REPORT
+  Generated: 2026-04-06 14:02:40
+================================================================================
+
+SUMMARY
+----------------------------------------
+Total REVISADO products:    268
+Successfully audited:       170
+Products with issues:       19
+Clean (no issues):          151
+Not in database:            1
+No HDS file found:          97
+Extraction errors:          0
+Total issues found:         23
+
+
+================================================================================
+  SECTION 1: PRODUCTS WITH DISCREPANCIES (NEED MANUAL REVIEW)
+================================================================================
+
+PRODUCT: MAJESTIC BLUE 935
+  Code:     IFF-QB00057
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\IFF\M\HDS - MAJESTIC BLUE 935.PDF
+  Fecha:    9/29/2025
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H227, H303, H411
+
+------------------------------------------------------------
+
+PRODUCT: LAVENDER MISTICA
+  Code:     IFF-QB00251
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\IFF\L\HDS - LAVENDER FRESH.pdf
+  Fecha:    1/26/2024
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H336
+
+------------------------------------------------------------
+
+PRODUCT: ASFIER N480L
+  Code:     KAO-QB00010
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\QUIMIKAO\A\HDS - ASFIER N480L.pdf
+  Fecha:    3/5/2025
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H400, H410
+
+------------------------------------------------------------
+
+PRODUCT: KAOAMIN 14 L
+  Code:     KAO-QB00014
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\QUIMIKAO\K\HDS - KAOAMIN 12.pdf
+  Fecha:    5/6/2024
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H351, H373, H400, H410
+
+------------------------------------------------------------
+
+PRODUCT: DANOX 511-B
+  Code:     KAO-QB00029
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\QUIMIKAO\D\HDS - DANOX 511-B.pdf
+  Fecha:    10/7/2024
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H400, H411
+
+------------------------------------------------------------
+
+PRODUCT: TETRANYL BC-80T
+  Code:     KAO-QB00078
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\QUIMIKAO\T\HDS - TETRANYL BC-80T.pdf
+  Fecha:    31/1025
+  [MEDIUM] CAS Number:
+    → DB CAS '64-17-5' not found in HDS CAS numbers: 61789-71-7, 67-63-0
+
+------------------------------------------------------------
+
+PRODUCT: SCHERCEMOL 318 S/P
+  Code:     LUB-QB00058
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\LUBRIZOL\S\HDS - SCHERCEMOL 1818.pdf
+  Fecha:    10/14/2025
+  [MEDIUM] CAS Number:
+    → DB CAS '68171-33-5' not found in HDS CAS numbers: 27458-93-1, 41669-30-1
+
+------------------------------------------------------------
+
+PRODUCT: SILSENSE BIO5 S/P
+  Code:     LUB-QB00066
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\LUBRIZOL\S\HDS - SILSENSE COPOLYOL.pdf
+  Fecha:    5/15/2023
+  [MEDIUM] CAS Number:
+    → DB CAS '8042-47-5' not found in HDS CAS numbers: 27274-31-3
+  [MEDIUM] CAS Number:
+    → DB CAS '79-10-7' not found in HDS CAS numbers: 27274-31-3
+
+------------------------------------------------------------
+
+PRODUCT: ABRILLANTADOR OPTICO LIQUIDO
+  Code:     VAR-QB00002
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\A\HDS - ABRILLANTADOR OPTICO EN POLVO.pdf
+  Fecha:    
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H319
+
+------------------------------------------------------------
+
+PRODUCT: ACEITE MINERAL QB 85
+  Code:     VAR-QB00006
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\A\HDS - ACEITE MINERAL.pdf
+  Fecha:    3/21/2025
+  [MEDIUM] CAS Number:
+    → DB CAS '8012-95-1' not found in HDS CAS numbers: 8042-47-5
+
+------------------------------------------------------------
+
+PRODUCT: ALCANFOR
+  Code:     VAR-QB00013
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\A\HDS - ALCANFOR.pdf
+  Fecha:    7/22/2025
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H315, H319, H335
+
+------------------------------------------------------------
+
+PRODUCT: ALCOHOL TRIDECILICO 6 MOLES S/P
+  Code:     VAR-QB00020
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\A\HDS - ALCOHOL TRIDECILICO 6M.pdf
+  Fecha:    11/28/2025
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H313, H402
+  [MEDIUM] CAS Number:
+    → DB CAS '78330-21-9' not found in HDS CAS numbers: 127087-87-0, 9043-30-5
+
+------------------------------------------------------------
+
+PRODUCT: C.M.C.
+  Code:     VAR-QB00032
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\IFF\S\HDS - SUAVIAZUL M 75.pdf
+  Fecha:    12/2/2025
+  [MEDIUM] CAS Number:
+    → DB CAS '9004-32-4' not found in HDS CAS numbers: 101-86-0, 106-22-9, 106-24-1, 1222-05-5, 127-51-5, 128119-70-0, 138-86-3, 140-11-4, 151-05-3, 18479-58-8, 2050-08-0, 2050-80-0, 28219-61-6, 32210-23-4, 5430-99-8, 54464-57-2, 54464-59-4, 55066-48-3, 5989-27-5, 6259-76-3, 68155-66-8, 68155-67-9, 68912-13-0, 7540-51-4, 7779-30-8, 80-54-6, 87-20-7, 88-41-5, 93-04-9
+
+------------------------------------------------------------
+
+PRODUCT: GLUCOPON 625 S/P
+  Code:     VAR-QB00103
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\G\HDS - GLUCOPON 425.pdf
+  Fecha:    1/15/2025
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H315, H401
+
+------------------------------------------------------------
+
+PRODUCT: MENTHOL
+  Code:     VAR-QB00113
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\M\HDS - MENTHOL.pdf
+  Fecha:    JUNIO 2019
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H318, H335
+
+------------------------------------------------------------
+
+PRODUCT: SALICILATO DE METILO
+  Code:     VAR-QB00134
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\S\HDS - SALICILATO DE METILO.pdf
+  Fecha:    5/3/2024
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H227, H316, H317, H411
+
+------------------------------------------------------------
+
+PRODUCT: ACIDO POLIFOSFORICO 117% S/P
+  Code:     VAR-QB00157
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\A\HDS - ACIDO POLIFOSFORICO.pdf
+  Fecha:    11/14/2025
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H314, H335
+
+------------------------------------------------------------
+
+PRODUCT: ACIDO POLIFOSFORICO 115% S/P
+  Code:     VAR-QB00158
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\A\HDS - ACIDO POLIFOSFORICO.pdf
+  Fecha:    11/14/2025
+  [MEDIUM] H-Statements:
+    → H-codes in DB but NOT found in HDS: H314, H335
+
+------------------------------------------------------------
+
+PRODUCT: C.M.C. 10,000
+  Code:     VAR-QB00180
+  HDS File: C:\Users\QB_DESARROLLO\Desktop\Nueva carpeta\VARIOS\A\HDS - ALCOHOL LÁURICO 10 M.docx
+  Fecha:    12/2/2025
+  [MEDIUM] CAS Number:
+    → DB CAS '2836-32-0' not found in HDS CAS numbers: 9002-92-0
+  [MEDIUM] CAS Number:
+    → DB CAS '7647-14-5' not found in HDS CAS numbers: 9002-92-0
+  [MEDIUM] CAS Number:
+    → DB CAS '9004-32-4' not found in HDS CAS numbers: 9002-92-0
+
+------------------------------------------------------------
+
+
+================================================================================
+  SECTION 2: PRODUCTS NOT FOUND IN DATABASE
+================================================================================
+
+  VAR-QB00181          MICRO ESFERAS DE CARBON ACTIVADO
+
+
+================================================================================
+  SECTION 3: NO MATCHING HDS FILE FOUND
+================================================================================
+
+  ASH-QB00002          CAPAUXEIN G2 BIOFUNTIONAL
+  ASH-QB00013          EDERLINE S/P
+  ASH-QB00017          EUXYL PE 9010
+  ASH-QB00026          N-DURHANCE A1000
+  ASH-QB00037          PROLIPID 151 S/P
+  ASH-QB00039          PVP K90 S/P
+  ASH-QB00040          PVP/VA S-630 S/P
+  ASH-QB00045          STYLIZE W20
+  ASH-QB00053          OPTIPHEN BSB-W
+  ASH-QB00054          SENSIVA SC50 (TOCPHEROL)
+  ASH-QB00059          EUXYL K830
+  ASH-QB00060          GERMALL 115
+  ASH-QB00061          INTEGRA 22
+  ASH-QB00063          STYLEZE CC-10
+  ASH-QB00064          COPOLYMER 937 LM-O
+  ASH-QB00065          ANTARON V220F
+  ASH-QB00068          SENSIVA SC 83
+  ASH-QB00071          AQUALON EC-N200 PC
+  ASH-QB00073          STYLIZE W-17
+  ASH-QB00076          EUXYL K900
+  ASH-QB00079          ROSALISS
+  ASH-QB00081          ALLIANZ OPT PAIL
+  ASH-QB00082          PERFECTYL
+  ASH-QB00084          LIFTYL
+  ASH-QB00085          AQUAFLEX XL-30
+  ASH-QB00086          STYLEZE ES-FORZA
+  IFF-QB00008          DSM 1034 MAR FRESCO
+  IFF-QB00017          JASMINE GREEN 263
+  IFF-QB00035          WOOD WICK 122
+  IFF-QB00058          PURPLE MYSTERY
+  IFF-QB00069          WONDERFUL LADY 195
+  IFF-QB00070          SUNSENSATION
+  IFF-QB00080          CHAN 001-C MOD 1
+  IFF-QB00107          SENSUAL BREEZE 873
+  IFF-QB00121          WATERY TIMBRE 939
+  IFF-QB00134          CLEAN SCENT 655
+  IFF-QB00136          COMPLETELY NUTS
+  IFF-QB00137          CSH 983 MELON
+  IFF-QB00139          DELIRIOUS JABOTICABA 335
+  IFF-QB00141          ELDEBERRY
+  IFF-QB00145          FROSTED WHITE CITRON
+  IFF-QB00158          QUIM 1300 PASION FRUIT
+  IFF-QB00165          SER 1057 UVA MORADA
+  IFF-QB00178          BEAUTY LIFE 894
+  IFF-QB00179          BLACK FLORAL 842
+  IFF-QB00184          CIC 0441 HB
+  IFF-QB00187          GHOST 081
+  IFF-QB00192          FFSMT1052 DPACIFIC P.
+  IFF-QB00193          SOY TU HOMBRE 070
+  IFF-QB00196          VICTORY 225
+  IFF-QB00197          BLOOM MEDLEY 420
+  IFF-QB00207          DSM 1063 ACE
+  IFF-QB00208          FLOWERCLEAN 384
+  IFF-QB00211          PERFECT BRIGHT 056
+  IFF-QB00213          PREMIUM FABRIC 992
+  IFF-QB00216          SPRING TIME 289
+  IFF-QB00218          ARGAN MANDARINA SOFT 195
+  IFF-QB00220          BAMBOO SENSE 2150 S/P
+  IFF-QB00221          BELLE FEM 6040
+  IFF-QB00226          BLUE MOMENT 759 S/P
+  IFF-QB00229          BOSS 1363 FQ TANGO
+  IFF-QB00232          CARISMAS 2911
+  IFF-QB00233          CHICLE 001D
+  IFF-QB00246          GREEN APPLE 1082
+  IFF-QB00254          MAX FLOWER 77 S/P
+  IFF-QB00262          QUIM HIDRA 759
+  IFF-QB00270          SIMPLE POSSION 383
+  IFF-QB00290          DSM 1082 FAB PASION FRUTAL
+  KAO-QB00028          CORROMIN E-4
+  KAO-QB00044          EMAL 227 LESS QKA
+  KAO-QB00057          KAOSOFCARE  GP1
+  LUB-QB00002          ACTIPHYTE BLUE AGAVE GL100NP
+  LUB-QB00004          ARBALON R-50 CELLULOSE LIQ
+  LUB-QB00027          CHEMORYL SFB 10-SK
+  LUB-QB00043          MATRIFUSSE s/p
+  LUB-QB00056          RESULOOK S/P
+  LUB-QB00069          SULFOCHEM TD3 S/P
+  VAR-QB00036          CERABOSS 4048 BASE
+  VAR-QB00041          COLAGENO COLLATEIN N359
+  VAR-QB00042          COLOR AMARILLO .6 P/GEL
+  VAR-QB00053          COLOR DC GREEN No8 (GEL FOSFORECENTE)
+  VAR-QB00074          DIPROPILEN GLICOL
+  VAR-QB00093          FONGRABAC MG (CONSERVA GEL SHAMPOO)
+  VAR-QB00104          GLUTARALDEHIDO
+  VAR-QB00115          MIT QB (CONSERVADOR LIBRE DE FORMOL) S/P
+  VAR-QB00140          TEA USO INDUSTRIAL (TRIETANOLAMINA 85%)
+  VAR-QB00146          TWEN 20 QE
+  VAR-QB00166          SORBATO DE POTASIO S/P
+  VAR-QB00172          CYTOBIOL-IRIS A2 S/P
+  VAR-QB00178          CARBOMER LIQUID QBW
+  VAR-QB00182          FIJADOR X100
+  VAR-QB00183          FIJADOR LS
+  VAR-QB00184          ESPESANTE GT-940
+  VAR-QB00185          ESPESANTE GT-980
+  VAR-QB00187          ESPESANTE GT-21
+  VAR-QB00188          ESPESANTE GT-20
+  VAR-QB00191          POLYQUATERNIUM 10
+
+
+================================================================================
+  SECTION 5: CLEAN PRODUCTS (NO ISSUES FOUND)
+================================================================================
+
+  ASH-QB00001          BENECEL K200M
+  ASH-QB00004          CERAPHYL 230 S/P
+  ASH-QB00005          CERAPHYL 70
+  ASH-QB00007          CERAPHYL SLK S/P
+  ASH-QB00008          CHROMAFEN S/P
+  ASH-QB00009          CONDITIONIZE 37E
+  ASH-QB00010          COSMEDIA GUAR N HANCE 3196
+  ASH-QB00012          DYNAGEN S/P
+  ASH-QB00014          ESCALOL 577
+  ASH-QB00016          EUXYL K100
+  ASH-QB00021          GP4G S/P
+  ASH-QB00022          LUBRAJEL 0IL S/P
+  ASH-QB00024          LUMINI SYSTEM
+  ASH-QB00028          N-HANCE SP100
+  ASH-QB00029          NATRIANCE BRIGHTENER S/P
+  ASH-QB00030          NATRIANCE SELF HYDRATE
+  ASH-QB00031          NATRIANCE WRINKLE LESS
+  ASH-QB00032          NATROSOL HHR250
+  ASH-QB00033          OPACIFICANTE A-430
+  ASH-QB00036          P.V.P.K 30
+  ASH-QB00038          PROTECTAGEN S/P
+  ASH-QB00041          RAPITIX A-100 S/P
+  ASH-QB00044          SOREZ H5205
+  ASH-QB00046          SUBERLIFTT LIPOPHILE S/P
+  ASH-QB00049          TOMASA SHEA BUTTER
+  ASH-QB00056          N-HANCE CCG 45
+  ASH-QB00067          LUBRAJEL NP
+  ASH-QB00069          CERAPHYL ODS
+  ASH-QB00072          CERAPHYL 847
+  ASH-QB00074          LUBRAJEL MARINE
+  ASH-QB00080          LUBRAJEL DV
+  IFF-QB00004          CITRUS BLEND 144 EXPLOSION FRUTAL
+  IFF-QB00005          CITRUS FRESH 140
+  IFF-QB00007          DSM 1024 LAVANDA
+  IFF-QB00011          FLORAL 001-E MOD
+  IFF-QB00012          FLORAL 841
+  IFF-QB00013          FLORAL P 0830
+  IFF-QB00014          FRUITY MIX 327
+  IFF-QB00015          GINGER ESSENCE 357 S/P
+  IFF-QB00018          LAVANDA 347
+  IFF-QB00025          MARINE LOVE 818
+  IFF-QB00029          RUPERT 933 S/P
+  IFF-QB00030          SEA FRESH 652
+  IFF-QB00031          SEA FRESH 704
+  IFF-QB00034          SO FRESH
+  IFF-QB00038          BLUE SKY 270
+  IFF-QB00039          BOSS 86
+  IFF-QB00040          CATERPILLAR 054
+  IFF-QB00041          CELESTIAL DREAMS 958
+  IFF-QB00043          COCONUT DELICE 733
+  IFF-QB00046          DURAMAX 640
+  IFF-QB00049          FLORAL ROSE 001-B
+  IFF-QB00051          FOUGERE FRESH 003-H
+  IFF-QB00052          FREEDOM 639
+  IFF-QB00061          QUIM 1147 FS
+  IFF-QB00064          SUEÑOS DE ALGODON 707
+  IFF-QB00071          SOFT BABY 611
+  IFF-QB00073          BAMBOO BOO 664
+  IFF-QB00076          BOSS 3117 NATURAL COCONUT
+  IFF-QB00077          BOSS 3156 TALK
+  IFF-QB00078          CEDARLOVE 443
+  IFF-QB00083          CHIRSTMAS VELAQUIM 53 (VAINILLA)
+  IFF-QB00085          CLASSIC FLORAL 535
+  IFF-QB00086          CLEANWOOD 860
+  IFF-QB00094          GREEN TEA & CHAI 202
+  IFF-QB00096          LIQUID FEEL 382
+  IFF-QB00102          OLD WOOD 789 S/P
+  IFF-QB00103          PEACH 299 MOD
+  IFF-QB00104          PEACH P757
+  IFF-QB00106          SANDALWOOD 019
+  IFF-QB00108          SPICY AMBER 973
+  IFF-QB00113          SWEET ANIS 972
+  IFF-QB00126          AVEIA PLUS PONS CR
+  IFF-QB00128          BLAZING 185
+  IFF-QB00129          BLUE BREEZE 929
+  IFF-QB00140          DRIZZLE 691
+  IFF-QB00146          FRUITY SOFT 624
+  IFF-QB00149          JUICY FRESH CITRUS 120
+  IFF-QB00151          KIWI FRESH 625
+  IFF-QB00152          MANGIFF 188
+  IFF-QB00160          RAINY WASH 530
+  IFF-QB00163          SENSE OF NATURE
+  IFF-QB00166          SER 1098 ORQUIDEA JAZMIN
+  IFF-QB00168          SER 1104 AGUACATE
+  IFF-QB00170          SER 1110 PERA
+  IFF-QB00171          SER 1114 TORONJA
+  IFF-QB00176          AMOR CON J 469
+  IFF-QB00177          FF SMT 1028 HARMANY
+  IFF-QB00182          CALVAN 1-150
+  IFF-QB00194          SPORTIVO 971
+  IFF-QB00198          BLUE MICRO MEMORIES 320 AZUL
+  IFF-QB00203          SPARK FRESH 317 CAP
+  IFF-QB00210          MY FLORAL 448
+  IFF-QB00222          BERRY BLOSSOM S/P
+  IFF-QB00223          BERRY PUNCH 867 FV
+  IFF-QB00227          BLUE MOON
+  IFF-QB00228          BOSQUE DE BAMBU
+  IFF-QB00236          CALVAN GEL 8020
+  IFF-QB00244          FRESH BREEZE
+  IFF-QB00245          GLAMOUR 50
+  IFF-QB00249          JUNGLE FRESH
+  IFF-QB00256          MINT MINT M BRM11
+  IFF-QB00273          SOFT LILY
+  IFF-QB00275          SPORTIVO MEN 2023
+  IFF-QB00287          VIOLET FLOWER
+  IFF-QB00289          COUNTRY SOFT 239
+  IFF-QB00291          WILD CITRONELLA 815
+  IFF-QB00321          RIVOLI 912 M2
+  IFF-QB00322          FRESH CITRUS 580
+  KAO-QB00013          GRIPPER 67
+  KAO-QB00025          BETADET HR2
+  KAO-QB00059          KAOSOFT HW TAMBOR
+  KAO-QB00060          POIZ 535
+  KAO-QB00061          POIZ 88
+  KAO-QB00076          TETRANYL BC80E S/P
+  LUB-QB00003          ALGAPUR HSHO
+  LUB-QB00020          CARBOPOL EZ4
+  LUB-QB00026          CARBOPOL XTRA 11 S/P
+  LUB-QB00037          GLUCAM P20
+  LUB-QB00038          GLUCAMATE LT
+  LUB-QB00045          MERQUAT 550PR (POLIQUATERNIUM 7)
+  LUB-QB00060          SCHERCEMOL IDO
+  LUB-QB00061          SCHERCEMOL NGDO
+  VAR-QB00003          ACEITE DE CASTOR HIDROGENADO S/P
+  VAR-QB00004          ACEITE DE COCO RBD S/P
+  VAR-QB00008          ACIDO CITRICO
+  VAR-QB00010          ACIDO OLEICO QB
+  VAR-QB00014          ALCOHOL CETILICO S/P
+  VAR-QB00023          ANTIESPUMANTE
+  VAR-QB00044          COLOR AMARILLO ACIDO 73 (LIMPIADORES) FOSFORECENTE
+  VAR-QB00050          COLOR AZUL AL ACEITE (ACEITE MOPS)
+  VAR-QB00070          DEAC. DE COCO
+  VAR-QB00073          DETERCL  30-12
+  VAR-QB00075          D-LIMONENO
+  VAR-QB00076          EDTA TETRASODICO
+  VAR-QB00079          EMULSION 37 ULTRA S/P
+  VAR-QB00081          ESPESANTE D150
+  VAR-QB00082          ESTANATO DE SODIO
+  VAR-QB00091          FISION HAIR MOISTURE
+  VAR-QB00099          GLICEPOL 160
+  VAR-QB00100          GLICERINA USP
+  VAR-QB00106          JABON POTASICO S/P
+  VAR-QB00107          KERATINA K100
+  VAR-QB00108          LESS 70% S/P
+  VAR-QB00109          LESS QB
+  VAR-QB00125          OCTOPIROX S/P
+  VAR-QB00127          PHANTENOL D
+  VAR-QB00141          TERPENOS DE NARANJA
+  VAR-QB00142          TRANSCUTOL CG
+  VAR-QB00144          TRICLOSAN
+  VAR-QB00177          PLANCHA FACIL MOD.1
+
+
+================================================================================
+  END OF REPORT
+================================================================================

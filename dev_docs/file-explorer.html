@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGA File Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0a0e1a;--bg-card:rgba(255,255,255,.03);--glass:rgba(255,255,255,.08);--text:#f1f5f9;--text2:#94a3b8;--muted:#64748b;--blue:#3b82f6;--cyan:#06b6d4;--green:#10b981;--purple:#8b5cf6;--amber:#f59e0b;--rose:#f43f5e}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+        .bg-glow .orb{position:absolute;border-radius:50%;filter:blur(140px);opacity:.1;animation:fl 25s ease-in-out infinite}
+        .bg-glow .orb:nth-child(1){width:500px;height:500px;background:#8b5cf6;top:10%;left:-5%}
+        .bg-glow .orb:nth-child(2){width:400px;height:400px;background:#06b6d4;bottom:0;right:-5%;animation-delay:-10s}
+        @keyframes fl{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-25px) scale(1.04)}}
+        .container{max-width:960px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+        .top-bar{display:flex;align-items:center;padding:24px 0 0}
+        .back-link{display:inline-flex;align-items:center;gap:8px;color:var(--text2);text-decoration:none;font-size:.88rem;font-weight:600;transition:color .2s}
+        .back-link:hover{color:var(--blue)}
+        .back-link svg{width:16px;height:16px}
+        header{padding:32px 0 8px;text-align:center}
+        header h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;letter-spacing:-1px;margin-bottom:8px;background:linear-gradient(135deg,#f1f5f9 30%,#94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        header p{color:var(--text2);font-size:.95rem;margin-bottom:32px}
+
+        /* Search */
+        .search-box{position:relative;max-width:480px;margin:0 auto 32px}
+        .search-box input{width:100%;background:var(--bg-card);border:1px solid var(--glass);border-radius:12px;padding:12px 16px 12px 44px;color:var(--text);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s}
+        .search-box input:focus{border-color:rgba(59,130,246,.4)}
+        .search-box input::placeholder{color:var(--muted)}
+        .search-box svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+
+        /* Tree */
+        .tree{margin-bottom:64px}
+        .tree-node{border-bottom:1px solid rgba(255,255,255,.04)}
+        .tree-header{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-radius:8px;transition:background .15s;user-select:none}
+        .tree-header:hover{background:rgba(255,255,255,.04)}
+        .tree-toggle{width:18px;height:18px;flex-shrink:0;color:var(--muted);transition:transform .2s}
+        .tree-node.open>.tree-header .tree-toggle{transform:rotate(90deg)}
+        .tree-node:not(.has-children)>.tree-header .tree-toggle{visibility:hidden}
+        .tree-icon{width:20px;height:20px;flex-shrink:0}
+        .tree-icon.folder{color:var(--amber)}
+        .tree-icon.python{color:var(--blue)}
+        .tree-icon.html{color:var(--rose)}
+        .tree-icon.json{color:var(--green)}
+        .tree-icon.config{color:var(--purple)}
+        .tree-icon.csv{color:var(--cyan)}
+        .tree-icon.other{color:var(--muted)}
+        .tree-name{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:600;color:var(--text)}
+        .tree-desc{font-size:.8rem;color:var(--text2);margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:50%}
+        .tree-size{font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;flex-shrink:0;min-width:60px;text-align:right}
+        .tree-children{padding-left:24px;display:none}
+        .tree-node.open>.tree-children{display:block}
+
+        .badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-left:8px}
+        .badge-bp{background:rgba(59,130,246,.15);color:var(--blue)}
+        .badge-manager{background:rgba(16,185,129,.15);color:var(--green)}
+        .badge-model{background:rgba(139,92,246,.15);color:var(--purple)}
+        .badge-config{background:rgba(245,158,11,.15);color:var(--amber)}
+        .badge-template{background:rgba(244,63,94,.15);color:var(--rose)}
+        .badge-data{background:rgba(6,182,212,.15);color:var(--cyan)}
+
+        .hidden{display:none!important}
+
+        footer{text-align:center;padding:32px 0;color:var(--muted);font-size:.8rem;border-top:1px solid var(--glass)}
+        footer a{color:var(--blue);text-decoration:none}
+    </style>
+</head>
+<body>
+    <div class="bg-glow"><div class="orb"></div><div class="orb"></div></div>
+    <div class="container">
+        <div class="top-bar">
+            <a href="index.html" class="back-link">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back to Docs
+            </a>
+        </div>
+        <header>
+            <h1>File Explorer</h1>
+            <p>Annotated directory tree of the entire SGA project — every file described.</p>
+        </header>
+
+        <div class="search-box">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="fileSearch" placeholder="Search files…">
+        </div>
+
+        <div class="tree" id="fileTree"></div>
+    </div>
+
+    <footer><div class="container"><a href="index.html">← Back to Documentation Hub</a></div></footer>
+
+    <script>
+        // SVG icons
+        const ICONS = {
+            folder: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>',
+            python: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>',
+            html: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.56l4.07-1.13.55-6.1H9.73l-.23-2.76h7.36l.23-2.76H6.91l.69 7.52h6.23l-.27 3.02-1.56.42-1.56-.42-.1-1.12H8.64l.19 2.18L12 17.56z"/><path d="M4.07 3h15.86L18.5 19.2 12 21l-6.5-1.8L4.07 3z" opacity=".3"/></svg>',
+            json: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h2v2H5v5a2 2 0 01-2 2 2 2 0 012 2v5h2v2H5c-1.07-.27-2-.9-2-2v-4a2 2 0 00-2-2H0v-2h1a2 2 0 002-2V5a2 2 0 012-2m14 0a2 2 0 012 2v4a2 2 0 002 2h1v2h-1a2 2 0 00-2 2v4a2 2 0 01-2 2h-2v-2h2v-5a2 2 0 012-2 2 2 0 01-2-2V5h-2V3h2z"/></svg>',
+            config: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81a.47.47 0 00-.47-.41h-3.85c-.24 0-.43.17-.47.41L9.25 5.35A7.07 7.07 0 007.63 6.3l-2.39-.96a.49.49 0 00-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.47.41h3.85c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1115.6 12 3.6 3.6 0 0112 15.6z"/></svg>',
+            csv: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM6 20V4h7v5h5v11H6z"/><path d="M8 12h8v2H8zm0 4h8v2H8z" opacity=".5"/></svg>',
+            other: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>',
+            chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"/></svg>'
+        };
+
+        function getIcon(name, isDir) {
+            if (isDir) return { svg: ICONS.folder, cls: 'folder' };
+            const ext = name.split('.').pop().toLowerCase();
+            if (ext === 'py') return { svg: ICONS.python, cls: 'python' };
+            if (ext === 'html' || ext === 'htm') return { svg: ICONS.html, cls: 'html' };
+            if (ext === 'json') return { svg: ICONS.json, cls: 'json' };
+            if (ext === 'csv') return { svg: ICONS.csv, cls: 'csv' };
+            if (['env','cfg','ini','toml','yml','yaml','bat','sh','ps1','tex','txt','md'].includes(ext)) return { svg: ICONS.config, cls: 'config' };
+            return { svg: ICONS.other, cls: 'other' };
+        }
+
+        function fmtSize(bytes) {
+            if (!bytes) return '';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+            return (bytes/1024/1024).toFixed(1) + ' MB';
+        }
+
+        // Project tree data
+        const tree = [
+            { name: 'sga_web/', desc: 'Flask Web Application (main)', badge: 'App Core', badgeCls: 'badge-bp', children: [
+                { name: 'app.py', desc: 'Application factory — creates Flask app, registers blueprints', size: 17709, badge: 'Entry Point', badgeCls: 'badge-bp' },
+                { name: 'config.py', desc: 'Configuration classes (Dev/Prod/Test), SQL connection string builder', size: 4098, badge: 'Config', badgeCls: 'badge-config' },
+                { name: 'models.py', desc: 'Flask-Login User model + PrintQueueItem dataclass', size: 2972, badge: 'Model', badgeCls: 'badge-model' },
+                { name: 'extensions.py', desc: 'Shared Flask extensions (Flask-Limiter)', size: 393 },
+                { name: 'db_connector.py', desc: 'SMB network share mount + database path resolution', size: 6600, badge: 'Data', badgeCls: 'badge-data' },
+                { name: 'run_development.py', desc: 'Dev server launcher with hot-reload', size: 1638 },
+                { name: 'run_production.py', desc: 'Production launcher (Waitress)', size: 764 },
+                { name: 'routes/', desc: 'Flask Blueprint route modules', badge: 'Routes', badgeCls: 'badge-bp', children: [
+                    { name: '__init__.py', desc: 'Blueprint registration', size: 396 },
+                    { name: 'auth.py', desc: '/login, /logout — Flask-Login + CSRF + rate limiting', size: 4793, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'main.py', desc: '/ dashboard — main landing page after login', size: 7285, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'labels.py', desc: '/labels/* — GHS label queue, generation, preview, print', size: 46482, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'products.py', desc: '/products/* — Product CRUD, search, import', size: 20579, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'orders.py', desc: '/orders/* — Order status, SAP sync, monitor, visor', size: 36213, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'users.py', desc: '/users/* — User admin (create, edit, delete)', size: 5054, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'api.py', desc: '/api/* — REST API endpoints', size: 5442, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'templates.py', desc: '/templates/* — Label template designer', size: 20552, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                    { name: 'control_interno.py', desc: '/control/* — Internal control / quality management', size: 33728, badge: 'Blueprint', badgeCls: 'badge-bp' },
+                ]},
+                { name: 'core/', desc: 'Business logic managers (shared by routes)', badge: 'Logic', badgeCls: 'badge-manager', children: [
+                    { name: 'sga_controller.py', desc: 'Main orchestrator: SAP → Queue → GHS Match → PDF', size: 18331, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'sap_connector.py', desc: 'SAP HANA connector (hdbcli): orders, materials, batches, stock', size: 53406, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'smart_label.py', desc: 'SmartLabelManager: product data resolution & fuzzy search', size: 49955, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'generate_ghs_label.py', desc: 'GHSLabelGenerator: ReportLab PDF builder with pictograms', size: 76378, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'order_status_manager.py', desc: 'OrderStatusManager: local order status DB (SQL + JSON)', size: 17382, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'user_manager.py', desc: 'UserManager: auth, roles (Admin/Operator/Viewer), CRUD', size: 16201, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'history_manager.py', desc: 'HistoryManager: audit trail for all system events', size: 7948, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'tara_weight_manager.py', desc: 'TaraWeightManager: tare weight resolution & CLASIFICACION', size: 63006, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'template_manager.py', desc: 'TemplateManager: label layout templates CRUD', size: 8135, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'shared_file_manager.py', desc: 'SharedFileManager: thread-safe JSON/CSV file locking', size: 13849, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'shared_config_manager.py', desc: 'SharedConfigManager: multi-system config sync', size: 10334, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'database_client.py', desc: 'DatabaseClient: pyodbc SQL Server connection', size: 21374, badge: 'Data', badgeCls: 'badge-data' },
+                    { name: 'settings_manager.py', desc: 'SettingsManager: user preferences & app settings', size: 7892, badge: 'Manager', badgeCls: 'badge-manager' },
+                    { name: 'resource_path.py', desc: 'Path helpers for poppler, assets, frozen exe', size: 5637 },
+                    { name: 'sga_cli.py', desc: 'CLI interface for SGA (standalone mode)', size: 7718 },
+                ]},
+                { name: 'templates/', desc: 'Jinja2 HTML templates', badge: 'Templates', badgeCls: 'badge-template', children: [
+                    { name: 'base.html', desc: 'Base layout: nav, sidebar, Tailwind, Alpine.js', size: 15201 },
+                    { name: 'index.html', desc: 'Landing/redirect page', size: 2084 },
+                    { name: 'dashboard.html', desc: 'Main dashboard with stats & quick actions', size: 14079 },
+                    { name: 'auth/', desc: 'Login, password change templates', children: [] },
+                    { name: 'labels/', desc: 'Label generation UI & print page', children: [
+                        { name: 'index.html', desc: 'Label queue builder with barcode scan', size: 116830 },
+                        { name: 'print.html', desc: 'Print-optimized page with CSS @page', size: 6063 },
+                    ]},
+                    { name: 'orders/', desc: 'Order management views', children: [
+                        { name: 'index.html', desc: 'Order list with status filters', size: 24107 },
+                        { name: 'detail.html', desc: 'Single order detail + history', size: 7205 },
+                        { name: 'visor.html', desc: 'Sales team visor dashboard', size: 13361 },
+                        { name: 'monitor.html', desc: 'Public control tower (no auth)', size: 95116 },
+                    ]},
+                    { name: 'products/', desc: 'Product CRUD views', children: [] },
+                    { name: 'users/', desc: 'User management views', children: [] },
+                    { name: 'templates/', desc: 'Label template designer', children: [] },
+                    { name: 'control_interno/', desc: 'Quality / internal control views', children: [] },
+                    { name: 'errors/', desc: '404, 500 error pages', children: [] },
+                ]},
+                { name: 'static/', desc: 'Static assets', children: [
+                    { name: 'css/', desc: 'Compiled Tailwind + custom CSS' },
+                    { name: 'js/', desc: 'Alpine.js components & helpers' },
+                    { name: 'images/', desc: 'Logo, icons, pictogram PNGs' },
+                    { name: 'img/', desc: 'GHS pictogram images' },
+                    { name: 'tmp/', desc: 'Temp print images (auto-cleaned hourly)' },
+                ]},
+                { name: 'generated_labels/', desc: 'Output directory for generated PDFs (auto-cleaned daily)' },
+            ]},
+            { name: 'unified_db/', desc: 'Master product database (CSV + JSON)', badge: 'Database', badgeCls: 'badge-data', children: [
+                { name: 'products_master.csv', desc: 'Main product catalog (codes, names, CAS)', size: 52361 },
+                { name: 'product_classifications.json', desc: 'GHS classifications per product', size: 414518 },
+                { name: 'product_hazards.csv', desc: 'H-statement assignments per product', size: 29579 },
+                { name: 'product_pictograms.csv', desc: 'Pictogram assignments per product', size: 16745 },
+                { name: 'product_precautions.csv', desc: 'P-statement assignments per product', size: 68931 },
+                { name: 'h_statements.csv', desc: 'GHS H-Statement master list', size: 6085 },
+                { name: 'p_statements.csv', desc: 'GHS P-Statement master list', size: 14813 },
+                { name: 'pictograms.csv', desc: 'Pictogram code → image mapping', size: 511 },
+                { name: 'product_variants.csv', desc: 'Product variant/size mappings', size: 271 },
+                { name: 'manifest.json', desc: 'Database version & checksum', size: 315 },
+            ]},
+            { name: 'config/', desc: 'Configuration files', badge: 'Config', badgeCls: 'badge-config', children: [
+                { name: 'shared_config.json', desc: 'Multi-system shared config (server paths, settings)', size: 1724 },
+                { name: 'sga_sql_config.json', desc: 'SQL Server connection config', size: 913 },
+                { name: 'db_client_config.json', desc: 'Database client settings', size: 188 },
+                { name: 'label_queue.json', desc: 'Persistent label print queue', size: 2668 },
+                { name: 'users.json', desc: 'User accounts (hashed passwords)', size: 1492 },
+                { name: 'history.json', desc: 'System event history log', size: 29828 },
+                { name: 'context.json', desc: 'App context / environment metadata', size: 3337 },
+                { name: 'changes.json', desc: 'Change log for tracked modifications', size: 1328 },
+            ]},
+            { name: 'scripts/', desc: 'Build, deploy & utility scripts', children: [
+                { name: 'build_windows.bat', desc: 'Windows build script (PyInstaller)', size: 2458 },
+                { name: 'build_windows.py', desc: 'Python build helper for frozen exe', size: 7125 },
+                { name: 'unify_for_sga.py', desc: 'Data unification script (Excel → unified_db)', size: 22195 },
+                { name: 'sql_migrator.py', desc: 'SQL schema migration tool', size: 6394 },
+                { name: 'network_share_manager.py', desc: 'SMB network share setup & management', size: 17153 },
+                { name: 'setup_server.sh', desc: 'Linux server setup (Docker, SMB)', size: 3260 },
+                { name: 'setup_client.sh', desc: 'Client workstation setup', size: 4317 },
+                { name: 'debug_startup.py', desc: 'Startup diagnostic script', size: 3362 },
+                { name: 'simulate_scan_print.py', desc: 'Test harness for scan → print flow', size: 2098 },
+            ]},
+            { name: 'dev_docs/', desc: 'Developer documentation (you are here)', children: [
+                { name: 'index.html', desc: 'Documentation hub', size: 5100 },
+                { name: 'architecture.html', desc: 'Interactive architecture diagrams', size: 12000 },
+                { name: 'file-explorer.html', desc: 'This file explorer page', size: 18000 },
+                { name: 'api-reference.html', desc: 'API route reference', size: 10000 },
+            ]},
+            { name: 'Root Files', desc: 'Project root configuration', children: [
+                { name: '.env', desc: 'Environment variables (SAP/SQL credentials)', size: 530 },
+                { name: 'requirements.txt', desc: 'Python dependencies', size: 513 },
+                { name: 'config.py', desc: 'Root config (legacy, used by CLI mode)', size: 1664 },
+                { name: 'database_client.py', desc: 'Root database client (legacy, used by root scripts)', size: 21148 },
+                { name: 'sap_connector.py', desc: 'Root SAP connector (legacy, used by root scripts)', size: 54517 },
+                { name: 'users.json', desc: 'Root user database (legacy)', size: 4433 },
+                { name: 'improvements.json', desc: 'Tracked improvement ideas', size: 1509 },
+                { name: 'deploy_to_preprod.bat', desc: 'Pre-production deployment script', size: 2183 },
+                { name: 'install_service.bat', desc: 'Windows Service installer', size: 1737 },
+            ]},
+        ];
+
+        // Render tree
+        function renderTree(nodes, container) {
+            nodes.forEach(node => {
+                const isDir = !!node.children;
+                const hasChildren = isDir && node.children.length > 0;
+                const el = document.createElement('div');
+                el.className = 'tree-node' + (hasChildren ? ' has-children' : '');
+                el.dataset.name = (node.name + ' ' + (node.desc || '')).toLowerCase();
+
+                const icon = getIcon(node.name, isDir);
+                let badgeHtml = node.badge ? `<span class="badge ${node.badgeCls || ''}">${node.badge}</span>` : '';
+
+                el.innerHTML = `
+                    <div class="tree-header">
+                        <span class="tree-toggle">${ICONS.chevron}</span>
+                        <span class="tree-icon ${icon.cls}">${icon.svg}</span>
+                        <span class="tree-name">${node.name}</span>
+                        ${badgeHtml}
+                        <span class="tree-desc">${node.desc || ''}</span>
+                        <span class="tree-size">${fmtSize(node.size)}</span>
+                    </div>
+                `;
+
+                if (hasChildren) {
+                    const childContainer = document.createElement('div');
+                    childContainer.className = 'tree-children';
+                    renderTree(node.children, childContainer);
+                    el.appendChild(childContainer);
+                }
+
+                // Toggle
+                el.querySelector('.tree-header').addEventListener('click', (e) => {
+                    if (hasChildren) {
+                        el.classList.toggle('open');
+                    }
+                });
+
+                container.appendChild(el);
+            });
+        }
+
+        const treeContainer = document.getElementById('fileTree');
+        renderTree(tree, treeContainer);
+
+        // Expand top-level by default
+        treeContainer.querySelectorAll(':scope > .tree-node.has-children').forEach(n => n.classList.add('open'));
+
+        // Search
+        const searchInput = document.getElementById('fileSearch');
+        searchInput.addEventListener('input', () => {
+            const q = searchInput.value.toLowerCase().trim();
+            const allNodes = treeContainer.querySelectorAll('.tree-node');
+
+            if (!q) {
+                allNodes.forEach(n => n.classList.remove('hidden'));
+                return;
+            }
+
+            // First hide all, then show matches and their ancestors
+            allNodes.forEach(n => n.classList.add('hidden'));
+            allNodes.forEach(n => {
+                if (n.dataset.name && n.dataset.name.includes(q)) {
+                    n.classList.remove('hidden');
+                    // Show all ancestors
+                    let parent = n.parentElement;
+                    while (parent && parent !== treeContainer) {
+                        if (parent.classList.contains('tree-node')) {
+                            parent.classList.remove('hidden');
+                            parent.classList.add('open');
+                        }
+                        parent = parent.parentElement;
+                    }
+                    // Show children
+                    n.querySelectorAll('.tree-node').forEach(c => c.classList.remove('hidden'));
+                    n.classList.add('open');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

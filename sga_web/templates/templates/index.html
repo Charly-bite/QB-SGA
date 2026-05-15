@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Plantillas de Etiquetas{% endblock %}
+{% block page_title %}Plantillas de Etiquetas{% endblock %}
+
+{% block content %}
+<div x-data="templateList()" x-init="init()">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <p class="text-slate-500 text-sm">Diseña plantillas personalizadas para etiquetas pre-impresas</p>
+        </div>
+        <a href="{{ url_for('templates.designer') }}"
+            class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium flex items-center space-x-2 transition-colors shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Nueva Plantilla</span>
+        </a>
+    </div>
+
+    <!-- Templates Grid -->
+    <template x-if="templates.length > 0">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="t in templates" :key="t.id">
+                <div
+                    class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow overflow-hidden">
+                    <!-- Preview header -->
+                    <div class="bg-gradient-to-br from-slate-700 to-slate-900 p-6 relative">
+                        <div class="border-2 border-dashed border-slate-500 rounded-lg p-4 flex items-center justify-center"
+                            :style="'aspect-ratio: ' + t.width_mm + '/' + t.height_mm + '; max-height: 120px;'">
+                            <div class="text-center">
+                                <svg class="w-8 h-8 mx-auto text-slate-400 mb-1" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zm10 0a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z" />
+                                </svg>
+                                <span class="text-xs text-slate-400"
+                                    x-text="t.width_mm + ' x ' + t.height_mm + ' mm'"></span>
+                            </div>
+                        </div>
+                        <div class="absolute top-3 right-3 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full"
+                            x-text="t.element_count + ' elementos'"></div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="p-4">
+                        <h3 class="font-semibold text-slate-800 text-lg mb-1" x-text="t.name"></h3>
+                        <p class="text-xs text-slate-400 mb-4" x-text="'Actualizado: ' + formatDate(t.updated_at)"></p>
+
+                        <div class="flex items-center space-x-2">
+                            <a :href="'/templates/designer/' + t.id"
+                                class="flex-1 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-sm font-medium text-center transition-colors">
+                                Editar
+                            </a>
+                            <button @click="duplicateTemplate(t.id)"
+                                class="px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-lg text-sm transition-colors"
+                                title="Duplicar">
+                                Duplicar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <!-- Empty State -->
+    <template x-if="templates.length === 0 && !loading">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+            <svg class="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zm10 0a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z" />
+            </svg>
+            <h3 class="text-lg font-medium text-slate-600 mb-2">No hay plantillas</h3>
+            <p class="text-slate-400 mb-6">Crea tu primera plantilla para etiquetas pre-impresas</p>
+            <a href="{{ url_for('templates.designer') }}"
+                class="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Crear Plantilla
+            </a>
+        </div>
+    </template>
+
+    <!-- Loading -->
+    <template x-if="loading">
+        <div class="flex items-center justify-center p-12">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+        </div>
+    </template>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function templateList() {
+    return {
+        templates: [],
+        loading: true,
+
+        init() {
+            this.templates = {{ templates | tojson | safe }};
+            this.loading = false;
+        },
+
+        formatDate(iso) {
+            if (!iso) return '-';
+            try {
+                const d = new Date(iso);
+                return d.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            } catch(e) { return iso; }
+        },
+
+        async duplicateTemplate(id) {
+            try {
+                const resp = await fetch('/templates/api/duplicate/' + id, { method: 'POST' });
+                const data = await resp.json();
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert(data.error || 'Error al duplicar');
+                }
+            } catch (e) { alert('Error: ' + e.message); }
+        },
+
+        async deleteTemplate(id, name) {
+            if (!confirm('Eliminar plantilla "' + name + '"?')) return;
+            try {
+                const resp = await fetch('/templates/api/' + id, { method: 'DELETE' });
+                const data = await resp.json();
+                if (data.success) {
+                    this.templates = this.templates.filter(function(t) { return t.id !== id; });
+                } else {
+                    alert(data.error || 'Error al eliminar');
+                }
+            } catch (e) { alert('Error: ' + e.message); }
+        }
+    };
+}
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+/* Tailwind CSS v4 - Source file for production build */
+@import "tailwindcss" source("../../templates");
+
+/* ── Custom utilities ──────────────────────────────────────────── */
+@utility sidebar-active {
+    background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+/* ── Custom base styles ────────────────────────────────────────── */
+@layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+}

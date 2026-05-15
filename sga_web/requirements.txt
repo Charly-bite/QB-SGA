@@ -1,0 +1,26 @@
+# SGA Web Application - Requirements
+# Flask Web Framework
+flask>=3.0.0
+flask-login>=0.6.3
+flask-wtf>=1.2.1
+flask-limiter>=3.5.0
+
+# Data Processing
+pandas>=2.0.0
+openpyxl>=3.1.0
+
+# PDF Generation & Processing
+reportlab>=4.0.0
+Pillow>=10.0.0
+pypdf>=4.0.0
+pdf2image>=1.16.0
+
+# SAP HANA Connection (optional - install if SAP needed)
+# hdbcli>=2.18.0
+
+# Production Server
+gunicorn>=21.0.0
+waitress>=2.1.0  # Windows-compatible WSGI server
+
+# Environment management
+python-dotenv>=1.0.0

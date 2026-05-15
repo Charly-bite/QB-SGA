@@ -1,0 +1,2584 @@
+{% extends "base.html" %}
+
+{% block title %}Diseñador de Plantillas{% endblock %}
+{% block page_title %}Diseñador de Plantillas{% endblock %}
+
+{% block extra_head %}
+
+<style>
+    /* ═══ Designer Layout ═══ */
+    .designer-container {
+        display: flex;
+        height: calc(100vh - 195px);
+        gap: 0;
+        overflow: hidden;
+    }
+
+    .toolbox {
+        width: 220px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        border-right: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    .canvas-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #f1f5f9;
+        overflow: hidden; /* Changed from auto */
+        /* padding: 20px; Removed padding */
+        position: relative;
+    }
+
+    .properties-panel {
+        width: 280px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        border-left: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+
+    /* ═══ Canvas ═══ */
+    .label-canvas {
+        background: white;
+        border: 2px solid #94a3b8;
+        position: relative;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        cursor: crosshair;
+    }
+
+    .label-canvas.grid-on {
+        background-image:
+            linear-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(148, 163, 184, 0.15) 1px, transparent 1px);
+    }
+
+    /* ═══ Draggable Elements on Canvas ═══ */
+    .canvas-element {
+        position: absolute;
+        cursor: move;
+        border: 1px dashed #cbd5e1;
+        padding: 2px 4px;
+        transition: border-color 0.15s;
+        user-select: none;
+        white-space: nowrap;
+        z-index: 1;
+    }
+
+    .canvas-element:hover {
+        border-color: #3b82f6;
+    }
+
+    .canvas-element.selected {
+        border-color: #2563eb;
+        background: rgba(37, 99, 235, 0.06);
+        z-index: 10;
+    }
+
+    .canvas-element .resize-handle {
+        position: absolute;
+        bottom: -4px;
+        right: -4px;
+        width: 8px;
+        height: 8px;
+        background: #2563eb;
+        cursor: nwse-resize;
+        border-radius: 2px;
+        display: none;
+    }
+
+    .canvas-element.selected .resize-handle {
+        display: block;
+    }
+
+    /* ═══ Element type visual cues ═══ */
+    .canvas-element[data-type="barcode"] {
+        font-family: monospace;
+        letter-spacing: 1px;
+    }
+
+    .barcode-preview-svg {
+        display: block;
+        overflow: visible;
+        max-width: none;
+    }
+
+    .canvas-element[data-type="line"] {
+        border-bottom: 2px solid #000;
+        min-width: 30px;
+        height: 2px !important;
+        padding: 0;
+    }
+
+    /* ═══ Toolbox items ═══ */
+    .tool-item {
+        padding: 10px 14px;
+        margin: 4px 8px;
+        border-radius: 8px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        cursor: grab;
+        transition: all 0.15s;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .tool-item:hover {
+        border-color: #3b82f6;
+        background: #eff6ff;
+        transform: translateX(2px);
+    }
+
+    .tool-item:active {
+        cursor: grabbing;
+    }
+
+    .tool-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    /* ═══ Property inputs ═══ */
+    .prop-group {
+        padding: 12px 16px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .prop-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 4px;
+        letter-spacing: 0.5px;
+    }
+
+    .prop-input {
+        width: 100%;
+        padding: 6px 10px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 13px;
+        background: white;
+        transition: border-color 0.15s;
+    }
+
+    .prop-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+
+    .prop-row {
+        display: flex;
+        gap: 8px;
+    }
+
+    .prop-row>div {
+        flex: 1;
+    }
+
+    /* ═══ Rulers ═══ */
+    .ruler-container {
+        display: grid;
+        grid-template-columns: 25px 1fr;
+        grid-template-rows: 25px 1fr;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        position: relative;
+    }
+
+    .ruler-corner {
+        grid-column: 1;
+        grid-row: 1;
+        background: #f8fafc;
+        border-right: 1px solid #cbd5e1;
+        border-bottom: 1px solid #cbd5e1;
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 30;
+    }
+
+    .ruler-h-wrapper {
+        grid-column: 2;
+        grid-row: 1;
+        height: 25px;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: #f8fafc; /* Masks content scrolling behind */
+        overflow: hidden;
+    }
+    
+    .ruler-h {
+        height: 100%;
+        background: #f8fafc;
+        border-bottom: 1px solid #cbd5e1;
+        position: relative;
+    }
+
+    .ruler-v-wrapper {
+        grid-column: 1;
+        grid-row: 2;
+        width: 25px;
+        position: sticky;
+        left: 0;
+        z-index: 20;
+        background: #f8fafc;
+        overflow: hidden;
+    }
+
+    .ruler-v {
+        width: 100%;
+        background: #f8fafc;
+        border-right: 1px solid #cbd5e1;
+        position: relative;
+    }
+
+    .canvas-scroll-area {
+        grid-column: 2;
+        grid-row: 2;
+        display: block; 
+        background: #e2e8f0; /* Darker bg to see canvas edges */
+        padding: 0; 
+        overflow: auto;
+        position: relative;
+    }
+
+    /* Add margin to canvas instead of padding to container if visual space is needed, 
+       but user wants corner start. Let's just keep canvas at top-left. 
+       If we want a bit of "overscroll" space at bottom/right, we can handle that with ::after 
+    */
+    
+    .ruler-tick {
+        position: absolute;
+        background: #94a3b8;
+    }
+    
+    .ruler-label {
+        position: absolute;
+        font-size: 8px;
+        color: #475569;
+        font-family: monospace;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div x-data="templateDesigner()" x-init="init()" @keydown.window="handleKeydown($event)">
+
+    <!-- ═══ Top Toolbar ═══ -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-3 mb-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <a href="{{ url_for('templates.index') }}"
+                class="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-500" title="Volver">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </a>
+            <input type="text" x-model="templateName" placeholder="Nombre de la plantilla..."
+                class="text-lg font-semibold border-0 bg-transparent focus:outline-none focus:ring-0 text-slate-800 w-64"
+                style="border-bottom: 2px solid transparent; transition: border-color 0.15s;"
+                onfocus="this.style.borderBottomColor='#3b82f6'" onblur="this.style.borderBottomColor='transparent'">
+        </div>
+        <div class="flex items-center space-x-2">
+            <!-- Dimensions (locked per warehouse) -->
+            <div class="flex items-center space-x-1 rounded-lg px-3 py-1.5 text-sm"
+                :class="sizeIsLocked ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-slate-50 text-slate-600'">
+                <span x-show="sizeIsLocked" class="text-xs mr-1" title="Tamaño bloqueado por almacén">🔒</span>
+                <span class="font-medium">W:</span>
+                <input type="number" x-model.number="canvasWidth" @change="updateCanvasSize()" min="50" max="400"
+                    class="w-14 bg-transparent border-0 p-0 text-center focus:outline-none font-mono"
+                    :disabled="sizeIsLocked" :class="sizeIsLocked ? 'cursor-not-allowed opacity-70' : ''">
+                <span>×</span>
+                <span class="font-medium">H:</span>
+                <input type="number" x-model.number="canvasHeight" @change="updateCanvasSize()" min="50" max="400"
+                    class="w-14 bg-transparent border-0 p-0 text-center focus:outline-none font-mono"
+                    :disabled="sizeIsLocked" :class="sizeIsLocked ? 'cursor-not-allowed opacity-70' : ''">
+                <span class="text-xs" :class="sizeIsLocked ? 'text-amber-500' : 'text-slate-400'">mm</span>
+            </div>
+
+            <!-- Grid toggle -->
+            <button @click="showGrid = !showGrid"
+                :class="showGrid ? 'bg-blue-100 text-blue-700' : 'bg-slate-50 text-slate-500'"
+                class="p-2 rounded-lg transition-colors" title="Cuadrícula">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16M6 4v16M12 4v16M18 4v16" />
+                </svg>
+            </button>
+
+            <!-- Undo / Redo -->
+            <div class="flex items-center space-x-0.5 bg-slate-50 rounded-lg px-1 py-1">
+                <button @click="undo()" :disabled="_undoStack.length === 0"
+                    class="p-1.5 rounded transition-colors" title="Deshacer (Ctrl+Z)"
+                    :class="_undoStack.length ? 'hover:bg-slate-200 text-slate-600' : 'text-slate-300 cursor-not-allowed'">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a5 5 0 015 5v2M3 10l4-4m-4 4l4 4"/></svg>
+                </button>
+                <button @click="redo()" :disabled="_redoStack.length === 0"
+                    class="p-1.5 rounded transition-colors" title="Rehacer (Ctrl+Shift+Z)"
+                    :class="_redoStack.length ? 'hover:bg-slate-200 text-slate-600' : 'text-slate-300 cursor-not-allowed'">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10H11a5 5 0 00-5 5v2m15-7l-4-4m4 4l-4 4"/></svg>
+                </button>
+            </div>
+
+            <!-- Zoom -->
+            <div class="flex items-center space-x-1 bg-slate-50 rounded-lg px-2 py-1.5">
+                <button @click="zoom = Math.max(0.3, zoom - 0.1)"
+                    class="text-slate-500 hover:text-slate-700 p-0.5">−</button>
+                <span class="text-xs font-mono w-10 text-center" x-text="Math.round(zoom * 100) + '%'"></span>
+                <button @click="zoom = Math.min(3, zoom + 0.1)"
+                    class="text-slate-500 hover:text-slate-700 p-0.5">+</button>
+            </div>
+
+            <!-- Quick Start -->
+            <button @click="loadPreset()"
+                class="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg text-sm font-medium transition-colors">
+                ⚡ Quick Start
+            </button>
+
+            <!-- Preview -->
+            <button @click="openPreviewModal()"
+                class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
+                <span>👁️</span>
+                <span>Vista Previa</span>
+            </button>
+            <!-- Test Print -->
+            <button @click="openTestPrintModal()"
+                class="px-4 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
+                <span>🖨️</span>
+                <span>Prueba</span>
+            </button>
+            <!-- Direct Print Agent -->
+            <button @click="openDirectPrintModal()"
+                class="px-4 py-1.5 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-1"
+                :class="printAgentOnline ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-400 cursor-not-allowed'"
+                :title="printAgentOnline ? 'Impresión directa via Print Agent (' + printAgentPrinter + ')' : 'Print Agent no disponible (localhost:5555)'">
+                <span>⚡</span>
+                <span x-text="printAgentOnline ? 'Directa' : 'Agent ✗'"></span>
+            </button>
+            <button @click="saveTemplate()"
+                class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Guardar</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══ Live Data Bar ═══ -->
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 px-4 py-2 mb-4 flex items-center gap-3 relative"
+         :class="liveDataActive ? 'border-teal-300 bg-teal-50/50' : ''">
+        <div class="flex items-center gap-2 flex-shrink-0">
+            <span class="text-sm font-semibold" :class="liveDataActive ? 'text-teal-700' : 'text-slate-500'">
+                <span x-show="liveDataActive">🟢</span><span x-show="!liveDataActive">⚪</span>
+                Datos en Vivo
+            </span>
+        </div>
+        <div class="relative flex-1 max-w-sm">
+            <input type="text" x-model="liveDataCode" placeholder="Buscar producto por código o nombre..."
+                class="w-full border rounded-lg px-3 py-1.5 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all pr-8"
+                :class="liveDataActive ? 'border-teal-300 bg-white' : 'border-slate-200'"
+                @input.debounce.300ms="searchLiveProducts()"
+                @keydown.enter="liveSearchResults.length > 0 && liveSearchHighlight >= 0 ? selectLiveProduct(liveSearchResults[liveSearchHighlight]) : loadLiveData()"
+                @keydown.arrow-down.prevent="liveSearchHighlight = Math.min(liveSearchHighlight + 1, liveSearchResults.length - 1)"
+                @keydown.arrow-up.prevent="liveSearchHighlight = Math.max(liveSearchHighlight - 1, 0)"
+                @keydown.escape="liveSearchResults = []">
+            <svg x-show="liveDataLoading" class="animate-spin h-4 w-4 text-teal-500 absolute right-3 top-2.5" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+            <!-- Dropdown -->
+            <div x-show="liveSearchResults.length > 0" x-transition
+                class="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-48 overflow-y-auto">
+                <template x-for="(prod, idx) in liveSearchResults" :key="prod.code">
+                    <button @click="selectLiveProduct(prod)"
+                        class="w-full text-left px-3 py-2 hover:bg-teal-50 transition-colors flex items-center justify-between text-sm border-b border-slate-50 last:border-0"
+                        :class="idx === liveSearchHighlight ? 'bg-teal-50' : ''">
+                        <div class="min-w-0">
+                            <span class="font-mono font-bold text-teal-700 text-xs" x-text="prod.code"></span>
+                            <span class="text-slate-600 ml-2 truncate" x-text="prod.name"></span>
+                        </div>
+                        <span x-show="prod.signal" class="text-[10px] px-1.5 py-0.5 rounded-full font-bold flex-shrink-0 ml-2"
+                            :class="(prod.signal.toUpperCase() === 'DANGER' || prod.signal.toUpperCase() === 'PELIGRO') ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'"
+                            x-text="prod.signal"></span>
+                    </button>
+                </template>
+            </div>
+        </div>
+        <button @click="loadLiveData()" :disabled="!liveDataCode || liveDataLoading"
+            class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors flex-shrink-0">
+            Cargar
+        </button>
+        <template x-if="liveDataActive">
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <span class="text-xs text-teal-700 font-medium bg-teal-100 px-2 py-0.5 rounded-full" x-text="liveDataName"></span>
+                <button @click="clearLiveData()" class="text-slate-400 hover:text-red-500 transition-colors" title="Quitar datos en vivo">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </template>
+    </div>
+
+    <!-- ═══ Designer Body ═══ -->
+    <div class="designer-container bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+        <!-- ═══ LEFT: Toolbox ═══ -->
+        <div class="toolbox">
+            <div class="p-3 border-b border-slate-200">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Elementos</h3>
+            </div>
+
+            <div class="py-2">
+                <!-- Quick-access section -->
+                <p class="px-4 text-[10px] font-semibold text-amber-500 uppercase tracking-wider mb-1">Básico</p>
+                <template x-for="field in toolboxFields.filter(f => f.category === 'basic')" :key="field.id">
+                    <div class="tool-item border border-amber-200 bg-amber-50/50" draggable="true" @dragstart="onToolDragStart($event, field)"
+                        @dragend="onToolDragEnd($event)">
+                        <div class="tool-icon bg-amber-100 text-amber-600" x-text="field.icon"></div>
+                        <span class="text-slate-700 text-xs font-medium" x-text="field.label"></span>
+                    </div>
+                </template>
+
+                <p class="px-4 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-3 mb-1">Texto</p>
+                <template x-for="field in toolboxFields.filter(f => f.category === 'text')" :key="field.id">
+                    <div class="tool-item" draggable="true" @dragstart="onToolDragStart($event, field)"
+                        @dragend="onToolDragEnd($event)">
+                        <div class="tool-icon bg-blue-100 text-blue-600" x-text="field.icon"></div>
+                        <span class="text-slate-700 text-xs font-medium" x-text="field.label"></span>
+                    </div>
+                </template>
+
+                <p class="px-4 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-3 mb-1">Códigos de
+                    Barras</p>
+                <template x-for="field in toolboxFields.filter(f => f.category === 'barcode')" :key="field.id">
+                    <div class="tool-item" draggable="true" @dragstart="onToolDragStart($event, field)"
+                        @dragend="onToolDragEnd($event)">
+                        <div class="tool-icon bg-emerald-100 text-emerald-600" x-text="field.icon"></div>
+                        <span class="text-slate-700 text-xs font-medium" x-text="field.label"></span>
+                    </div>
+                </template>
+
+                <p class="px-4 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-3 mb-1">Etiquetas /
+                    Estáticos</p>
+                <template x-for="field in toolboxFields.filter(f => f.category === 'static')" :key="field.id">
+                    <div class="tool-item" draggable="true" @dragstart="onToolDragStart($event, field)"
+                        @dragend="onToolDragEnd($event)">
+                        <div class="tool-icon bg-purple-100 text-purple-600" x-text="field.icon"></div>
+                        <span class="text-slate-700 text-xs font-medium" x-text="field.label"></span>
+                    </div>
+                </template>
+
+                <p class="px-4 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-3 mb-1">Otros</p>
+                <template x-for="field in toolboxFields.filter(f => f.category === 'other')" :key="field.id">
+                    <div class="tool-item" draggable="true" @dragstart="onToolDragStart($event, field)"
+                        @dragend="onToolDragEnd($event)">
+                        <div class="tool-icon bg-orange-100 text-orange-600" x-text="field.icon"></div>
+                        <span class="text-slate-700 text-xs font-medium" x-text="field.label"></span>
+                    </div>
+                </template>
+
+                <p class="px-4 text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-3 mb-1">Pictogramas
+                    GHS</p>
+                <div class="grid grid-cols-3 gap-2 px-2">
+                    <template x-for="field in toolboxFields.filter(f => f.category === 'pictogram')" :key="field.id">
+                        <div class="tool-item flex-col h-auto p-1 text-center" draggable="true"
+                            @dragstart="onToolDragStart($event, field)" @dragend="onToolDragEnd($event)">
+                            <div class="text-2xl mb-1" x-text="field.icon"></div>
+                            <span class="text-[9px] text-slate-600 truncate w-full"
+                                x-text="field.label.replace('GHS', '')"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CENTER: Canvas ═══ -->
+        <div class="canvas-area" @click.self="selectedElement = null">
+            
+            <div class="ruler-container">
+                <!-- Top-Left Corner -->
+                <div class="ruler-corner z-30"></div>
+
+                <!-- Horizontal Ruler -->
+                <div class="ruler-h-wrapper" x-ref="rulerHWrapper">
+                    <div class="ruler-h" :style="'width: ' + (Math.max(canvasWidth * pxPerMm * zoom + 80, 2000)) + 'px'">
+                        <template x-for="i in (Math.ceil(canvasWidth / 10) + 2)" :key="'h'+i">
+                            <div class="ruler-tick border-l border-slate-400"
+                                :class="(i-1) % 5 === 0 ? 'h-4' : 'h-2'"
+                                :style="'left: ' + ((i-1) * 10 * pxPerMm * zoom) + 'px; bottom: 0;'">
+                                <span x-show="(i-1) % 5 === 0" class="ruler-label select-none"
+                                    style="top: 2px; left: 2px;"
+                                    x-text="((i-1) * 10) + 'mm'"></span>
+                                <span x-show="(i-1) % 5 !== 0 && (i-1) > 0" class="ruler-label select-none text-[6px] text-slate-300"
+                                    style="top: 10px; left: 2px;"
+                                    x-text="(i-1) * 10"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Vertical Ruler -->
+                <div class="ruler-v-wrapper" x-ref="rulerVWrapper">
+                    <div class="ruler-v" :style="'height: ' + (Math.max(canvasHeight * pxPerMm * zoom + 80, 2000)) + 'px'">
+                        <template x-for="i in (Math.ceil(canvasHeight / 10) + 2)" :key="'v'+i">
+                            <div class="ruler-tick border-t border-slate-400"
+                                :class="(i-1) % 5 === 0 ? 'w-4' : 'w-2'"
+                                :style="'top: ' + ((i-1) * 10 * pxPerMm * zoom) + 'px; right: 0;'">
+                                <span x-show="(i-1) % 5 === 0" class="ruler-label select-none"
+                                    style="bottom: 2px; right: 2px; transform: rotate(-90deg); transform-origin: bottom right;"
+                                    x-text="((i-1) * 10) + 'mm'"></span>
+                                <span x-show="(i-1) % 5 !== 0 && (i-1) > 0" class="ruler-label select-none text-[6px] text-slate-300"
+                                    style="bottom: 2px; right: 2px; transform: rotate(-90deg); transform-origin: bottom right;"
+                                    x-text="(i-1) * 10"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Canvas Scroll Area -->
+                <div class="canvas-scroll-area" @scroll="syncRulers($event)">
+                    <div class="label-canvas" :class="{ 'grid-on': showGrid }" :style="canvasStyle()"
+                        @dragover.prevent="onCanvasDragOver($event)" @drop.prevent="onCanvasDrop($event)"
+                        @mousedown="onCanvasMouseDown($event)" x-ref="canvas">
+
+                <!-- Rendered Elements -->
+                <template x-for="(el, idx) in elements" :key="el._uid">
+                    <div class="canvas-element" :class="{ 'selected': selection.includes(idx) }" :data-type="el.type"
+                        :style="elementStyle(el)" @mousedown.stop="startDrag($event, idx)"
+                        @dblclick="editElementText(idx)">
+
+                        <!-- Text / Static -->
+                        <template x-if="el.type === 'text' || el.type === 'static'">
+                            <span :style="elementTextStyle(el)" :class="{ 'auto-fit-text': el.auto_fit }" x-text="elementDisplayText(el)"
+                                x-effect="if (el.auto_fit) $nextTick(() => autoFitElement($el, el))"></span>
+                        </template>
+
+                        <!-- Multiline (shows boundary hint when height_mm is set) -->
+                        <template x-if="el.type === 'multiline'">
+                            <span :style="elementTextStyle(el)" x-text="elementDisplayText(el)"></span>
+                        </template>
+
+                        <!-- Barcode -->
+                        <template x-if="el.type === 'barcode'">
+                            <div class="flex flex-col items-center" :style="el.auto_fit ? 'max-width: 100%; overflow: hidden;' : ''">
+                                <div
+                                    :style="'height:' + (el.bar_height_mm || 8) * pxPerMm * zoom + 'px; display: flex; align-items:center; width: 100%;' + (el.auto_fit ? ' max-width: 100%; overflow: hidden;' : '')"
+                                    :class="{ 'auto-fit-barcode': el.auto_fit }"
+                                    x-effect="$nextTick(() => renderBarcodePreview($el, el))">
+                                    <svg class="barcode-preview-svg"></svg>
+                                </div>
+                                <template x-if="el.show_text !== false">
+                                    <span :style="'font-size:' + Math.max(8, (el.font_size || 7) * zoom) + 'px;' + (el.auto_fit ? ' max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;' : '')"
+                                        class="mt-0.5" x-text="barcodeDisplayText(el)"></span>
+                                </template>
+                            </div>
+                        </template>
+
+                        <!-- Line separator -->
+                        <template x-if="el.type === 'line'">
+                            <div
+                                :style="'width:' + (el.width_mm || 50) * pxPerMm * zoom + 'px; border-bottom: ' + (el.line_width || 1) + 'px solid ' + (el.color || '#000') + ';'">
+                            </div>
+                        </template>
+
+                        <!-- Pictogram / Image -->
+                        <template x-if="el.type === 'image'">
+                            <img :src="el.src" class="pointer-events-none select-none"
+                                :style="'width:' + (el.width_mm || 20) * pxPerMm * zoom + 'px; height:' + (el.height_mm || 20) * pxPerMm * zoom + 'px; object-fit: contain;'">
+                        </template>
+
+                        <!-- Pictogram Group (Dynamic) -->
+                        <template x-if="el.type === 'pictogram_group'">
+                            <div
+                                class="w-full h-full border-2 border-dashed border-red-400 bg-red-50 relative pointer-events-none">
+                                <span class="text-[8px] text-red-800 font-bold absolute top-1 left-1 z-20">GHS</span>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <!-- Rotated container holding the 2x2 grid -->
+                                    <div class="grid grid-cols-2"
+                                        :style="'gap: ' + (2.5 * pxPerMm * zoom) + 'px; transform: rotate(45deg);'">
+                                        <!-- Each square is 34mm. 4 squares logic. Future: v-for based on actual data -->
+                                        <div class="border-2 border-red-500 bg-white flex items-center justify-center"
+                                            :style="'width: ' + (34 * pxPerMm * zoom) + 'px; height: ' + (34 * pxPerMm * zoom) + 'px;'">
+                                            <span class="transform -rotate-45 text-xs text-gray-300">1</span>
+                                        </div>
+                                        <div class="border-2 border-red-500 bg-white flex items-center justify-center"
+                                            :style="'width: ' + (34 * pxPerMm * zoom) + 'px; height: ' + (34 * pxPerMm * zoom) + 'px;'">
+                                            <span class="transform -rotate-45 text-xs text-gray-300">2</span>
+                                        </div>
+                                        <div class="border-2 border-red-500 bg-white flex items-center justify-center"
+                                            :style="'width: ' + (34 * pxPerMm * zoom) + 'px; height: ' + (34 * pxPerMm * zoom) + 'px;'">
+                                            <span class="transform -rotate-45 text-xs text-gray-300">3</span>
+                                        </div>
+                                        <div class="border-2 border-red-500 bg-white flex items-center justify-center"
+                                            :style="'width: ' + (34 * pxPerMm * zoom) + 'px; height: ' + (34 * pxPerMm * zoom) + 'px;'">
+                                            <span class="transform -rotate-45 text-xs text-gray-300">4</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Dynamic Pictogram Group (4-diamond cluster: Top, Left, Right, Bottom) -->
+                        <template x-if="el.type === 'pictogram_group_dynamic'">
+                            <div class="w-full h-full border-2 border-dashed border-indigo-400 bg-indigo-50 relative pointer-events-none">
+                                <span class="text-[8px] text-indigo-800 font-bold absolute top-1 left-1 z-20">🔄 Dinámico</span>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="flex flex-col items-center" :style="'gap: ' + (0 * pxPerMm * zoom) + 'px;'">
+                                        <!-- Top diamond -->
+                                        <div class="border-2 border-indigo-500 bg-white flex items-center justify-center"
+                                            :style="'width: ' + (12 * pxPerMm * zoom) + 'px; height: ' + (12 * pxPerMm * zoom) + 'px; transform: rotate(45deg); margin-bottom: ' + (-3 * pxPerMm * zoom) + 'px;'">
+                                            <span class="transform -rotate-45 text-[8px] text-indigo-300">1</span>
+                                        </div>
+                                        <!-- Middle row: Left + Right diamonds -->
+                                        <div class="flex" :style="'gap: ' + (1 * pxPerMm * zoom) + 'px;'">
+                                            <div class="border-2 border-indigo-500 bg-white flex items-center justify-center"
+                                                :style="'width: ' + (12 * pxPerMm * zoom) + 'px; height: ' + (12 * pxPerMm * zoom) + 'px; transform: rotate(45deg);'">
+                                                <span class="transform -rotate-45 text-[8px] text-indigo-300">2</span>
+                                            </div>
+                                            <div class="border-2 border-indigo-500 bg-white flex items-center justify-center"
+                                                :style="'width: ' + (12 * pxPerMm * zoom) + 'px; height: ' + (12 * pxPerMm * zoom) + 'px; transform: rotate(45deg);'">
+                                                <span class="transform -rotate-45 text-[8px] text-indigo-300">3</span>
+                                            </div>
+                                        </div>
+                                        <!-- Bottom diamond -->
+                                        <div class="border-2 border-indigo-500 bg-white flex items-center justify-center"
+                                            :style="'width: ' + (12 * pxPerMm * zoom) + 'px; height: ' + (12 * pxPerMm * zoom) + 'px; transform: rotate(45deg); margin-top: ' + (-3 * pxPerMm * zoom) + 'px;'">
+                                            <span class="transform -rotate-45 text-[8px] text-indigo-300">4</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Pictogram Group (editable size) -->
+                        <template x-if="el.type === 'pictogram_group_locked'">
+                            <div class="w-full h-full border-2 border-dashed border-red-400 bg-red-50 relative pointer-events-none">
+                                <span class="text-[8px] text-red-800 font-bold absolute top-1 left-1 z-20">GHS</span>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="grid grid-cols-2"
+                                        :style="'gap: ' + (2.5 * pxPerMm * zoom) + 'px; transform: rotate(45deg);'">
+                                        <template x-for="n in 4" :key="'pgl'+n">
+                                            <div class="border-2 border-red-500 bg-white flex items-center justify-center"
+                                                :style="'width: ' + ((el.picto_square_mm || 15) * pxPerMm * zoom) + 'px; height: ' + ((el.picto_square_mm || 15) * pxPerMm * zoom) + 'px;'">
+                                                <!-- Show real pictogram from live data or N/A for empty slots -->
+                                                <template x-if="liveDataActive && liveDataPictograms.length > 0">
+                                                    <template x-if="n <= liveDataPictograms.length">
+                                                        <img :src="liveDataPictograms[n-1]"
+                                                            class="transform -rotate-45 object-contain"
+                                                            :style="'width: ' + ((el.picto_square_mm || 15) * pxPerMm * zoom * 0.85) + 'px; height: ' + ((el.picto_square_mm || 15) * pxPerMm * zoom * 0.85) + 'px;'">
+                                                    </template>
+                                                </template>
+                                                <template x-if="liveDataActive && (liveDataPictograms.length === 0 || n > liveDataPictograms.length)">
+                                                    <span class="transform -rotate-45 font-bold text-gray-400"
+                                                        :style="'font-size: ' + Math.max(8, (el.picto_square_mm || 15) * pxPerMm * zoom * 0.3) + 'px;'">N/A</span>
+                                                </template>
+                                                <template x-if="!liveDataActive">
+                                                    <span class="transform -rotate-45 text-xs text-gray-300" x-text="n"></span>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
+
+                        <div class="resize-handle" @mousedown.stop.prevent="startResize($event, idx)"></div>
+                    </div>
+                </template>
+
+                <!-- Drop indicator -->
+                <div x-show="dropIndicator.visible"
+                    class="absolute border-2 border-dashed border-blue-400 bg-blue-50 bg-opacity-30 rounded pointer-events-none"
+                    :style="'left:' + dropIndicator.x + 'px; top:' + dropIndicator.y + 'px; width: 60px; height: 20px;'">
+                </div>
+            </div>
+            
+            </div>
+            </div>
+
+            <!-- Coordinates display >
+            <div class="absolute bottom-2 left-2 text-xs text-slate-400 bg-white bg-opacity-80 px-2 py-1 rounded"
+                x-show="mousePos.x >= 0">
+                X: <span x-text="mousePos.x.toFixed(1)"></span>mm,
+                Y: <span x-text="mousePos.y.toFixed(1)"></span>mm
+            </div>
+        </div-->
+        <!-- Coordinates display integrated in canvas area -->
+         <div class="absolute bottom-4 left-10 z-50 text-xs text-slate-500 bg-white bg-opacity-90 px-2 py-1 rounded shadow border border-slate-200"
+              x-show="mousePos.x >= 0">
+             X: <span x-text="mousePos.x.toFixed(1)"></span>mm,
+             Y: <span x-text="mousePos.y.toFixed(1)"></span>mm
+         </div>
+
+         </div>
+
+        <!-- ═══ RIGHT: Properties Panel ═══ -->
+        <div class="properties-panel">
+            <div class="p-3 border-b border-slate-200">
+                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Propiedades</h3>
+            </div>
+
+
+            <!-- Template Properties (No selection) -->
+            <template x-if="selectedElement === null">
+                <div class="space-y-4">
+                    <div class="prop-group">
+                        <div class="prop-label">Información de Plantilla</div>
+                        <p class="text-[10px] text-slate-400">Configuración global del documento</p>
+                    </div>
+
+                    <div class="prop-group">
+                        <div class="prop-label">Orientación de Salida</div>
+                        <select x-model.number="rotation" class="prop-input" @change="markDirty()">
+                            <option value="0">Horizontal (Estándar 0°)</option>
+                            <option value="90">Vertical (Rotado 90°)</option>
+                            <option value="270">Vertical (Rotado 270°)</option>
+                        </select>
+                        <p class="text-[9px] text-slate-400 mt-1">* Nota: La rotación se aplica al generar el PDF final,
+                            no al lienzo de diseño.</p>
+                    </div>
+
+                    <div class="prop-group">
+                        <div class="prop-label">Ayuda</div>
+                        <p class="text-xs text-slate-500">Arrastra elementos del panel izquierdo para comenzar. Haz clic
+                            en un elemento para editarlo.</p>
+                    </div>
+                </div>
+            </template>
+            <template x-if="selectedElement !== null && elements[selectedElement]">
+                <div>
+                    <!-- Field binding -->
+                    <div class="prop-group">
+                        <div class="prop-label">Campo de Datos</div>
+                        <select x-model="elements[selectedElement].field" class="prop-input" @change="markDirty()">
+                            <option value="">— Seleccionar —</option>
+                            <template x-for="(info, key) in availableFields" :key="key">
+                                <option :value="key" x-text="info.label"
+                                    :selected="elements[selectedElement].field === key"></option>
+                            </template>
+                            <option value="_custom_">Texto personalizado</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom text (only when field is custom) -->
+                    <template
+                        x-if="elements[selectedElement].field === '_custom_' || elements[selectedElement].type === 'static'">
+                        <div class="prop-group">
+                            <div class="prop-label">Texto</div>
+                            <template x-if="elements[selectedElement].type === 'multiline'">
+                                <textarea x-model="elements[selectedElement].custom_text" class="prop-input" rows="3"
+                                    style="resize: vertical; min-height: 60px;"
+                                    @input="markDirty()"></textarea>
+                            </template>
+                            <template x-if="elements[selectedElement].type !== 'multiline'">
+                                <input type="text" x-model="elements[selectedElement].custom_text" class="prop-input"
+                                    @input="markDirty()">
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- Position -->
+                    <div class="prop-group">
+                        <div class="prop-label">Posición (mm)</div>
+                        <div class="prop-row">
+                            <div>
+                                <label class="text-[10px] text-slate-400">X</label>
+                                <input type="number" step="0.5" x-model.number="elements[selectedElement].x_mm"
+                                    class="prop-input font-mono" @input="markDirty()">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-400">Y</label>
+                                <input type="number" step="0.5" x-model.number="elements[selectedElement].y_mm"
+                                    class="prop-input font-mono" @input="markDirty()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Width -->
+                    <div class="prop-group">
+                        <div class="prop-label">Ancho (mm)</div>
+                        <input type="number" step="1" x-model.number="elements[selectedElement].width_mm"
+                            class="prop-input font-mono"
+                            @input="markDirty()">
+                    </div>
+
+                    <!-- Height (for image, pictogram, pictogram_group, multiline, and text/static types) -->
+                    <template x-if="['image', 'pictogram_group', 'pictogram_group_locked', 'pictogram_group_dynamic', 'multiline', 'text', 'static'].includes(elements[selectedElement].type)">
+                        <div class="prop-group">
+                            <div class="prop-label">Alto (mm)</div>
+                            <input type="number" step="1" min="5" x-model.number="elements[selectedElement].height_mm"
+                                class="prop-input font-mono"
+                                @input="markDirty()">
+                            <template x-if="elements[selectedElement].type === 'multiline'">
+                                <p class="text-[9px] text-slate-400 mt-1">Limita el área de texto. La fuente se ajusta automáticamente.</p>
+                            </template>
+                            <template x-if="elements[selectedElement].type === 'text' || elements[selectedElement].type === 'static'">
+                                <p class="text-[9px] text-slate-400 mt-1">Opcional. Limita la altura y recorta si el texto excede el área. La fuente se reduce automáticamente al ancho.</p>
+                            </template>
+                        </div>
+                    </template>
+
+                    <!-- Max pictograms (for dynamic pictogram groups) -->
+                    <template x-if="elements[selectedElement].type === 'pictogram_group_dynamic'">
+                        <div class="prop-group">
+                            <div class="prop-label">Máx. Pictogramas</div>
+                            <input type="number" step="1" min="1" max="9"
+                                x-model.number="elements[selectedElement].max_pictos"
+                                class="prop-input font-mono"
+                                @input="markDirty()">
+                            <p class="text-[9px] text-slate-400 mt-1">Límite de pictogramas a mostrar (se ajustan al espacio)</p>
+                        </div>
+                    </template>
+
+                    <!-- Pictogram square size (for locked pictogram groups) -->
+                    <template x-if="elements[selectedElement].type === 'pictogram_group_locked'">
+                        <div class="prop-group">
+                            <div class="prop-label">Tamaño Rombo (mm)</div>
+                            <input type="number" step="0.5" min="5" max="40"
+                                x-model.number="elements[selectedElement].picto_square_mm"
+                                class="prop-input font-mono"
+                                @input="markDirty()">
+                            <p class="text-[9px] text-slate-400 mt-1">Lado de cada pictograma individual</p>
+                        </div>
+                    </template>
+
+                    <!-- Auto-fit toggle (for text and barcode types) -->
+                    <template x-if="['text', 'static', 'barcode'].includes(elements[selectedElement].type)">
+                        <div class="prop-group">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" x-model="elements[selectedElement].auto_fit" @change="markDirty()"
+                                    class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                                <span class="prop-label" style="margin: 0;">Ajustar al espacio</span>
+                            </label>
+                            <p class="text-[9px] text-slate-400 mt-1">Reduce automáticamente el tamaño para que no se desborde del campo.</p>
+                        </div>
+                    </template>
+
+                    <!-- Font (for text types) -->
+                    <template x-if="elements[selectedElement].type !== 'line'">
+                        <div>
+                            <div class="prop-group">
+                                <div class="prop-label">Fuente</div>
+                                <div class="prop-row">
+                                    <div>
+                                        <label class="text-[10px] text-slate-400">Tamaño (pt)</label>
+                                        <input type="number" step="0.5" min="4" max="48"
+                                            x-model.number="elements[selectedElement].font_size"
+                                            class="prop-input font-mono" @input="markDirty()">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-slate-400">Peso</label>
+                                        <select x-model="elements[selectedElement].font_weight" class="prop-input"
+                                            @change="markDirty()">
+                                            <option value="normal">Normal</option>
+                                            <option value="bold">Bold</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="prop-group">
+                                <div class="prop-label">Alineación</div>
+                                <div class="flex space-x-1">
+                                    <button @click="elements[selectedElement].alignment = 'left'; markDirty()"
+                                        :class="elements[selectedElement].alignment === 'left' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'"
+                                        class="flex-1 py-1.5 rounded text-xs font-medium transition-colors">Izq</button>
+                                    <button @click="elements[selectedElement].alignment = 'center'; markDirty()"
+                                        :class="elements[selectedElement].alignment === 'center' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'"
+                                        class="flex-1 py-1.5 rounded text-xs font-medium transition-colors">Centro</button>
+                                    <button @click="elements[selectedElement].alignment = 'right'; markDirty()"
+                                        :class="elements[selectedElement].alignment === 'right' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'"
+                                        class="flex-1 py-1.5 rounded text-xs font-medium transition-colors">Der</button>
+                                </div>
+                            </div>
+                            <div class="prop-group">
+                                <div class="prop-label">Color</div>
+                                <input type="color" x-model="elements[selectedElement].color"
+                                    class="w-full h-8 rounded cursor-pointer" @input="markDirty()">
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Barcode specific -->
+                    <template x-if="elements[selectedElement].type === 'barcode'">
+                        <div>
+                            <div class="prop-group">
+                                <div class="prop-label">Altura Barras (mm)</div>
+                                <input type="number" step="0.5" min="2" max="30"
+                                    x-model.number="elements[selectedElement].bar_height_mm"
+                                    class="prop-input font-mono" @input="markDirty()">
+                            </div>
+                            <div class="prop-group">
+                                <div class="prop-label">Ancho Barra (factor)</div>
+                                <input type="number" step="0.05" min="0.5" max="3"
+                                    x-model.number="elements[selectedElement].bar_width" class="prop-input font-mono"
+                                    @input="markDirty()">
+                            </div>
+                            <div class="prop-group">
+                                <div class="flex items-center">
+                                    <input type="checkbox" x-model="elements[selectedElement].show_text" class="mr-2"
+                                        @change="markDirty()">
+                                    <span class="text-xs text-slate-600">Mostrar texto bajo barras</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Line specific -->
+                    <template x-if="elements[selectedElement].type === 'line'">
+                        <div class="prop-group">
+                            <div class="prop-label">Grosor (px)</div>
+                            <input type="number" step="0.5" min="0.5" max="5"
+                                x-model.number="elements[selectedElement].line_width" class="prop-input font-mono"
+                                @input="markDirty()">
+                        </div>
+                    </template>
+
+                    <!-- Delete -->
+                    <div class="prop-group">
+                        <button @click="deleteElement(selectedElement)"
+                            class="w-full px-3 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-sm font-medium transition-colors">
+                            🗑️ Eliminar Elemento
+                        </button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- No selection -->
+            <template x-if="selectedElement === null">
+                <div class="p-6 text-center text-slate-400">
+                    <svg class="w-10 h-10 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                    </svg>
+                    <p class="text-sm">Selecciona un elemento para editar sus propiedades</p>
+                    <p class="text-xs mt-2">Arrastra elementos del panel izquierdo al lienzo</p>
+                </div>
+            </template>
+
+            <!-- Elements list -->
+            <div class="border-t border-slate-200 mt-2">
+                <div class="p-3">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        Elementos (<span x-text="elements.length"></span>)
+                    </h3>
+                    <div class="space-y-1 max-h-48 overflow-y-auto">
+                        <template x-for="(el, idx) in elements" :key="el._uid">
+                            <div @click="selectedElement = idx"
+                                :class="selectedElement === idx ? 'bg-blue-50 border-blue-200' : 'bg-white border-slate-200 hover:bg-slate-50'"
+                                class="px-3 py-1.5 rounded-lg border text-xs cursor-pointer transition-colors flex items-center justify-between">
+                                <span class="truncate" x-text="elementDisplayText(el).substring(0, 25)"></span>
+                                <span class="text-[10px] text-slate-400 ml-2 flex-shrink-0"
+                                    x-text="el.x_mm.toFixed(0) + ',' + el.y_mm.toFixed(0)"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save feedback -->
+    <div x-show="saveMessage" x-transition
+        class="fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg text-sm font-medium z-50"
+        :class="saveError ? 'bg-red-600 text-white' : 'bg-emerald-600 text-white'">
+        <span x-text="saveMessage"></span>
+    </div>
+
+    <!-- Test Print Modal -->
+    <div x-show="showTestPrintModal" id="test-print-modal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100]"
+        style="display: none;" x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-96 border border-slate-200">
+            <h3 class="text-lg font-bold text-slate-800 mb-2 font-display">Impresión de Prueba</h3>
+            <p class="text-sm text-slate-500 mb-4">Ingresa el código de un producto real para ver cómo queda la
+                plantilla.</p>
+
+            <div class="mb-4 relative">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Código del
+                    Producto</label>
+                <div class="relative">
+                    <input type="text" x-model="testProductCode" placeholder="Buscar por código o nombre..."
+                        class="w-full border border-slate-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all pr-8"
+                        @input.debounce.300ms="searchProducts()"
+                        @keydown.enter="productSearchResults.length > 0 && productSearchHighlight >= 0 ? selectProduct(productSearchResults[productSearchHighlight]) : runTestPrint()"
+                        @keydown.arrow-down.prevent="productSearchHighlight = Math.min(productSearchHighlight + 1, productSearchResults.length - 1)"
+                        @keydown.arrow-up.prevent="productSearchHighlight = Math.max(productSearchHighlight - 1, 0)"
+                        @keydown.escape="productSearchResults = []"
+                        @focus="testProductCode.length >= 2 && searchProducts()">
+                    <svg x-show="productSearching" class="animate-spin h-4 w-4 text-blue-500 absolute right-3 top-3.5" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    <svg x-show="!productSearching && testProductCode" @click="testProductCode = ''; productSearchResults = []" class="h-4 w-4 text-slate-400 hover:text-slate-600 absolute right-3 top-3.5 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+                <!-- Search Results Dropdown -->
+                <div x-show="productSearchResults.length > 0"
+                    x-transition
+                    class="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-48 overflow-y-auto">
+                    <template x-for="(prod, idx) in productSearchResults" :key="prod.code">
+                        <button @click="selectProduct(prod)"
+                            class="w-full text-left px-3 py-2 hover:bg-blue-50 transition-colors flex items-center justify-between text-sm border-b border-slate-50 last:border-0"
+                            :class="idx === productSearchHighlight ? 'bg-blue-50' : ''">
+                            <div class="min-w-0">
+                                <span class="font-mono font-bold text-blue-700 text-xs" x-text="prod.code"></span>
+                                <span class="text-slate-600 ml-2 truncate" x-text="prod.name"></span>
+                            </div>
+                            <span x-show="prod.signal" class="text-[10px] px-1.5 py-0.5 rounded-full font-bold flex-shrink-0 ml-2"
+                                :class="(prod.signal.toUpperCase() === 'DANGER' || prod.signal.toUpperCase() === 'PELIGRO') ? 'bg-red-100 text-red-700' : ((prod.signal.toUpperCase() === 'ATENCIÓN' || prod.signal.toUpperCase() === 'ATENCION') ? 'bg-yellow-100 text-yellow-700' : 'bg-slate-100 text-slate-700')"
+                                x-text="prod.signal"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div>
+                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Formato</label>
+                     <select x-model="testFormat" class="w-full border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <option value="pdf">PDF</option>
+                        <option value="image">Imagen (PNG)</option>
+                        <option value="image_jpg">Imagen (JPG)</option>
+                     </select>
+                </div>
+                <div>
+                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Rotación</label>
+                     <select x-model="testRotation" class="w-full border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                        <option value="default">Original</option>
+                        <option value="0">0° (Horizontal)</option>
+                        <option value="90">90° (Vert)</option>
+                        <option value="270">270° (Vert Inv)</option>
+                     </select>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Escalado (%)</label>
+                <div class="flex items-center space-x-2">
+                    <input type="range" min="50" max="150" step="1" x-model.number="testScale" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                    <input type="number" min="50" max="150" x-model.number="testScale" class="w-16 border border-slate-200 rounded-lg p-2 text-sm text-center font-mono focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <p class="text-[10px] text-slate-400 mt-1">Ajusta el tamaño final de la impresión (ej. 98% si sale cortado)</p>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+                <button @click="showTestPrintModal = false"
+                    class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+                    Cancelar
+                </button>
+                <button @click="runTestPrint()" :disabled="testPrinting"
+                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center shadow-lg shadow-blue-200">
+                    <span x-show="!testPrinting">🖨️ Imprimir</span>
+                    <span x-show="testPrinting" class="flex items-center">
+                        <svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Generando...
+                    </span>
+                </button>
+            </div>
+
+            <div x-show="testPrintMessage" class="mt-4 p-3 rounded-lg text-xs"
+                :class="testPrintError ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'">
+                <span x-text="testPrintMessage"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Preview Modal ═══ -->
+    <div x-show="showPreviewModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100]"
+        style="display: none;" x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 border border-indigo-200" style="width: 90vw; max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">👁️</div>
+                <h3 class="text-lg font-bold text-slate-800 font-display">Vista Previa con Datos Reales</h3>
+                <button @click="showPreviewModal = false; previewImageUrl = ''" class="ml-auto p-1 hover:bg-slate-100 rounded-lg transition-colors text-slate-400">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <p class="text-sm text-slate-500 mb-4">Selecciona un producto e ingresa los datos de lote y peso para ver cómo se verá la etiqueta.</p>
+
+            <!-- Product Search -->
+            <div class="mb-4 relative">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Código del Producto</label>
+                <div class="relative">
+                    <input type="text" x-model="previewProductCode" placeholder="Buscar por código o nombre..."
+                        class="w-full border border-slate-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all pr-8"
+                        @input.debounce.300ms="searchPreviewProducts()"
+                        @keydown.enter="previewProductSearchResults.length > 0 && previewProductSearchHighlight >= 0 ? selectPreviewProduct(previewProductSearchResults[previewProductSearchHighlight]) : loadPreview()"
+                        @keydown.arrow-down.prevent="previewProductSearchHighlight = Math.min(previewProductSearchHighlight + 1, previewProductSearchResults.length - 1)"
+                        @keydown.arrow-up.prevent="previewProductSearchHighlight = Math.max(previewProductSearchHighlight - 1, 0)"
+                        @keydown.escape="previewProductSearchResults = []"
+                        @focus="previewProductCode.length >= 2 && searchPreviewProducts()">
+                    <svg x-show="previewProductSearching" class="animate-spin h-4 w-4 text-indigo-500 absolute right-3 top-3.5" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                </div>
+                <!-- Search Results Dropdown -->
+                <div x-show="previewProductSearchResults.length > 0" x-transition
+                    class="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-48 overflow-y-auto">
+                    <template x-for="(prod, idx) in previewProductSearchResults" :key="prod.code">
+                        <button @click="selectPreviewProduct(prod)"
+                            class="w-full text-left px-3 py-2 hover:bg-indigo-50 transition-colors flex items-center justify-between text-sm border-b border-slate-50 last:border-0"
+                            :class="idx === previewProductSearchHighlight ? 'bg-indigo-50' : ''">
+                            <div class="min-w-0">
+                                <span class="font-mono font-bold text-indigo-700 text-xs" x-text="prod.code"></span>
+                                <span class="text-slate-600 ml-2 truncate" x-text="prod.name"></span>
+                            </div>
+                            <span x-show="prod.signal" class="text-[10px] px-1.5 py-0.5 rounded-full font-bold flex-shrink-0 ml-2"
+                                :class="(prod.signal.toUpperCase() === 'DANGER' || prod.signal.toUpperCase() === 'PELIGRO') ? 'bg-red-100 text-red-700' : ((prod.signal.toUpperCase() === 'ATENCIÓN' || prod.signal.toUpperCase() === 'ATENCION') ? 'bg-yellow-100 text-yellow-700' : 'bg-slate-100 text-slate-700')"
+                                x-text="prod.signal"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Override Fields: Batch, Weight, Dates -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                <!-- Batch / Lote -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">No. Lote</label>
+                    <input type="text" x-model="previewBatchNumber" placeholder="Ej: 240307-A"
+                        class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <!-- Net Weight -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Peso Neto (kg)</label>
+                    <input type="number" step="0.01" min="0" x-model="previewNetWeight" placeholder="20.00"
+                        class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <!-- Tara Weight -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Peso Tara (kg)</label>
+                    <input type="number" step="0.01" min="0" x-model="previewTaraWeight" placeholder="2.50"
+                        class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <!-- Elaboration Date -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">F. Elaboración</label>
+                    <input type="date" x-model="previewElabDate"
+                        class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+                <!-- Reinspection Date -->
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">F. Reinspección</label>
+                    <input type="date" x-model="previewReinspDate"
+                        class="w-full border border-slate-200 rounded-lg px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                </div>
+            </div>
+
+            <!-- Calculated gross weight display -->
+            <div x-show="previewNetWeight || previewTaraWeight" class="mb-3 text-xs text-slate-500 flex items-center gap-3">
+                <span>📦 <strong>Peso Bruto:</strong> <span x-text="((parseFloat(previewNetWeight || 0) + parseFloat(previewTaraWeight || 0)).toFixed(2)) + ' kg'"></span></span>
+            </div>
+
+            <!-- Load Preview button -->
+            <div class="flex items-center gap-2 mb-4">
+                <button @click="loadPreviewImage()" :disabled="previewLoading || !previewProductCode"
+                    class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span x-show="!previewLoading">👁️ Cargar Vista Previa</span>
+                    <span x-show="previewLoading" class="flex items-center">
+                        <svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Generando...
+                    </span>
+                </button>
+                <span x-show="previewImageUrl" class="text-xs text-emerald-600 font-medium">✅ <span x-text="previewProductCode"></span></span>
+            </div>
+
+            <!-- Preview Image -->
+            <div x-show="previewImageUrl" class="border border-slate-200 rounded-xl p-2 bg-slate-50 flex justify-center">
+                <img :src="previewImageUrl" class="max-w-full max-h-[60vh] object-contain rounded-lg shadow-md"
+                    style="image-rendering: -webkit-optimize-contrast;">
+            </div>
+
+            <!-- No preview yet -->
+            <div x-show="!previewImageUrl && !previewLoading" class="text-center py-12 text-slate-400">
+                <svg class="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <p class="text-sm">Busca un producto y presiona "Cargar Vista Previa" para ver el resultado</p>
+            </div>
+
+            <!-- Error message -->
+            <div x-show="previewMessage" class="mt-3 p-3 rounded-lg text-xs"
+                :class="previewError ? 'bg-red-50 text-red-700' : 'bg-indigo-50 text-indigo-700'">
+                <span x-text="previewMessage"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Direct Print Modal ═══ -->
+    <div x-show="showDirectPrintModal"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-[100]"
+        style="display: none;" x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-96 border border-emerald-200">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">⚡</div>
+                <h3 class="text-lg font-bold text-slate-800 font-display">Impresión Directa</h3>
+            </div>
+            <p class="text-sm text-slate-500 mb-1">Imprime directo a la impresora sin diálogo de Chrome.</p>
+            <p class="text-xs text-emerald-600 font-medium mb-4">
+                🖨️ <span x-text="printAgentPrinter"></span>
+                • <span x-text="canvasWidth + '×' + canvasHeight + ' mm'"></span>
+            </p>
+
+            <div class="mb-4 relative">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Código del Producto</label>
+                <div class="relative">
+                    <input type="text" x-model="directPrintProductCode" placeholder="Buscar por código o nombre..."
+                        class="w-full border border-slate-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all pr-8"
+                        @input.debounce.300ms="searchDirectProducts()"
+                        @keydown.enter="directProductSearchResults.length > 0 && directProductSearchHighlight >= 0 ? selectDirectProduct(directProductSearchResults[directProductSearchHighlight]) : runDirectPrint()"
+                        @keydown.arrow-down.prevent="directProductSearchHighlight = Math.min(directProductSearchHighlight + 1, directProductSearchResults.length - 1)"
+                        @keydown.arrow-up.prevent="directProductSearchHighlight = Math.max(directProductSearchHighlight - 1, 0)"
+                        @keydown.escape="directProductSearchResults = []"
+                        @focus="directPrintProductCode.length >= 2 && searchDirectProducts()">
+                    <svg x-show="directProductSearching" class="animate-spin h-4 w-4 text-emerald-500 absolute right-3 top-3.5" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                </div>
+                <!-- Search Results Dropdown -->
+                <div x-show="directProductSearchResults.length > 0" x-transition
+                    class="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-48 overflow-y-auto">
+                    <template x-for="(prod, idx) in directProductSearchResults" :key="prod.code">
+                        <button @click="selectDirectProduct(prod)"
+                            class="w-full text-left px-3 py-2 hover:bg-emerald-50 transition-colors flex items-center justify-between text-sm border-b border-slate-50 last:border-0"
+                            :class="idx === directProductSearchHighlight ? 'bg-emerald-50' : ''">
+                            <div class="min-w-0">
+                                <span class="font-mono font-bold text-emerald-700 text-xs" x-text="prod.code"></span>
+                                <span class="text-slate-600 ml-2 truncate" x-text="prod.name"></span>
+                            </div>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Rotación</label>
+                <!-- Almacen2 (warehouse 02): rotation locked to 90° for direct thermal printing -->
+                <template x-if="['02', 'Almacen2'].includes(userWarehouse)">
+                    <div>
+                        <div class="w-full border border-emerald-200 bg-emerald-50 rounded-lg p-2 text-sm text-emerald-700 font-medium">
+                            🔒 90° (Sentido Horario) — Bloqueado para Almacén 02
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-1">Rotación fijada para impresora térmica del almacén</p>
+                    </div>
+                </template>
+                <template x-if="!['02', 'Almacen2'].includes(userWarehouse)">
+                    <div>
+                        <select x-model="directPrintRotation" class="w-full border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                            <option value="default">Original (Plantilla)</option>
+                            <option value="0">0° (Sin Rotación)</option>
+                            <option value="90">90° (Sentido Horario)</option>
+                            <option value="180">180° (Inverso)</option>
+                            <option value="270">270° (Anti-horario)</option>
+                        </select>
+                        <p class="text-[10px] text-slate-400 mt-1">Ajusta la orientación de la impresión</p>
+                    </div>
+                </template>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+                <button @click="showDirectPrintModal = false"
+                    class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+                    Cancelar
+                </button>
+                <button @click="runDirectPrint()" :disabled="directPrinting"
+                    class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center shadow-lg shadow-emerald-200">
+                    <span x-show="!directPrinting">⚡ Imprimir</span>
+                    <span x-show="directPrinting" class="flex items-center">
+                        <svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Imprimiendo...
+                    </span>
+                </button>
+            </div>
+
+            <div x-show="directPrintMessage" class="mt-4 p-3 rounded-lg text-xs"
+                :class="directPrintError ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700'">
+                <span x-text="directPrintMessage"></span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Google Font for barcode preview -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
+<script>
+    function templateDesigner() {
+        return {
+            // ═══ State ═══
+            templateId: {{ ((template_data.id | tojson) if template_data else 'null') | safe }},
+            templateName: {{ ((template_data.name | tojson) if template_data else '"Nueva Plantilla"') | safe }},
+            canvasWidth: {{ (template_data.width_mm if template_data and template_data.width_mm else (200 if user_warehouse in ['02', 'Almacen2'] else 151)) | safe }},
+            canvasHeight: {{ (template_data.height_mm if template_data and template_data.height_mm else (150 if user_warehouse in ['02', 'Almacen2'] else 101)) | safe }},
+            rotation: {{ (template_data.rotation if template_data and template_data.rotation else 0) | safe }},
+
+            // ═══ Undo / Redo ═══
+            _undoStack: [],
+            _redoStack: [],
+            _lastSnapshot: '',
+            _undoMaxSize: 60,
+
+            // ═══ Live Data Preview ═══
+            liveDataCode: '',
+            liveDataName: '',
+            liveDataActive: false,
+            liveDataLoading: false,
+            liveDataFields: {},
+            liveDataPictograms: [],
+            barcodeSvgCache: {},
+            barcodeSvgPending: {},
+            barcodePreviewDefaults: {
+                process_barcode: '01-ENVASADO',
+                internal_code_barcode: 'IFF-QB00122',
+                batch_barcode: 'LOTE-PREVIEW-001',
+                net_weight_barcode: '20',
+                gross_weight_barcode: '22'
+            },
+            liveSearchResults: [],
+            liveSearchHighlight: -1,
+            liveSearching: false,
+
+            showTestPrintModal: false,
+            testProductCode: '',
+            testRotation: 'default',
+            testFormat: 'pdf',
+            testScale: 100,
+            testPrinting: false,
+            testPrintMessage: '',
+            testPrintError: false,
+            productSearchResults: [],
+            productSearchHighlight: -1,
+            productSearching: false,
+            // Print Agent state
+            printAgentOnline: false,
+            printAgentPrinter: '',
+            printAgentUrl: 'http://127.0.0.1:5555',
+            showDirectPrintModal: false,
+            directPrintProductCode: '',
+            directPrintRotation: 'default',
+            directPrinting: false,
+            directPrintMessage: '',
+            directPrintError: false,
+            directProductSearchResults: [],
+            directProductSearchHighlight: -1,
+            directProductSearching: false,
+            // User warehouse context (for conditional features like locked rotation)
+            userWarehouse: '{{ user_warehouse|default("", true) }}',
+            // Preview state
+            showPreviewModal: false,
+            previewProductCode: '',
+            previewLoading: false,
+            previewImageUrl: '',
+            previewMessage: '',
+            previewError: false,
+            previewProductSearchResults: [],
+            previewProductSearchHighlight: -1,
+            previewProductSearching: false,
+            // Preview overrides (user-editable)
+            previewBatchNumber: '',
+            previewNetWeight: '',
+            previewTaraWeight: '',
+            previewElabDate: '',
+            previewReinspDate: '',
+            elements: [],
+            selection: [],
+            selectedElement: null,
+            showGrid: true,
+            zoom: 1.0,
+            dirty: false,
+            saveMessage: '',
+            saveError: false,
+            pxPerMm: 3.78,
+            dragging: false,
+            dragOffsetX: 0,
+            dragOffsetY: 0,
+            dropIndicator: { visible: false, x: 0, y: 0 },
+            resizing: false,
+            resizeElement: null,
+            initialResize: {},
+            mousePos: { x: -1, y: -1 },
+            availableFields: {{ available_fields | tojson | safe }},
+            _uidCounter: 0,
+            Math: Math,
+        toolboxFields: [
+            // Text
+            { id: 'product_name', category: 'text', label: 'Nombre Producto', icon: '🏷️', type: 'text', field: 'product_name', defaults: { font_size: 18, font_weight: 'bold', alignment: 'center', width_mm: 80, auto_fit: true } },
+            { id: 'signal_word', category: 'text', label: 'Palabra de Señal', icon: '⚠️', type: 'text', field: 'signal_word', defaults: { font_size: 13, font_weight: 'bold', alignment: 'right', color: '#dc2626', width_mm: 40 } },
+            { id: 'cas_number', category: 'text', label: 'Número CAS', icon: '🔬', type: 'text', field: 'cas_number', defaults: { font_size: 6, width_mm: 40 } },
+            { id: 'h_statements', category: 'text', label: 'Indicaciones H', icon: '📋', type: 'multiline', field: 'h_statements', defaults: { font_size: 5.5, width_mm: 65 } },
+            { id: 'p_statements', category: 'text', label: 'Consejos P', icon: '📋', type: 'multiline', field: 'p_statements', defaults: { font_size: 5, width_mm: 65 } },
+            { id: 'elab_date_value', category: 'text', label: 'Fecha Elaboración', icon: '📅', type: 'text', field: 'elab_date_value', defaults: { font_size: 16, font_weight: 'bold', width_mm: 40 } },
+            { id: 'reinsp_date_value', category: 'text', label: 'Fecha Reinspección', icon: '📅', type: 'text', field: 'reinsp_date_value', defaults: { font_size: 16, font_weight: 'bold', width_mm: 40 } },
+            { id: 'lote_value', category: 'text', label: 'Valor LOTE', icon: '📦', type: 'text', field: 'lote_value', defaults: { font_size: 15, font_weight: 'bold', width_mm: 40 } },
+            { id: 'peso_bruto_value', category: 'text', label: 'Peso Bruto', icon: '⚖️', type: 'text', field: 'peso_bruto_value', defaults: { font_size: 14, font_weight: 'bold', width_mm: 35 } },
+            { id: 'peso_tara_value', category: 'text', label: 'Peso Tara', icon: '⚖️', type: 'text', field: 'peso_tara_value', defaults: { font_size: 14, font_weight: 'bold', width_mm: 35 } },
+            { id: 'peso_neto_value', category: 'text', label: 'Peso Neto', icon: '⚖️', type: 'text', field: 'peso_neto_value', defaults: { font_size: 10, font_weight: 'bold', width_mm: 35 } },
+            { id: 'internal_code_text', category: 'text', label: 'Código Interno', icon: '🔖', type: 'text', field: 'internal_code_text', defaults: { font_size: 7, width_mm: 35 } },
+
+            // Barcodes
+            { id: 'process_barcode', category: 'barcode', label: 'Barcode Proceso', icon: '▐▌', type: 'barcode', field: 'process_barcode', defaults: { bar_height_mm: 8, bar_width: 1, show_text: true, font_size: 7, width_mm: 40, auto_fit: true } },
+            { id: 'internal_code_barcode', category: 'barcode', label: 'Barcode Interno', icon: '▐▌', type: 'barcode', field: 'internal_code_barcode', defaults: { bar_height_mm: 7, bar_width: 1.25, show_text: true, font_size: 7, width_mm: 40, auto_fit: true } },
+            { id: 'batch_barcode', category: 'barcode', label: 'Barcode LOTE', icon: '▐▌', type: 'barcode', field: 'batch_barcode', defaults: { bar_height_mm: 4, bar_width: 1.25, show_text: false, font_size: 7, width_mm: 40, auto_fit: true } },
+            { id: 'net_weight_barcode', category: 'barcode', label: 'Barcode Peso Neto', icon: '▐▌', type: 'barcode', field: 'net_weight_barcode', defaults: { bar_height_mm: 4, bar_width: 0.9, show_text: true, font_size: 10, width_mm: 30, auto_fit: true } },
+            { id: 'gross_weight_barcode', category: 'barcode', label: 'Barcode Peso Bruto', icon: '▐▌', type: 'barcode', field: 'gross_weight_barcode', defaults: { bar_height_mm: 4, bar_width: 0.9, show_text: true, font_size: 10, width_mm: 30, auto_fit: true } },
+
+            // Static labels
+            { id: 'h_header', category: 'static', label: 'Encab. Peligro', icon: '📌', type: 'static', field: 'h_header', defaults: { font_size: 7, font_weight: 'bold', custom_text: 'INDICACIONES DE PELIGRO:', width_mm: 60 } },
+            { id: 'p_header', category: 'static', label: 'Encab. Prudencia', icon: '📌', type: 'static', field: 'p_header', defaults: { font_size: 7, font_weight: 'bold', custom_text: 'CONSEJOS DE PRUDENCIA:', width_mm: 60 } },
+            { id: 'elab_date_label', category: 'static', label: 'Etiq. F.Elaboración', icon: '📌', type: 'static', field: 'elab_date_label', defaults: { font_size: 7, font_weight: 'bold', custom_text: 'F.ELABORACION:', width_mm: 30 } },
+            { id: 'reinsp_date_label', category: 'static', label: 'Etiq. F.Reinspección', icon: '📌', type: 'static', field: 'reinsp_date_label', defaults: { font_size: 7, font_weight: 'bold', custom_text: 'F.REINSPECCION:', width_mm: 30 } },
+            { id: 'lote_label', category: 'static', label: 'Etiq. LOTE', icon: '📌', type: 'static', field: 'lote_label', defaults: { font_size: 10, font_weight: 'bold', custom_text: 'LOTE:', width_mm: 20 } },
+            { id: 'peso_bruto_label', category: 'static', label: 'Etiq. Peso Bruto', icon: '📌', type: 'static', field: 'peso_bruto_label', defaults: { font_size: 7, font_weight: 'bold', custom_text: 'PESO BRUTO:', width_mm: 25 } },
+            { id: 'peso_tara_label', category: 'static', label: 'Etiq. Peso Tara', icon: '📌', type: 'static', field: 'peso_tara_label', defaults: { font_size: 7, font_weight: 'bold', custom_text: 'PESO TARA:', width_mm: 25 } },
+            { id: 'peso_neto_label', category: 'static', label: 'Etiq. Peso Neto', icon: '📌', type: 'static', field: 'peso_neto_label', defaults: { font_size: 7, font_weight: 'bold', custom_text: 'PESO NETO:', width_mm: 25 } },
+            { id: 'address_footer', category: 'static', label: 'Dirección Pie', icon: '📌', type: 'static', field: 'address_footer', defaults: { font_size: 7, alignment: 'center', custom_text: 'QUIMICA BOSS San Agustin 759 Col. El Briseño, Zapopan, Jalisco, México.', width_mm: 150 } },
+            { id: 'static_text', category: 'static', label: 'Texto Libre', icon: '✏️', type: 'static', field: '_custom_', defaults: { font_size: 10, custom_text: 'Texto', width_mm: 40 } },
+
+            // Basic (quick-access)
+            { id: 'basic_text', category: 'basic', label: 'Texto Libre', icon: '✏️', type: 'static', field: '_custom_', defaults: { font_size: 10, custom_text: 'Texto personalizado', width_mm: 50 } },
+            { id: 'basic_multiline', category: 'basic', label: 'Bloque de Texto', icon: '📝', type: 'multiline', field: '_custom_', defaults: { font_size: 8, custom_text: 'Escriba aquí su texto...', width_mm: 60 } },
+
+            // Other
+            { id: 'separator_line', category: 'other', label: 'Línea Separadora', icon: '➖', type: 'line', field: 'separator_line', defaults: { width_mm: 144, line_width: 1, color: '#000000' } },
+            { id: 'company_logo', category: 'other', label: 'Logo Empresa', icon: '🏢', type: 'image', field: 'company_logo', src: '/static/images/logo_vertical.2.png', defaults: { width_mm: 15, height_mm: 15 } },
+
+            // Pictograms
+            { id: 'ghs01', category: 'pictogram', label: 'GHS01 - Bomba', icon: '💣', type: 'image', field: 'ghs01', src: '/static/img/pictograms/bomba.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs02', category: 'pictogram', label: 'GHS02 - Llama', icon: '🔥', type: 'image', field: 'ghs02', src: '/static/img/pictograms/llama.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs03', category: 'pictogram', label: 'GHS03 - Llama Círculo', icon: '⭕', type: 'image', field: 'ghs03', src: '/static/img/pictograms/llama_circulo.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs04', category: 'pictogram', label: 'GHS04 - Gas', icon: '💨', type: 'image', field: 'ghs04', src: '/static/img/pictograms/cilindro_gas.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs05', category: 'pictogram', label: 'GHS05 - Corrosión', icon: '🧪', type: 'image', field: 'ghs05', src: '/static/img/pictograms/corrosion.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs06', category: 'pictogram', label: 'GHS06 - Calavera', icon: '☠️', type: 'image', field: 'ghs06', src: '/static/img/pictograms/calavera.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs07', category: 'pictogram', label: 'GHS07 - Exclamación', icon: '❗', type: 'image', field: 'ghs07', src: '/static/img/pictograms/exclamacion.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs08', category: 'pictogram', label: 'GHS08 - Salud', icon: '👤', type: 'image', field: 'ghs08', src: '/static/img/pictograms/peligro_salud.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs09', category: 'pictogram', label: 'GHS09 - Ambiente', icon: '🌳', type: 'image', field: 'ghs09', src: '/static/img/pictograms/ambiente.png', defaults: { width_mm: 20, height_mm: 20 } },
+            { id: 'ghs_pictograms_locked', category: 'pictogram', label: 'Pictogramas Producto', icon: '🔒', type: 'pictogram_group_locked', field: 'ghs_pictograms_locked', defaults: { width_mm: 70, height_mm: 70, picto_square_mm: 15 } },
+            { id: 'ghs_pictograms_dynamic', category: 'pictogram', label: 'Pictograma Dinámico', icon: '🔄', type: 'pictogram_group_dynamic', field: 'ghs_pictograms_dynamic', defaults: { width_mm: 60, height_mm: 60, max_pictos: 6 } },
+        ],
+
+            // ═══ Init ═══
+            init() {
+        {% if template_data %}
+        // Load existing elements
+        const raw = {{ template_data.elements | tojson | safe
+    }};
+    this.elements = raw.map(el => ({ ...el, _uid: this.nextUid() }));
+    {% endif %}
+    // Mouse position tracker on canvas
+    this.$nextTick(() => {
+        const canvas = this.$refs.canvas;
+        if (canvas) {
+            canvas.addEventListener('mousemove', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                this.mousePos.x = (e.clientX - rect.left) / (this.pxPerMm * this.zoom);
+                this.mousePos.y = (e.clientY - rect.top) / (this.pxPerMm * this.zoom);
+            });
+            canvas.addEventListener('mouseleave', () => {
+                this.mousePos = { x: -1, y: -1 };
+            });
+        }
+    });
+
+    // Auto-calculate initial zoom
+    this.$nextTick(() => this.autoZoom());
+
+    // Lock canvas size per warehouse
+    this.applyWarehouseSize();
+
+    // Take initial undo snapshot
+    this.$nextTick(() => this.takeSnapshot());
+
+    // Check Print Agent availability
+    this.checkPrintAgent();
+        },
+
+    nextUid() { return ++this._uidCounter; },
+
+    autoZoom() {
+        // Simple zoom
+        this.zoom = 1.6;
+    },
+
+    // ═══ Warehouse-locked canvas sizes ═══
+    warehouseSizes: {
+        '01': { w: 151, h: 101 },  // Almacen1
+        '02': { w: 200, h: 150 },  // Almacen2
+        'Almacen1': { w: 151, h: 101 },
+        'Almacen2': { w: 200, h: 150 },
+    },
+
+    get sizeIsLocked() {
+        return this.userWarehouse in this.warehouseSizes;
+    },
+
+    applyWarehouseSize() {
+        const preset = this.warehouseSizes[this.userWarehouse];
+        if (preset && !this.templateId) {
+            // Only override for NEW templates; existing ones keep their saved size
+            this.canvasWidth = preset.w;
+            this.canvasHeight = preset.h;
+        }
+    },
+
+    // ═══ Canvas rendering ═══
+    canvasStyle() {
+        const w = this.canvasWidth * this.pxPerMm * this.zoom;
+        const h = this.canvasHeight * this.pxPerMm * this.zoom;
+        let bg = '';
+        if (this.showGrid) {
+            const gridSize = 5 * this.pxPerMm * this.zoom; // 5mm grid
+            bg = `background-size: ${gridSize}px ${gridSize}px;`;
+        }
+        return `width: ${w}px; height: ${h}px; ${bg}`;
+    },
+
+    updateCanvasSize() {
+        this.markDirty();
+        this.$nextTick(() => this.autoZoom());
+    },
+
+    syncRulers(e) {
+        const target = e.target;
+        if (this.$refs.rulerHWrapper) {
+            this.$refs.rulerHWrapper.scrollLeft = target.scrollLeft;
+        }
+        if (this.$refs.rulerVWrapper) {
+            this.$refs.rulerVWrapper.scrollTop = target.scrollTop;
+        }
+    },
+
+    elementStyle(el) {
+        const x = el.x_mm * this.pxPerMm * this.zoom;
+        const y = el.y_mm * this.pxPerMm * this.zoom;
+        let style = `left: ${x}px; top: ${y}px;`;
+        if (el.type === 'pictogram_group_locked' || el.type === 'pictogram_group_dynamic') {
+            // Use element's own width/height (editable in properties panel)
+            const defW = el.type === 'pictogram_group_dynamic' ? 60 : 70;
+            const defH = el.type === 'pictogram_group_dynamic' ? 60 : 70;
+            const w = (el.width_mm || defW) * this.pxPerMm * this.zoom;
+            const h = (el.height_mm || defH) * this.pxPerMm * this.zoom;
+            style += ` width: ${w}px; height: ${h}px;`;
+            return style;
+        }
+        if (el.width_mm) {
+            style += ` width: ${el.width_mm * this.pxPerMm * this.zoom}px;`;
+        }
+        if (el.height_mm && (el.type === 'image' || el.type === 'pictogram_group')) {
+            style += ` height: ${el.height_mm * this.pxPerMm * this.zoom}px;`;
+        }
+        if (el.height_mm && el.type === 'multiline') {
+            style += ` height: ${el.height_mm * this.pxPerMm * this.zoom}px; overflow: hidden; border: 1px dashed rgba(59,130,246,0.3); border-radius: 2px;`;
+        }
+        if (el.height_mm && (el.type === 'text' || el.type === 'static')) {
+            style += ` height: ${el.height_mm * this.pxPerMm * this.zoom}px; overflow: hidden; border: 1px dashed rgba(16,185,129,0.3); border-radius: 2px;`;
+        }
+        return style;
+    },
+
+    elementTextStyle(el) {
+        const size = Math.max(8, (el.font_size || 10) * this.zoom);
+        let style = `font-size: ${size}px;`;
+        if (el.font_weight === 'bold') style += ' font-weight: bold;';
+        if (el.alignment) style += ` text-align: ${el.alignment};`;
+        if (el.color) style += ` color: ${el.color};`;
+        style += ' display: block; width: 100%; overflow: hidden; text-overflow: ellipsis;';
+        if (el.type === 'text' || el.type === 'static' || el.type === 'barcode') {
+            style += ' white-space: nowrap;';
+        }
+        return style;
+    },
+
+    /**
+     * Auto-fit: scale down overflowing content so it stays within its element bounds.
+     * Works for text spans and barcode containers.
+     */
+    autoFitElement(domEl, el) {
+        if (!domEl || !el.auto_fit) return;
+        // Reset any previous transform
+        domEl.style.transform = '';
+        domEl.style.transformOrigin = 'left top';
+        const parentW = domEl.parentElement ? domEl.parentElement.clientWidth : 0;
+        const parentH = domEl.parentElement ? domEl.parentElement.clientHeight : 0;
+        if (parentW <= 0) return;
+        const contentW = domEl.scrollWidth;
+        const contentH = domEl.scrollHeight;
+        let scaleX = contentW > 0 ? parentW / contentW : 1;
+        let scaleY = (parentH > 0 && contentH > parentH) ? parentH / contentH : 1;
+        if (el.type === 'barcode') {
+            if (el.alignment === 'center') domEl.style.transformOrigin = 'center top';
+            if (el.alignment === 'right') domEl.style.transformOrigin = 'right top';
+            if (Math.abs(scaleX - 1) > 0.01) {
+                domEl.style.transform = `scaleX(${scaleX})`;
+            }
+            return;
+        }
+        const scale = Math.min(scaleX, scaleY);
+        if (scale < 1) {
+            domEl.style.transform = `scale(${scale})`;
+        }
+    },
+
+    barcodeDisplayText(el) {
+        if (this.liveDataActive) {
+            const liveValue = this.liveDataFields[el.field];
+            if (liveValue !== undefined && liveValue !== null && liveValue !== '') {
+                return String(liveValue);
+            }
+        }
+        if (el.custom_text) return String(el.custom_text);
+        if (this.barcodePreviewDefaults[el.field]) return this.barcodePreviewDefaults[el.field];
+        const fieldInfo = this.availableFields[el.field];
+        if (fieldInfo && fieldInfo.default_value) return String(fieldInfo.default_value);
+        return el.field || 'BARCODE';
+    },
+
+    barcodePreviewCacheKey(el, value) {
+        return JSON.stringify({
+            value,
+            width_mm: Number(el.width_mm || 0),
+            bar_height_mm: Number(el.bar_height_mm || 8),
+            bar_width: Number(el.bar_width || 1),
+            auto_fit: !!el.auto_fit,
+        });
+    },
+
+    applyBarcodePreviewSvg(containerEl, svgMarkup, previewWidthMm, previewHeightMm, el) {
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svgMarkup, 'image/svg+xml');
+        const renderedSvg = svgDoc.documentElement;
+        if (!renderedSvg || renderedSvg.nodeName.toLowerCase() !== 'svg') return;
+
+        renderedSvg.classList.add('barcode-preview-svg');
+        renderedSvg.setAttribute('preserveAspectRatio', 'none');
+        // When auto_fit is on, stretch SVG to fill the full element width
+        const displayWidthMm = (el.auto_fit && el.width_mm > 0) ? el.width_mm : Math.max(previewWidthMm, 0.1);
+        renderedSvg.style.width = `${displayWidthMm * this.pxPerMm * this.zoom}px`;
+        renderedSvg.style.height = `${Math.max(previewHeightMm, 0.1) * this.pxPerMm * this.zoom}px`;
+
+        if (el.alignment === 'center') containerEl.style.justifyContent = 'center';
+        else if (el.alignment === 'right') containerEl.style.justifyContent = 'flex-end';
+        else containerEl.style.justifyContent = 'flex-start';
+
+        containerEl.replaceChildren(renderedSvg);
+    },
+
+    fallbackBarcodePreview(containerEl, el, value) {
+        let svgEl = containerEl.querySelector('svg');
+        if (!svgEl) {
+            svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            containerEl.replaceChildren(svgEl);
+        }
+        if (el.alignment === 'center') containerEl.style.justifyContent = 'center';
+        else if (el.alignment === 'right') containerEl.style.justifyContent = 'flex-end';
+        else containerEl.style.justifyContent = 'flex-start';
+
+        if (typeof window.JsBarcode !== 'function') {
+            svgEl.innerHTML = '';
+            return;
+        }
+
+        window.JsBarcode(svgEl, value, {
+            format: 'CODE128',
+            displayValue: false,
+            margin: 0,
+            width: Math.max(1, (el.bar_width || 1) * this.zoom),
+            height: Math.max(8, (el.bar_height_mm || 8) * this.pxPerMm * this.zoom),
+            lineColor: el.color || '#000000',
+            background: 'transparent',
+        });
+
+        svgEl.classList.add('barcode-preview-svg');
+        svgEl.style.height = `${Math.max(8, (el.bar_height_mm || 8) * this.pxPerMm * this.zoom)}px`;
+        if (el.auto_fit && el.width_mm > 0) {
+            svgEl.style.width = `${el.width_mm * this.pxPerMm * this.zoom}px`;
+            svgEl.setAttribute('preserveAspectRatio', 'none');
+        } else {
+            svgEl.style.width = 'auto';
+        }
+
+        if (el.auto_fit) {
+            this.$nextTick(() => this.autoFitElement(containerEl, el));
+        }
+    },
+
+    async renderBarcodePreview(containerEl, el) {
+        if (!containerEl || el.type !== 'barcode') return;
+        const value = this.barcodeDisplayText(el);
+        if (!value) {
+            containerEl.replaceChildren(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
+            return;
+        }
+
+        const cacheKey = this.barcodePreviewCacheKey(el, value);
+
+        try {
+            let payload = this.barcodeSvgCache[cacheKey];
+            if (!payload) {
+                if (!this.barcodeSvgPending[cacheKey]) {
+                    this.barcodeSvgPending[cacheKey] = fetch('/templates/api/barcode_preview', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            value,
+                            width_mm: el.width_mm || 0,
+                            bar_height_mm: el.bar_height_mm || 8,
+                            bar_width: el.bar_width || 1,
+                            auto_fit: !!el.auto_fit,
+                        })
+                    })
+                        .then(resp => resp.json())
+                        .then(data => data.success ? data : null)
+                        .finally(() => { delete this.barcodeSvgPending[cacheKey]; });
+                }
+                payload = await this.barcodeSvgPending[cacheKey];
+                if (payload) {
+                    this.barcodeSvgCache[cacheKey] = payload;
+                }
+            }
+
+            if (payload && payload.svg) {
+                this.applyBarcodePreviewSvg(containerEl, payload.svg, payload.width_mm, payload.height_mm, el);
+            } else {
+                this.fallbackBarcodePreview(containerEl, el, value);
+            }
+        } catch (error) {
+            console.warn('Barcode preview render failed', el.field, error);
+            this.fallbackBarcodePreview(containerEl, el, value);
+        }
+    },
+
+    elementDisplayText(el) {
+        // Live data mode: show real product values
+        if (this.liveDataActive && this.liveDataFields[el.field]) return this.liveDataFields[el.field];
+        if (el.custom_text) return el.custom_text;
+        const fieldInfo = this.availableFields[el.field];
+        if (fieldInfo) {
+            if (fieldInfo.default_value) return fieldInfo.default_value;
+            return `{${fieldInfo.label}}`;
+        }
+        return el.field || 'Elemento';
+    },
+
+    // ═══ Toolbox drag → Canvas ═══
+    onToolDragStart(e, field) {
+        e.dataTransfer.setData('application/json', JSON.stringify(field));
+        e.dataTransfer.effectAllowed = 'copy';
+    },
+    onToolDragEnd(e) {
+        this.dropIndicator.visible = false;
+    },
+    onCanvasDragOver(e) {
+        e.dataTransfer.dropEffect = 'copy';
+        const rect = this.$refs.canvas.getBoundingClientRect();
+        this.dropIndicator.visible = true;
+        this.dropIndicator.x = e.clientX - rect.left;
+        this.dropIndicator.y = e.clientY - rect.top;
+    },
+    onCanvasDrop(e) {
+        this.dropIndicator.visible = false;
+        let data;
+        try { data = JSON.parse(e.dataTransfer.getData('application/json')); } catch { return; }
+
+        const rect = this.$refs.canvas.getBoundingClientRect();
+        const x_mm = (e.clientX - rect.left) / (this.pxPerMm * this.zoom);
+        const y_mm = (e.clientY - rect.top) / (this.pxPerMm * this.zoom);
+
+        const newEl = {
+            _uid: this.nextUid(),
+            type: data.type,
+            field: data.field,
+            x_mm: Math.round(x_mm * 2) / 2,  // snap to 0.5mm
+            y_mm: Math.round(y_mm * 2) / 2,
+            font_size: 10,
+            font_weight: 'normal',
+            alignment: 'left',
+            color: '#000000',
+            src: data.src || '', // Include source for images
+            ...data.defaults
+        };
+
+        if (newEl.type === 'pictogram_group_locked') {
+            newEl.width_mm = newEl.width_mm || 70;
+            newEl.height_mm = newEl.height_mm || 70;
+            newEl.picto_square_mm = newEl.picto_square_mm || 15;
+        }
+        if (newEl.type === 'pictogram_group_dynamic') {
+            newEl.width_mm = newEl.width_mm || 60;
+            newEl.height_mm = newEl.height_mm || 60;
+            newEl.max_pictos = newEl.max_pictos || 4;
+        }
+
+        this.elements.push(newEl);
+        this.selectedElement = this.elements.length - 1;
+        this.markDirty();
+    },
+
+    // ═══ Element dragging on canvas ═══
+    onCanvasMouseDown(e) {
+        // Clicked on empty canvas area
+        if (e.target === this.$refs.canvas) {
+            this.selectedElement = null;
+            this.selection = [];
+        }
+    },
+
+    startResize(e, idx) {
+        this.resizing = true;
+        this.resizeElement = idx;
+        const el = this.elements[idx];
+
+        // Store initial state
+        this.initialResize = {
+            w: el.width_mm,
+            h: el.height_mm,
+            mouseX: e.clientX,
+            mouseY: e.clientY
+        };
+
+        const onResizeMove = (me) => {
+            if (!this.resizing) return;
+
+            const dx = (me.clientX - this.initialResize.mouseX) / (this.pxPerMm * this.zoom);
+            const dy = (me.clientY - this.initialResize.mouseY) / (this.pxPerMm * this.zoom);
+
+            let newW = this.initialResize.w + dx;
+            let newH = this.initialResize.h + dy;
+
+            // Minimum size constraint (5mm)
+            newW = Math.max(5, newW);
+            newH = Math.max(5, newH);
+
+            const el = this.elements[this.resizeElement];
+            if (el) {
+                el.width_mm = parseFloat(newW.toFixed(1));
+                el.height_mm = parseFloat(newH.toFixed(1));
+            }
+            this.markDirty();
+        };
+
+        const onResizeUp = () => {
+            this.resizing = false;
+            this.resizeElement = null;
+            document.removeEventListener('mousemove', onResizeMove);
+            document.removeEventListener('mouseup', onResizeUp);
+        };
+
+        document.addEventListener('mousemove', onResizeMove);
+        document.addEventListener('mouseup', onResizeUp);
+    },
+
+    startDrag(e, idx) {
+        // Selection Logic
+        if (e.shiftKey || e.ctrlKey) {
+            const sIdx = this.selection.indexOf(idx);
+            if (sIdx > -1) {
+                this.selection.splice(sIdx, 1);
+                if (this.selectedElement === idx) {
+                    this.selectedElement = this.selection.length > 0 ? this.selection[this.selection.length - 1] : null;
+                }
+                return;
+            } else {
+                this.selection.push(idx);
+                this.selectedElement = idx;
+            }
+        } else {
+            if (!this.selection.includes(idx)) {
+                this.selection = [idx];
+                this.selectedElement = idx;
+            } else {
+                this.selectedElement = idx;
+            }
+        }
+
+        this.dragging = true;
+        const rect = this.$refs.canvas.getBoundingClientRect();
+
+        // Store initial positions
+        const initialPositions = {};
+        this.selection.forEach(sIdx => {
+            const el = this.elements[sIdx];
+            if (el) initialPositions[sIdx] = { x: el.x_mm, y: el.y_mm };
+        });
+
+        const mouseStartX = (e.clientX - rect.left) / (this.pxPerMm * this.zoom);
+        const mouseStartY = (e.clientY - rect.top) / (this.pxPerMm * this.zoom);
+
+        const onMove = (me) => {
+            if (!this.dragging) return;
+            const r = this.$refs.canvas.getBoundingClientRect();
+            const currentMouseX = (me.clientX - r.left) / (this.pxPerMm * this.zoom);
+            const currentMouseY = (me.clientY - r.top) / (this.pxPerMm * this.zoom);
+
+            const deltaX = currentMouseX - mouseStartX;
+            const deltaY = currentMouseY - mouseStartY;
+
+            this.selection.forEach(sIdx => {
+                const initPos = initialPositions[sIdx];
+                if (!initPos) return;
+
+                let newX = initPos.x + deltaX;
+                let newY = initPos.y + deltaY;
+
+                // Snap
+                newX = Math.round(newX * 2) / 2;
+                newY = Math.round(newY * 2) / 2;
+
+                const el = this.elements[sIdx];
+                newX = Math.max(0, Math.min(newX, this.canvasWidth - (el.width_mm || 0)));
+                newY = Math.max(0, Math.min(newY, this.canvasHeight - (el.height_mm || 0)));
+
+                el.x_mm = newX;
+                el.y_mm = newY;
+            });
+            this.markDirty();
+        };
+
+        const onUp = () => {
+            this.dragging = false;
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+        };
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+    },
+
+    // ═══ Keyboard shortcuts ═══
+    handleKeydown(e) {
+        // Undo: Ctrl+Z  (works even with no element selected)
+        if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') {
+            e.preventDefault();
+            this.undo();
+            return;
+        }
+        // Redo: Ctrl+Shift+Z  or  Ctrl+Y
+        if ((e.ctrlKey || e.metaKey) && ((e.shiftKey && e.key === 'z') || (!e.shiftKey && e.key === 'y'))) {
+            e.preventDefault();
+            this.redo();
+            return;
+        }
+
+        if (this.selectedElement === null) return;
+        const el = this.elements[this.selectedElement];
+        if (!el) return;
+
+        // Delete / Backspace (only if not focused on input)
+        if ((e.key === 'Delete' || e.key === 'Backspace') && !['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) {
+            e.preventDefault();
+            this.deleteElement(this.selectedElement);
+            return;
+        }
+
+        // Arrow keys for fine positioning
+        const step = e.shiftKey ? 5 : 0.5;
+        if (e.key === 'ArrowLeft') { e.preventDefault(); el.x_mm = Math.max(0, el.x_mm - step); this.markDirty(); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); el.x_mm = Math.min(this.canvasWidth, el.x_mm + step); this.markDirty(); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); el.y_mm = Math.max(0, el.y_mm - step); this.markDirty(); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); el.y_mm = Math.min(this.canvasHeight, el.y_mm + step); this.markDirty(); }
+    },
+
+    editElementText(idx) {
+        const el = this.elements[idx];
+        if (el.type === 'static' || el.field === '_custom_') {
+            const newText = prompt('Nuevo texto:', el.custom_text || '');
+            if (newText !== null) {
+                el.custom_text = newText;
+                this.markDirty();
+            }
+        }
+    },
+
+    deleteElement(idx) {
+        this.elements.splice(idx, 1);
+        this.selectedElement = null;
+        this.markDirty();
+    },
+
+    // ═══ Undo / Redo ═══
+    _serializeState() {
+        return JSON.stringify(this.elements.map(el => { const { _uid, ...rest } = el; return rest; }));
+    },
+
+    takeSnapshot() {
+        this._lastSnapshot = this._serializeState();
+    },
+
+    markDirty() {
+        this.dirty = true;
+        // Push undo snapshot if state actually changed
+        const snap = this._serializeState();
+        if (snap !== this._lastSnapshot) {
+            this._undoStack.push(this._lastSnapshot);
+            if (this._undoStack.length > this._undoMaxSize) this._undoStack.shift();
+            this._redoStack = [];   // clear redo on new action
+            this._lastSnapshot = snap;
+        }
+    },
+
+    undo() {
+        if (this._undoStack.length === 0) return;
+        // Save current state to redo
+        this._redoStack.push(this._serializeState());
+        // Pop previous state
+        const prev = this._undoStack.pop();
+        this._restoreState(prev);
+        this._lastSnapshot = prev;
+        this.dirty = true;
+    },
+
+    redo() {
+        if (this._redoStack.length === 0) return;
+        this._undoStack.push(this._serializeState());
+        const next = this._redoStack.pop();
+        this._restoreState(next);
+        this._lastSnapshot = next;
+        this.dirty = true;
+    },
+
+    _restoreState(json) {
+        try {
+            const arr = JSON.parse(json);
+            this.elements = arr.map(el => ({ ...el, _uid: this.nextUid() }));
+            this.selectedElement = null;
+            this.selection = [];
+        } catch (e) { console.error('Undo restore failed', e); }
+    },
+
+    // ═══ Live Data on Canvas ═══
+    async searchLiveProducts() {
+        const q = this.liveDataCode.trim();
+        if (q.length < 2) { this.liveSearchResults = []; return; }
+        this.liveSearching = true;
+        try {
+            const resp = await fetch('/products/search?q=' + encodeURIComponent(q) + '&limit=8');
+            const data = await resp.json();
+            this.liveSearchResults = data.products || [];
+            this.liveSearchHighlight = this.liveSearchResults.length > 0 ? 0 : -1;
+        } catch (e) { this.liveSearchResults = []; }
+        finally { this.liveSearching = false; }
+    },
+
+    selectLiveProduct(prod) {
+        this.liveDataCode = prod.code;
+        this.liveSearchResults = [];
+        this.loadLiveData();
+    },
+
+    async loadLiveData() {
+        const code = this.liveDataCode.trim();
+        if (!code) return;
+        this.liveDataLoading = true;
+        try {
+            const resp = await fetch('/templates/api/product_data/' + encodeURIComponent(code));
+            const data = await resp.json();
+            if (data.success) {
+                this.liveDataFields = data.fields;
+                this.liveDataPictograms = data.pictogram_urls || [];
+                this.liveDataName = (data.product_name_display || code).substring(0, 35);
+                this.liveDataActive = true;
+            } else {
+                alert(data.error || 'Producto no encontrado');
+            }
+        } catch (e) {
+            alert('Error de conexión: ' + e.message);
+        } finally { this.liveDataLoading = false; }
+    },
+
+    clearLiveData() {
+        this.liveDataActive = false;
+        this.liveDataFields = {};
+        this.liveDataPictograms = [];
+        this.liveDataName = '';
+        this.liveDataCode = '';
+    },
+
+    // ═══ Save ═══
+    async openTestPrintModal() {
+        this.showTestPrintModal = true;
+        this.testProductCode = '';
+        this.testPrintMessage = '';
+        this.testFormat = 'pdf';
+        this.testRotation = 'default';
+        this.testScale = 100;
+        this.productSearchResults = [];
+        this.productSearchHighlight = -1;
+    },
+
+    async searchProducts() {
+        const q = this.testProductCode.trim();
+        if (q.length < 2) {
+            this.productSearchResults = [];
+            return;
+        }
+        this.productSearching = true;
+        try {
+            const resp = await fetch('/products/search?q=' + encodeURIComponent(q) + '&limit=8');
+            const data = await resp.json();
+            if (this.testProductCode.trim() === q) {
+                this.productSearchResults = data.products || [];
+                this.productSearchHighlight = this.productSearchResults.length > 0 ? 0 : -1;
+            }
+        } catch (e) {
+            console.error('Product search failed:', e);
+            if (this.testProductCode.trim() === q) this.productSearchResults = [];
+        } finally {
+            if (this.testProductCode.trim() === q) this.productSearching = false;
+        }
+    },
+
+    selectProduct(prod) {
+        this.testProductCode = prod.code;
+        this.productSearchResults = [];
+    },
+
+    async runTestPrint() {
+        if (!this.testProductCode) {
+            this.testPrintMessage = 'Ingresa un código de producto';
+            this.testPrintError = true;
+            return;
+        }
+
+        this.testPrinting = true;
+        if (this.testFormat.startsWith('image')) {
+             this.testPrintMessage = 'Generando Imagen (' + this.testScale + '%)...';
+        } else {
+             this.testPrintMessage = 'Generando PDF...';
+        }
+        this.testPrintError = false;
+
+        try {
+            const payload = {
+                product_id: this.testProductCode,
+                output_format: this.testFormat,
+                rotation_override: this.testRotation,
+                scale_percent: this.testScale,
+                template_data: {
+                    id: this.templateId,
+                    name: this.templateName,
+                    width_mm: this.canvasWidth,
+                    height_mm: this.canvasHeight,
+                    rotation: this.rotation,
+                    elements: this.elements
+                }
+            };
+
+            const response = await fetch('/templates/' + (this.templateId || 'new') + '/test_print', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                this.testPrintMessage = 'Archivo generado. Abriendo diálogo de impresión...';
+                // Open in a new window and trigger print dialog
+                const printWin = window.open(data.pdf_url, '_blank');
+                if (printWin && data.format !== 'PDF') {
+                    // For images, wait for load then trigger print
+                    printWin.addEventListener('load', () => {
+                        setTimeout(() => printWin.print(), 500);
+                    });
+                }
+                this.showTestPrintModal = false;
+            } else {
+                this.testPrintMessage = 'Error: ' + (data.error || 'Desconocido');
+                this.testPrintError = true;
+            }
+        } catch (e) {
+            this.testPrintMessage = 'Error de conexión';
+            this.testPrintError = true;
+            console.error(e);
+        } finally {
+            this.testPrinting = false;
+        }
+    },
+    // ═══ Print Agent Methods ═══
+    async checkPrintAgent() {
+        try {
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 2000);
+            const res = await fetch(this.printAgentUrl + '/status', { signal: controller.signal });
+            if (res.ok) {
+                const data = await res.json();
+                this.printAgentOnline = true;
+                this.printAgentPrinter = data.printer || 'Unknown';
+            }
+        } catch (e) {
+            this.printAgentOnline = false;
+        }
+    },
+
+    // ══════ Preview Modal Methods ══════
+    openPreviewModal() {
+        this.previewProductCode = this.liveDataCode || this.testProductCode || '';
+        this.previewMessage = '';
+        this.previewError = false;
+        this.previewImageUrl = '';
+        this.previewProductSearchResults = [];
+        this.previewProductSearchHighlight = -1;
+        // Reset override fields (keep blank = use defaults)
+        this.previewBatchNumber = '';
+        this.previewNetWeight = '';
+        this.previewTaraWeight = '';
+        // Default dates: today and +1 year
+        const today = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        this.previewElabDate = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+        const nextYear = new Date(today);
+        nextYear.setFullYear(nextYear.getFullYear() + 1);
+        this.previewReinspDate = `${nextYear.getFullYear()}-${pad(nextYear.getMonth()+1)}-${pad(nextYear.getDate())}`;
+        this.showPreviewModal = true;
+    },
+
+    async searchPreviewProducts() {
+        if (this.previewProductCode.length < 2) {
+            this.previewProductSearchResults = [];
+            return;
+        }
+        this.previewProductSearching = true;
+        try {
+            const res = await fetch(`/products/search?q=${encodeURIComponent(this.previewProductCode)}`);
+            if (res.ok) {
+                const data = await res.json();
+                this.previewProductSearchResults = data.products || [];
+                this.previewProductSearchHighlight = this.previewProductSearchResults.length > 0 ? 0 : -1;
+            }
+        } catch (e) {
+            console.error('Preview product search error:', e);
+        } finally {
+            this.previewProductSearching = false;
+        }
+    },
+
+    selectPreviewProduct(prod) {
+        this.previewProductCode = prod.code;
+        this.previewProductSearchResults = [];
+    },
+
+    async loadPreviewImage() {
+        if (!this.previewProductCode) return;
+        this.previewLoading = true;
+        this.previewMessage = '';
+        this.previewError = false;
+        this.previewImageUrl = '';
+
+        try {
+            const templateId = new URLSearchParams(window.location.search).get('id') || window.location.pathname.split('/designer/')[1];
+            if (!templateId) {
+                this.previewMessage = 'Guarda la plantilla primero antes de previsualizar.';
+                this.previewError = true;
+                this.previewLoading = false;
+                return;
+            }
+
+            // Build override payload with user-provided values
+            const payload = {
+                product_code: this.previewProductCode,
+                output_format: 'image'
+            };
+            if (this.previewBatchNumber.trim()) payload.batch_number = this.previewBatchNumber.trim();
+            if (this.previewNetWeight) payload.net_weight = this.previewNetWeight;
+            if (this.previewTaraWeight) payload.tara_weight = this.previewTaraWeight;
+            if (this.previewElabDate) payload.elab_date = this.previewElabDate;
+            if (this.previewReinspDate) payload.reinsp_date = this.previewReinspDate;
+
+            const res = await fetch(`/templates/${templateId}/test_print`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            if (data.success && data.pdf_url) {
+                this.previewImageUrl = data.pdf_url + '?t=' + Date.now();
+                this.previewMessage = '';
+            } else {
+                this.previewMessage = data.error || 'Error al generar la vista previa';
+                this.previewError = true;
+            }
+        } catch (e) {
+            this.previewMessage = 'Error de conexión: ' + e.message;
+            this.previewError = true;
+        } finally {
+            this.previewLoading = false;
+        }
+    },
+
+    openDirectPrintModal() {
+        if (!this.printAgentOnline) {
+            alert('Print Agent no disponible.\n\nInicia start_agent.bat en la PC del almac\u00e9n.');
+            return;
+        }
+        this.directPrintProductCode = this.testProductCode || '';
+        this.directPrintMessage = '';
+        this.directPrintError = false;
+        // Almacen2 (warehouse 02): force rotation to 90° for thermal printing
+        if (this.userWarehouse === '02' || this.userWarehouse === 'Almacen2') {
+            this.directPrintRotation = '90';
+        }
+        this.showDirectPrintModal = true;
+    },
+
+    async searchDirectProducts() {
+        if (this.directPrintProductCode.length < 2) {
+            this.directProductSearchResults = [];
+            return;
+        }
+        this.directProductSearching = true;
+        try {
+            const res = await fetch('/products/search?q=' + encodeURIComponent(this.directPrintProductCode) + '&limit=8');
+            const data = await res.json();
+            this.directProductSearchResults = data.products || [];
+        } catch (e) {
+            this.directProductSearchResults = [];
+        } finally {
+            this.directProductSearching = false;
+        }
+    },
+
+    selectDirectProduct(prod) {
+        this.directPrintProductCode = prod.code;
+        this.directProductSearchResults = [];
+    },
+
+    async runDirectPrint() {
+        if (!this.directPrintProductCode) {
+            this.directPrintMessage = 'Ingresa un c\u00f3digo de producto';
+            this.directPrintError = true;
+            return;
+        }
+
+        this.directPrinting = true;
+        this.directPrintMessage = 'Generando imagen...';
+        this.directPrintError = false;
+
+        try {
+            // Step 1: Generate image via server
+            const payload = {
+                product_id: this.directPrintProductCode,
+                output_format: 'image',
+                rotation_override: this.directPrintRotation,
+                scale_percent: 100,
+                render_dpi: 300,
+                template_data: {
+                    id: this.templateId,
+                    name: this.templateName,
+                    width_mm: this.canvasWidth,
+                    height_mm: this.canvasHeight,
+                    rotation: this.rotation,
+                    elements: this.elements
+                }
+            };
+
+            const genRes = await fetch('/templates/' + (this.templateId || 'new') + '/test_print', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const genData = await genRes.json();
+            if (!genData.success) {
+                this.directPrintMessage = 'Error: ' + (genData.error || 'Fallo al generar');
+                this.directPrintError = true;
+                return;
+            }
+
+            // Step 2: Fetch the generated image and convert to base64
+            this.directPrintMessage = 'Enviando a impresora ' + this.printAgentPrinter + '...';
+
+            const imgRes = await fetch(genData.pdf_url);
+            const imgBlob = await imgRes.blob();
+            const base64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(imgBlob);
+            });
+
+            // Step 3: Send to Print Agent
+            // Determine effective rotation for dimension calculation
+            const effectiveRotation = this.directPrintRotation !== 'default' 
+                ? parseInt(this.directPrintRotation) 
+                : (this.rotation || 0);
+            // Swap width/height if rotation is 90 or 270 (image is now portrait)
+            const swapDims = (effectiveRotation === 90 || effectiveRotation === 270);
+            const printW = swapDims ? this.canvasHeight : this.canvasWidth;
+            const printH = swapDims ? this.canvasWidth : this.canvasHeight;
+
+            const printRes = await fetch(this.printAgentUrl + '/print', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    image_base64: base64,
+                    width_mm: printW,
+                    height_mm: printH,
+                    copies: 1,
+                    // ★ CALIBRATION: label_gap_mm — physical gap (brecha) between
+                    // stickers on the roll.  The printer advances by
+                    // (height_mm + label_gap_mm) after each label.
+                    // Adjust this value if prints drift over 50+ labels:
+                    //   Drift DOWN → increase (e.g. 3 → 3.5)
+                    //   Drift UP   → decrease (e.g. 3 → 2.5)
+                    // This value is also configurable server-side in
+                    // print_agent_config.json → "label_gap_mm".
+                    // If omitted here, the print agent uses its config default.
+                    label_gap_mm: 3
+                })
+            });
+
+            const printData = await printRes.json();
+            if (printData.success) {
+                this.directPrintMessage = '\u2705 Impreso correctamente en ' + this.printAgentPrinter + ' (' + printW + '\u00d7' + printH + 'mm, rot=' + effectiveRotation + '\u00b0)';
+                this.directPrintError = false;
+            } else {
+                this.directPrintMessage = 'Error: ' + (printData.errors?.join(', ') || 'Fallo de impresi\u00f3n');
+                this.directPrintError = true;
+            }
+        } catch (e) {
+            this.directPrintMessage = 'Error de conexi\u00f3n: ' + e.message;
+            this.directPrintError = true;
+            console.error(e);
+        } finally {
+            this.directPrinting = false;
+        }
+    },
+
+    async saveTemplate() {
+        const payload = {
+            id: this.templateId,
+            name: this.templateName,
+            width_mm: this.canvasWidth,
+            height_mm: this.canvasHeight,
+            rotation: this.rotation,
+            elements: this.elements.map(el => {
+                const { _uid, ...rest } = el;
+                return rest;
+            })
+        };
+
+        try {
+            const resp = await fetch('/templates/api/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+            if (data.success) {
+                this.templateId = data.template.id;
+                this.dirty = false;
+                this.saveMessage = '✅ Plantilla guardada exitosamente';
+                this.saveError = false;
+                // Update URL without reload
+                window.history.replaceState({}, '', '/templates/designer/' + data.template.id);
+            } else {
+                this.saveMessage = '❌ ' + (data.error || 'Error al guardar');
+                this.saveError = true;
+            }
+        } catch (e) {
+            this.saveMessage = '❌ Error: ' + e.message;
+            this.saveError = true;
+        }
+
+        setTimeout(() => { this.saveMessage = ''; }, 3000);
+    },
+
+    // ═══ Quick Start Preset ═══
+    loadPreset() {
+        if (this.elements.length > 0 && !confirm('Esto reemplazará los elementos actuales. ¿Continuar?')) return;
+
+        const preset = this.warehouseSizes[this.userWarehouse] || { w: 151, h: 101 };
+        this.canvasWidth = preset.w;
+        this.canvasHeight = preset.h;
+        this.elements = [
+            // Header section
+            { _uid: this.nextUid(), type: 'barcode', field: 'process_barcode', x_mm: 0, y_mm: 0, width_mm: 63, font_size: 7, bar_height_mm: 4, bar_width: 1.25, show_text: true, font_weight: 'normal', alignment: 'left', color: '#000000', auto_fit: true },
+            { _uid: this.nextUid(), type: 'barcode', field: 'internal_code_barcode', x_mm: 88, y_mm: 0, width_mm: 60, font_size: 7, bar_height_mm: 4, bar_width: 1.25, show_text: true, font_weight: 'normal', alignment: 'right', color: '#000000', auto_fit: true },
+            { _uid: this.nextUid(), type: 'text', field: 'product_name', x_mm: 20, y_mm: 17, width_mm: 160, font_size: 18, font_weight: 'bold', alignment: 'center', color: '#000000' },
+            { _uid: this.nextUid(), type: 'text', field: 'signal_word', x_mm: 150, y_mm: 22, width_mm: 45, font_size: 13, font_weight: 'bold', alignment: 'right', color: '#dc2626' },
+            { _uid: this.nextUid(), type: 'text', field: 'cas_number', x_mm: 3, y_mm: 22, width_mm: 50, font_size: 6, font_weight: 'normal', alignment: 'left', color: '#000000' },
+
+            // Separator
+            { _uid: this.nextUid(), type: 'line', field: 'separator_line', x_mm: 3, y_mm: 25, width_mm: 194, line_width: 0.5, color: '#000000' },
+
+            // Content section
+            { _uid: this.nextUid(), type: 'static', field: 'h_header', x_mm: 3, y_mm: 28, width_mm: 65, font_size: 7, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'INDICACIONES DE PELIGRO:' },
+            { _uid: this.nextUid(), type: 'multiline', field: 'h_statements', x_mm: 3, y_mm: 32, width_mm: 65, font_size: 5.5, font_weight: 'normal', alignment: 'left', color: '#000000' },
+            { _uid: this.nextUid(), type: 'static', field: 'p_header', x_mm: 3, y_mm: 60, width_mm: 65, font_size: 7, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'CONSEJOS DE PRUDENCIA:' },
+            { _uid: this.nextUid(), type: 'multiline', field: 'p_statements', x_mm: 3, y_mm: 64, width_mm: 65, font_size: 5, font_weight: 'normal', alignment: 'left', color: '#000000' },
+
+            // Bottom separator
+            { _uid: this.nextUid(), type: 'line', field: 'separator_line', x_mm: 3, y_mm: 102, width_mm: 194, line_width: 1, color: '#000000' },
+
+            // Bottom left: dates and batch
+            { _uid: this.nextUid(), type: 'static', field: 'elab_date_label', x_mm: 1, y_mm: 116, width_mm: 30, font_size: 7, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'F.ELABORACION:' },
+            { _uid: this.nextUid(), type: 'text', field: 'elab_date_value', x_mm: 31, y_mm: 115, width_mm: 45, font_size: 16, font_weight: 'bold', alignment: 'left', color: '#000000' },
+            { _uid: this.nextUid(), type: 'static', field: 'reinsp_date_label', x_mm: 1, y_mm: 128, width_mm: 30, font_size: 7, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'F.REINSPECCION:' },
+            { _uid: this.nextUid(), type: 'text', field: 'reinsp_date_value', x_mm: 31, y_mm: 127, width_mm: 45, font_size: 16, font_weight: 'bold', alignment: 'left', color: '#000000' },
+            { _uid: this.nextUid(), type: 'static', field: 'lote_label', x_mm: 87, y_mm: 116, width_mm: 20, font_size: 10, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'LOTE:' },
+            { _uid: this.nextUid(), type: 'text', field: 'lote_value', x_mm: 80, y_mm: 128, width_mm: 55, font_size: 15, font_weight: 'bold', alignment: 'left', color: '#000000' },
+            { _uid: this.nextUid(), type: 'barcode', field: 'batch_barcode', x_mm: 50, y_mm: 140, width_mm: 55, font_size: 7, bar_height_mm: 4, bar_width: 1.25, show_text: false, font_weight: 'normal', alignment: 'left', color: '#000000' },
+
+            // Bottom right: weights
+            { _uid: this.nextUid(), type: 'line', field: 'separator_line', x_mm: 140, y_mm: 102, width_mm: 0.5, line_width: 50, color: '#000000' },
+            { _uid: this.nextUid(), type: 'static', field: 'peso_bruto_label', x_mm: 142, y_mm: 107, width_mm: 25, font_size: 7, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'PESO BRUTO:' },
+            { _uid: this.nextUid(), type: 'text', field: 'peso_bruto_value', x_mm: 165, y_mm: 106, width_mm: 30, font_size: 14, font_weight: 'bold', alignment: 'right', color: '#000000' },
+            { _uid: this.nextUid(), type: 'static', field: 'peso_tara_label', x_mm: 142, y_mm: 118, width_mm: 25, font_size: 7, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'PESO TARA:' },
+            { _uid: this.nextUid(), type: 'text', field: 'peso_tara_value', x_mm: 165, y_mm: 117, width_mm: 30, font_size: 14, font_weight: 'bold', alignment: 'right', color: '#000000' },
+            { _uid: this.nextUid(), type: 'static', field: 'peso_neto_label', x_mm: 142, y_mm: 129, width_mm: 25, font_size: 7, font_weight: 'bold', alignment: 'left', color: '#000000', custom_text: 'PESO NETO:' },
+            { _uid: this.nextUid(), type: 'barcode', field: 'net_weight_barcode', x_mm: 155, y_mm: 133, width_mm: 30, font_size: 10, bar_height_mm: 4, bar_width: 0.9, show_text: true, font_weight: 'bold', alignment: 'center', color: '#000000' },
+
+            // Footer
+            { _uid: this.nextUid(), type: 'static', field: 'address_footer', x_mm: 5, y_mm: 150, width_mm: 190, font_size: 7, font_weight: 'normal', alignment: 'center', color: '#000000', custom_text: 'QUIMICA BOSS San Agustin 759 Col. El Briseño, Zapopan, Jalisco, México. CP 45236 Tel: 36 84 05 05' },
+        ];
+
+        this.selectedElement = null;
+        this.markDirty();
+        this.$nextTick(() => this.autoZoom());
+    },
+    };
+}
+</script>
+{% endblock %}

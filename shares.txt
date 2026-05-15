@@ -1,0 +1,9 @@
+
+Nombre       Recurso                         Descripci¢n
+
+-------------------------------------------------------------------------------
+C$           C:\                             Recurso predeterminado            
+IPC$                                         IPC remota                        
+ADMIN$       C:\WINDOWS                      Admin remota                      
+Se ha completado el comando correctamente.
+

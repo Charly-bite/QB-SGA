@@ -1,0 +1,184 @@
+P,Significado
+P101,"Si se necesita consejo médico, tener a mano el envase o la etiqueta "
+P102,Mantener fuera del alcance de los niños
+P103,Leer la etiqueta antes del uso
+P201,Solicitar instrucciones especiales antes del uso
+P202,No manipular la sustancia antes de haber leído y comprendido todas las instrucciones de seguridad
+P210,"Mantener alejado de fuentes de calor, chispas, llama abierta o superficies calientes. No fumar"
+P211,No pulverizar sobre una llama abierta u otra fuente de ignición
+P212,Evitar el calentamiento en espacios cerrados o la reducción del agente desensibilizado.
+P220,Mantener o almacenar alejado de la ropa/…/materiales combustibles
+P221,Tomar todas las precauciones necesarias para no mezclar con materias combustibles
+P222,No dejar que entre en contacto con el aire
+P223,"Mantener alejado de cualquier posible contacto con el agua, pues reacciona violentamente y puede provocar una llamarada"
+P230,Mantener humedecido con el material recomendado por el proveedor
+P231,Manipular en gas inerte
+P231 + P232,Manipular en gas inerte. Proteger de la humedad
+P232,Proteger de la humedad
+P233,Mantener el recipiente herméticamente cerrado
+P234,Conservar únicamente en el recipiente original 
+P235,Mantener en lugar fresco
+P235 + P410,Conservar en un lugar fresco. Proteger de la luz del sol 
+P236,Conservar únicamente en el embalaje original
+P240,Conectar a tierra/enlace equipotencial del recipiente y del equipo de recepción
+P241,"Utilizar un material eléctrico, de ventilación o de iluminación/…/antideflagrante según sea indicado en la hoja de seguridad"
+P242,Utilizar únicamente herramientas que no produzcan chispas 
+P243,Tomar medidas de precaución contra descargas electrostáticas
+P244,Mantener las válvulas de reducción limpias de grasa y aceite
+P250,Evitar la abrasión/el choque/…./la fricción
+P251,"Recipiente a presión: no perforar ni quemar, incluso después del uso"
+P260,No respirar el polvo/el humo/el gas/la niebla/los vapores/el aerosol
+P261,Evitar respirar el polvo/el humo/el gas/la niebla/los vapores/el aerosol 
+P262,"Evitar el contacto con los ojos, la piel o la ropa"
+P263,Evitar el contacto durante el embarazo/la lactancia 
+P264,Lavarse concienzudamente tras la manipulación 
+P265,No tocarse los ojos después de la manipulación del material.
+P270,"No comer, beber ni fumar durante su utilización"
+P271,Utiliza únicamente en exteriores o en un lugar bien ventilado
+P272,Las prendas de trabajo contaminadas no podrán sacarse del lugar de trabajo 
+P273,Evitar su liberación al medio ambiente 
+P280,Llevar guantes de protección / ropa de protección / equipo de protección de los ojos / cara.
+P281,Utilizar el equipo de protección individual obligatorio
+P282,Llevar guantes/gafas/máscara que aislen del frío
+P283,Llevar prendas ignífugas/resistentes al fuego/resistentes a las llamas
+P284,Llevar equipo de protección respiratoria
+P285,"En caso de ventilación insuficiente, llevar equipo de protección respiratoria "
+P301,EN CASO DE INGESTIÓN
+P301 + P310,EN CASO DE INGESTIÓN: Llamar inmediatamente a un CENTRO de información toxicológica o a un médico
+P301 + P312,EN CASO DE INGESTIÓN: Llamar a un CENTRO de información toxicológica o a un médico si se encuentra mal 
+P301 + P330 + P331,EN CASO DE INGESTIÓN: enjuagarse la boca. NO provocar el vómito
+P301+ P312 + P330,EN CASO DE INGESTIÓN: Llamar a un CENTRO de información toxicológica o a un médico si se encuentra mal. Enjuagar la boca
+P301+P316,EN CASO DE INGESTIÓN: Buscar asistencia médica de urgencia inmediatamente.
+P301+P317,EN CASO DE INGESTIÓN: Buscar asistencia médica.
+P302,EN CASO DE CONTACTO CON LA PIEL
+P302 + P310,EN CASO DE CONTACTO CON LA PIEL: Llamar inmediatamente a un CENTRO de información toxicológica o a un médico
+P302 + P312,EN CASO DE CONTACTO CON LA PIEL: Llamar a un CENTRO de información toxicológica o a un médico si se encuentra mal 
+P302 + P334,EN CASO DE CONTACTO CON LA PIEL: Sumergir en agua fresca/aplicar compresas húmedas 
+P302 + P350,EN CASO DE CONTACTO CON LA PIEL: Lavar suavemente con agua y jabón abundantes
+P302 + P352,EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes
+P302+P317,EN CASO DE CONTACTO CON LA PIEL: Buscar asistencia médica.
+P302+P335+P334,Cepillar las partículas sueltas de la piel. Sumergir en agua fría [o envolver con vendajes húmedos].
+P302+P361+P354,EN CASO DE CONTACTO CON LA PIEL: Quitar inmediatamente toda la ropa contaminada. Aclarar inmediatamente con agua durante varios minutos.
+P303,EN CASO DE CONTACTO CON LA PIEL (o el pelo) 
+P303 + P361 + P353 ,EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitarse inmediatamente las prendas contaminadas. Aclararse la piel con agua o ducharse 
+P304,EN CASO DE INHALACIÓN
+P304 + P340 ,EN CASO DE INHALACIÓN: Transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar
+" P304 + P340, P310",EN CASO DE INHALACIÓN: Transportar a la persona al aire libre  y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico.
+P304 + P340 + P312,EN CASO DE INHALACIÓN: Transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar. Llamar a un CENTRO DE TOXICOLOGÍA/ médico si la persona se encuentra mal.
+P304 + P341,"EN CASO DE INHALACIÓN: Si respira con dificultad, transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar "
+P304+P312,EN CASO DE INHALACIÓN: Llamar a un CENTRO DE TOXICOLOGÍA si se encuentra mal.
+P304+P317,EN CASO DE INHALACIÓN: Buscar asistencia médica.
+P305,EN CASO DE CONTACTO CON LOS OJOS 
+P305 + P351 + P338,EN CASO DE CONTACTO CON LOS OJOS: Enjuagar con agua cuidadosamente por varios minutos. Quitar las lentes de contacto cuando estén presentes y pueda hacerse con facilidad. Proseguir con el lavado.
+P305 + P351 + P338 + P310,EN CASO DE CONTACTO CON LOS OJOS: Enjuagar con agua cuidadosamente durante varios minutos. Quitar las lentes de contacto cuando estén presentes y pueda hacerse con facilidad. Proseguir con el lavado. Llamar inmediatamente a un CENTRO DE TOXICOLOGÍA / médico.
+P305 + P354 + P338 + P317,EN CASO DE CONTACTO CON LOS OJOS: Enjuagar inmediatamente con agua durante varios minutos. Quitar las lentes de contacto cuando estén presentes y pueda hacerse con facilidad. Proseguir con el lavado. Buscar ayuda médica.
+P306,EN CASO DE CONTACTO CON LA ROPA 
+P306 + P360,EN CASO DE CONTACTO CON LA ROPA: aclarar inmediatamente con agua abundante las prendas y la piel contaminadas antes de quitarse la ropa
+P307,EN CASO DE exposición 
+P307 + P311,EN CASO DE exposición: llamar a un CENTRO de información toxicológica o a un médico 
+P307 + P313,EN CASO DE exposición: consultar a su médico.
+P307 + P317,EN CASO DE exposición: consultar ayuda médica.
+P308,EN CASO DE exposición manifiesta o presunta 
+P308 + P311,EN CASO DE exposición manifiesta o presuntiva: Llamar a un CENTRO DE TOXICOLOGÍA / médico.
+P308 + P313,EN CASO DE exposición manifiesta o presunta: consultar a su médico
+P308 + P316,EN CASO DE EXPOSICIÓN O malestar: Acudir inmediatamente al médico.
+P308 + P317,EN CASO DE exposición manifiesta o presunta: consultar ayuda médica.
+P309,EN CASO DE exposición o malestar 
+P309 + P311,EN CASO DE exposición o si se encuentra mal: llamar a un CENTRO de información toxicológica o a un médico 
+P309 + P313,EN CASO DE exposición o si se encuentra mal: consultar a su médico.
+P309 + P317,EN CASO DE exposición o si se encuentra mal: consultar ayuda médica.
+P310,Llamar inmediatamente a un CENTRO de información toxicológica o a un médico 
+P311,Llamar a un CENTRO de información toxicológica o a un médico 
+P312,Llamar a un CENTRO de información toxicológica o a un médico en caso de malestar
+P313,Consultar a un médico
+P314,Consultar a un médico en caso de malestar 
+P315,Consultar a un médico inmediatamente
+P316,Busque atención médica de urgencia inmediatamente.
+P317,Busque atención médica de urgencia.
+P318,"Si ha estado expuesto o le preocupa, consulte a un médico."
+P319,Busquen atención médica de urgencia inmediatamente.
+P320,Se necesita urgentemente un tratamiento específico
+P321,Se necesita un tratamiento específico
+P322,Se necesitan medidas específicas
+P323,Medidas específicas (ver información en la hoja de seguridad)
+P330,Enjuagarse la boca
+P331,No provocar el vómito 
+P332,En caso de irritación cutánea 
+P332 + P311,En caso de irritación cutánea: Llamar a un CENTRO DE TOXICOLOGÍA / médico.
+P332 + P313,En caso de irritación cutánea: consultar a un médico 
+P332 + P317,En caso de irritación cutánea: consultar ayuda médica
+P333,En caso de irritación o erupción cutánea
+P333 + P311,En caso de irritación o erupción cutánea: Llamar a un CENTRO DE TOXICOLOGÍA / médico.
+P333 + P317,En caso de irritación cutánea o sarpullido: consultar ayuda médica
+P333+P313,En caso de irritación o erupción cutánea: consultar a un médico
+P334,Sumergir en agua fresca/aplicar compresas húmedas
+P335,Sacudir las partículas que se hayan depositado en la piel
+P335+P334,Sacudir las partículas que se hayan depositado en la piel. Sumergir en agua fresca/aplicar compresas húmedas 
+P336,Descongelar las partes heladas con agua tibia. No frotar la zona afectada
+P336+P317,Descongelar inmediatamente las partes congeladas con agua tibia. No frotar la zona afectada. Consultar a un médico.
+P337,Si persiste la irritación ocular
+P337 + P311,Si persiste la irritación ocular: Llamar a un CENTRO DE TOXICOLOGÍA / médico.
+P337 + P317,Si persiste la irritación ocular: consultar ayuda médica.
+P337+P313,Si persiste la irritación ocular: consultar a un médico
+P338,"Quitar las lentes de contacto, si lleva y resulta fácil. Seguir aclarado"
+P340,Transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar 
+P341,"Si respira con dificultad, transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar"
+P342,En caso de síntomas respiratorios
+P342 + P311, Si experimenta síntomas respiratorios: Llame a un CENTRO DE TOXICOLOGÍA
+P342 + P313,En caso de síntomas respiratorios: consultar a un médico
+P342 + P317,En caso de síntomas respiratorios: buscar ayuda médica
+P342+P311,En caso de síntomas respiratorios: llamar a un CENTRO de información toxicológica o a un médico 
+P350,Lavar suavemente con agua y jabón abundantes
+P351,Aclarar cuidadosamente con agua durante varios minutos 
+P352,Lavar con agua y jabón abundantes
+P353,Aclararse la piel con agua/ducharse
+P354,Enjuagarse inmediatamente con agua durante varios minutos.
+P360,Aclarar inmediatamente con agua abundante las prendas y la piel contaminadas antes de quitarse la ropa
+P361,Quitarse inmediatamente las prendas contaminadas
+P361 + P364,Quítese inmediatamente toda la ropa contaminada y lávela antes de volver a usarla.
+P362,Quitarse las prendas contaminadas 
+P362 + P364,Quitar las prendas contaminadas y lavarlas antes de volver a usarlas
+P363,Lavar las prendas contaminadas antes de volverlas a utilizar
+P364,Y lavarla antes de volver a usarla.
+P370,En caso de incendio 
+P370 + P372 + P380 + P373,En caso de incendio: Riesgo de explosión. Evacue la zona. NO combata el fuego si este alcanza explosivos.
+P370+P376,"En caso de incendio: detener la fuga, si no hay peligro en hacerlo"
+P370+P378,"FRAGANCIAS: En caso de incendio: Utilizar arena seca, producto químico seco o espuma resistente al alcohol para la extinción. OTRO MATERIAL: En caso de incendio: seguir las indicaciones mencionadas en la hoja de seguridad"
+P370+P380,En caso de incendio: Evacuar la zona
+P370+P380+P375,"En caso de incendio: Evacuar la zona. Luchar contra el incendio a distancia, dado el riesgo de explosión"
+P370+P380+P375+P378,En caso de incendio: Evacue la zona. Combata el fuego a distancia debido al riesgo de explosión.
+P371,En caso de incendio importante y en grandes cantidades 
+P371+P380+P375,"En caso de incendio importante y en grandes cantidades: Evacuar la zona. Luchar contra el Incendio a distancia, dado el riesgo de explosión "
+P372,Riesgo de explosión en caso de incendio
+P373,NO luchar contra el incendio cuando el fuego llega a los explosivos
+P374,"Luchar contra el incendio desde una distancia razonable, tomando las precauciones habituales"
+P375,"Luchar contra el incendio a distancia, dado el riesgo de explosión"
+P376,"Detener la fuga, si no hay peligro en hacerlo"
+P377,"Fuga de gas en llamas: No apagar, salvo si la fuga puede detenerse sin peligro"
+P378,Utilizar para apagar el fuego el material recomendado
+P380,Evacuar la zona
+P381,Eliminar todas las fuentas de ignición si no hay peligro en hacerlo 
+P390,Absorber el vertido para que no dañe otros materiales
+P391,Recoger el vertido
+P401,Almacenar en las condiciones recomendadas por el proveedor
+P402,Almacenar en un lugar seco
+P402+P404,Almacenar en un lugar seco. Almacenar en un recipiente cerrado
+P403,Almacenar en un lugar bien ventilado 
+P403+P233,Almacenar en un lugar bien ventilado. Mantener el recipiente cerrado herméticamente 
+P403+P235,Almacenar en un lugar bien ventilado. Mantener en lugar fresco 
+P404,Almacenar en un recipiente cerrado 
+P405,Guardar bajo llave
+P406,Almacenar en un recipiente resistente a la corrosión con revestimiento interior resistente 
+P407,Dejar una separación entre los bloques/los palés de carga 
+P410,Proteger de la luz del sol
+P410+P403,Proteger de la luz del sol. Almacenar en un lugar bien ventilado
+P410+P412,Proteger de la luz del sol. No exponer a temperaturas superiores a 50º C/122º F 
+P411,Almacenar a temperaturas no superiores las recomendadas por el proveedor
+P411+P235,Almacenar a temperaturas no superiores a las recomendadas por el proveedor. Mantener en lugar fresco
+P412,No exponer a temperaturas superiores a 50º C/122º
+P413,Almacenar las cantidades a granel superiores a las recomendadas por el proveedor
+P420,Almacenar alejado de otros materiales 
+P422,Almacenar el contenido en el contenedor recomendado por el proveedor
+P501,"FRAGANCIAS: Eliminar el contenido/el recipiente en una planta de eliminación de residuos autorizada. OTRO MATERIAL: Eliminar el contenido y el recipiente de acuerdo con las normativas locales, regionales, nacionales e internacionales"
+P502,Consultar al fabricante o proveedor para obtener información sobre la recuperación o el reciclaje
+P503,Consultar al fabricante/proveedor... para obtener información sobre la eliminación/recuperación/reciclaje.

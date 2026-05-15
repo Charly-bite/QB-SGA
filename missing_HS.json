@@ -1,0 +1,6013 @@
+{
+  "_metadata": {
+    "title": "Missing GHS Data Analysis & Recovery Plan",
+    "generated": "2026-02-23 10:29:59",
+    "total_products_in_db": 579,
+    "total_with_missing_ghs": 181,
+    "recoverable_from_legacy_csv": 178,
+    "needs_manual_sds_lookup": 3,
+    "population_run": "2026-02-23 10:42:11",
+    "h_entries_added": 48,
+    "p_entries_added": 309,
+    "pic_entries_added": 10,
+    "sw_updated": 12,
+    "h_unmatched_count": 20,
+    "p_unmatched_count": 43,
+    "final_update": "2026-02-23 10:48:09",
+    "population_status": "completed",
+    "products_with_complete_ghs": 439,
+    "products_still_incomplete": 140,
+    "no_ghs_classification": 101,
+    "partially_complete": 23,
+    "needs_sds_lookup": 16
+  },
+  "plan": {
+    "step_1": "DONE - Auto-populated from legacy CSV (41 products recovered)",
+    "step_2": "23 products partially complete - need remaining fields from SDS",
+    "step_3": "16 products need full SDS lookup from supplier",
+    "step_4": "101 products may genuinely have No GHS classification (non-hazardous)",
+    "step_5": "Review and validate all populated data"
+  },
+  "products": [
+    {
+      "product_id": "ASH-QB00001",
+      "chemical_name": "BENECEL",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Puede formar concentraciones de polvo combustible en el aire"
+        ],
+        "p_codes": [
+          "Mantener las mezclas de polvo y aire lejos de fuentes de ignición."
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00002",
+      "chemical_name": "CAPAUXEIN G2 BIOFUNTIONAL",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00004",
+      "chemical_name": "CERAPHYL 230 S/P",
+      "cas_number": "6938-94-9",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00005",
+      "chemical_name": "CERAPHYL 70",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00007",
+      "chemical_name": "CERAPHYL SLK S/P",
+      "cas_number": "60209-82-7",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00008",
+      "chemical_name": "CHROMAFEN S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00009",
+      "chemical_name": "CONDITIONIZE 37E",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "1-800-274-5263",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "1"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00012",
+      "chemical_name": "DYNAGEN S7P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00013",
+      "chemical_name": "EDERLINE S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00021",
+      "chemical_name": "GP4G S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00022",
+      "chemical_name": "LUBRAJEL 0IL S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00026",
+      "chemical_name": "N-DURHANCE A1000",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00028",
+      "chemical_name": "N-HANCE SP100",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00029",
+      "chemical_name": "NATRIANCE BRIGHTENER S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00030",
+      "chemical_name": "NATRIANCE SELF HYDRATE",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00031",
+      "chemical_name": "NATRIANCE WRINKLE LESS",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00032",
+      "chemical_name": "NATROSOL HHR250",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Puede formar concentraciones de polvo combustible en el aire."
+        ],
+        "p_codes": [
+          "Mantener las mezclas de polvo y aire lejos de fuentes de ignición."
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00033",
+      "chemical_name": "OPACIFICANTE A-430",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00036",
+      "chemical_name": "P.V.P.K 30",
+      "cas_number": "9003-39-8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00038",
+      "chemical_name": "PROTECTAGEN S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00039",
+      "chemical_name": "PVP K90 S/P",
+      "cas_number": "9003-39-8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00040",
+      "chemical_name": "PVP/VA S-630 S/P",
+      "cas_number": "25086-89-9",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00041",
+      "chemical_name": "RAPITIX A-100 S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00043",
+      "chemical_name": "SOREZ 100",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00044",
+      "chemical_name": "SOREZ H5205",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00045",
+      "chemical_name": "STYLIZE W20",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00046",
+      "chemical_name": "SUBERLIFTT LIPOPHILE S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00049",
+      "chemical_name": "TOMASA SHEA BUTTER",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00051",
+      "chemical_name": "VITS PRIMASPONGES BLUE SS MICROESFERA",
+      "cas_number": "57455-37-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00057",
+      "chemical_name": "BLANOSE CMC 9H4F 421930",
+      "cas_number": "9004-32-4",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "Mantener las mezclas de polvo y aire lejos de fuentes de ignición"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00062",
+      "chemical_name": "N-HANCE HP40",
+      "cas_number": "Mezcla",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Puede formar concentraciones de polvo combustible en el aire."
+        ],
+        "p_codes": [
+          "Puede formarse una mezcla de polvo y aire explosiva si se dispersa"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00063",
+      "chemical_name": "STYLEZE CC-10",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00066",
+      "chemical_name": "LUBRAGEL OIL FREE",
+      "cas_number": "Mezcla",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Provoca irritación ocular grave."
+        ],
+        "p_codes": [
+          "Si se necesita consejo médica",
+          "tener a mano al envase o la etiqueta. Mantener fuera del alcance de los niños. Leer la etiqueta antes del uso. PREVENCIÓN: Lavarse la piel concienzudamente tras la manipulación. Llevar equipo de protección para los ojos/ la cara. INTERVENCIÓN: En caso de contacto con los ojos: Enjuagar con agua cuidadosamente durante varios minutos. Quitar las lentes de contacto cuando estén presentes y pueda hacerse con facilidad. Proseguir con el lavado. Si persiste la irritación ocular. Consultar a un médico."
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "ASH-QB00069",
+      "chemical_name": "CERAPHYL ODS",
+      "cas_number": "96690-38-9",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00070",
+      "chemical_name": "GERMALL PLUS POLVO",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "H319 Provoca irritación ocular grave"
+        ],
+        "p_codes": [
+          "P264 Lavarse la piel cuidadosamente después de la manipulación. P280 Usar equipo de protección para los ojos/la cara. P305 + P351 + P338 EN CASO DE CONTACTO CON LOS OJOS: Enjuagar con agua cuidadosamente durante varios\r\nminutos. Quitar las lentes de contacto cuando estén presentes y pueda hacerse con facilidad. Proseguir con el lavado."
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00071",
+      "chemical_name": "AQUALON EC-N200 PC",
+      "cas_number": "9004-57-3",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00073",
+      "chemical_name": "STYLIZE W-17",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00074",
+      "chemical_name": "LUBRAGEL MARINE",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00078",
+      "chemical_name": "ANTARON SOJA",
+      "cas_number": "56-81-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00079",
+      "chemical_name": "ROSALISS",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00080",
+      "chemical_name": "LUBRAJEL DV",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00081",
+      "chemical_name": "ALLIANZ OPT PAIL",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00082",
+      "chemical_name": "PERFECTYL",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00084",
+      "chemical_name": "LIFTYL",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "ASH-QB00086",
+      "chemical_name": "STYLEZE ES-FORZA",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00082",
+      "chemical_name": "CHIRSTMAS GINGERAPPLE 712 FV",
+      "cas_number": "Mezcla",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00084",
+      "chemical_name": "CHOCOLAT MOD",
+      "cas_number": "Mezcla",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00119",
+      "chemical_name": "UVA AIR 814",
+      "cas_number": "Mezcla",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00150",
+      "chemical_name": "JUNGLE MELON",
+      "cas_number": "Mezcla",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": true,
+      "has_p_statements": true,
+      "has_pictograms": false,
+      "missing_fields": [
+        "pictograms"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [],
+        "p_codes": [
+          "P210",
+          "P261",
+          "FG"
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "IFF-QB00180",
+      "chemical_name": "BOSS 3023 ACQUA DI GIO",
+      "cas_number": "Mezcla",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00191",
+      "chemical_name": "MEN 500",
+      "cas_number": "Mezcla",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00263",
+      "chemical_name": "QUIM SH MOD",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": true,
+      "has_pictograms": false,
+      "missing_fields": [
+        "pictograms"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H227",
+          "H303",
+          "H304",
+          "H315",
+          "H317",
+          "H319",
+          "H361",
+          "H400",
+          "H361"
+        ],
+        "p_codes": [
+          "P201",
+          "P202",
+          "P210",
+          "P261",
+          "P264",
+          "P280",
+          "P301 + P310",
+          "P302 + P352",
+          "P305 + P351 + P338",
+          "P312",
+          "P331",
+          "P333 + P313",
+          "P337 + P313",
+          "P370 + P378",
+          "P391",
+          "P403 + P235",
+          "P405",
+          "P501"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00272",
+      "chemical_name": "SOFT BLUE M 68",
+      "cas_number": "-",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "IFF-QB00302",
+      "chemical_name": "SER 1011 LAVANDA",
+      "cas_number": "Mezcla",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "IFF-QB00323",
+      "chemical_name": "CESCO LV40",
+      "cas_number": "-",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00002",
+      "chemical_name": "ASFIER 121",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión. Provoca quemaduras graves en la piel y lesiones oculares graves. Provoca daños en los órganos tras exposiciones prolongadas o repetidas."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo.  Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "máscara. Llevar prendas de protección: Recomendado: Traje de protección.  No respirar el polvo. No comer",
+          "beber ni fumar durante su utilización.  Lavarse las manos concienzudamente tras la manipulación.  EN CASO DE INHALACIÓN:  Transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar.  Llamar inmediatamente a un centro de información toxicológica o a un médico.  EN CASO DE INGESTIÓN:  Llamar inmediatamente a un centro de información toxicológica o a un médico.  Enjuagarse la boca.  NO provocar el vómito.  EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas.  Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®). Lavar las prendas contaminadas antes de volver a usarlas. Llamar  ediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS:  Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "Previn ®)",
+          "levantando ocasionalmente los párpados superior e inferior.  Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando.  Llamar inmediatamente a un centro de información toxicológica o a un médico. Guardar cerrado. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00003",
+      "chemical_name": "ASFIER 208",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión.\r\nProvoca quemaduras graves en la piel y lesiones oculares graves.\r\nProvoca daños en los órganos tras exposiciones prolongadas o repetidas.\r\nMuy tóxico para los organismos acuáticos",
+          "con efectos nocivos duraderos."
+        ],
+        "p_codes": [
+          "PREVENCIÓN: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "Viton®.\r\nLlevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. Llevar \r\nprendas de protección: Recomendado: Traje de protección. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. RESPUESTA: EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un centro de \r\ninformación toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar \r\ninmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o \r\nducharse. Lavar las prendas contaminadas antes de volver a usarlas. Llamar \r\ninmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios \r\nminutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar \r\ninmediatamente a un centro de información toxicológica o a un médico. ALMACENAMIENTO: Guardar cerrado. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS08",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00007",
+      "chemical_name": "ASFIER 216 S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca quemaduras graves en la piel y lesiones oculares graves. Puede provocar daños en los órganos tras exposiciones prolongadas o repetidas. (tracto gastrointestinal) Tóxico para los organismos acuáticos",
+          "con efectos nocivos duraderos."
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar prendas de protección: Recomendado: bata de laboratorio Traje de protección. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "gafas de seguridad con protección lateral. Evitar su liberación al medio ambiente. No respirar los vapores. Lavarse concienzudamente tras la manipulación. RESPUESTA: Consultar a un médico en caso de malestar. EN CASO DE INHALACIÓN: Transportar \r\na la persona al aire libre y mantenerla en una posición que le facilite la respiración.\r\nLlamar inmediatamente a un centro de información toxicológica o a un médico. EN \r\nCASO DE INGESTIÓN: Llamar inmediatamente a un centro de información \r\ntoxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE \r\nCONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®). Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "Previn ®)",
+          "levantando ocasionalmente  los párpados superior e inferior. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico."
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00009",
+      "chemical_name": "ASFIER 710",
+      "cas_number": "7732-18-5, 130014-37-8",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "H302",
+          "H315",
+          "H319",
+          "H410"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): caucho natural (látex). Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "gafas de seguridad con protección lateral. Evitar su liberación al medio ambiente. No comer",
+          "beber ni fumar durante su utilización. Lavarse concienzudamente tras la manipulación. RESPUESTA:  Recoger el vertido. EN CASO DE INGESTIÓN: Llamar a un CENTRO DE  INFORMACIÓN TOXICOLÓGICA o a un médico si la persona se encuentra mal. Enjuagarse la boca. Quitar las prendas contaminadas y lavarlas antes de volver a  usarlas. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En  caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON  LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes  de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Si persiste la irritación ocular: Consultar a un médico. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00011",
+      "chemical_name": "DANOX RAP 305",
+      "cas_number": "61788-62-3, 1317-38-0, 13463-67-7",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca irritación cutánea.\r\nProvoca lesiones oculares graves.\r\nMuy tóxico para los organismos acuáticos.\r\nTóxico para los organismos acuáticos",
+          "con efectos nocivos duraderos."
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "Viton®",
+          "caucho nitrílico. Llevar gafas o máscara de protección: Recomendado: gafas anti salpicaduras. Evitar su liberación al medio ambiente. Lavarse concienzudamente tras la manipulación. RESPUESTA: Recoger el vertido. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON  LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes  de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un  CENTRO DE INFORMACION TOXICOLOGICA o a un médico. ALMACENAMIENTO:  No aplicable. ELIMINACION: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00012",
+      "chemical_name": "GRIPER X2",
+      "cas_number": "12645-31-7",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca quemaduras graves en la piel y lesiones oculares graves."
+        ],
+        "p_codes": [
+          "PREVENCIÓN: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "máscara. Llevar prendas de protección: Recomendado: Traje de protección. Lavarse las manos concienzudamente tras la manipulación. RESPUESTA: EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o ducharse. Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar  inmediatamente a un centro de información toxicológica o a un médico. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales"
+        ],
+        "pictograms": [
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00016",
+      "chemical_name": "AKYPO LM-40 S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H318"
+        ],
+        "p_codes": [
+          "PREVENCIÓN:Llevar gafas o máscara de protección: Recomendado: Gafas anti-salpicaduras.",
+          "Gafas de seguridad con protección lateral. RESPUESTA: EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico."
+        ],
+        "pictograms": [
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00018",
+      "chemical_name": "ALCOHOL ESTEARILICO KALKOL 8098",
+      "cas_number": "112-92-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00019",
+      "chemical_name": "ALFANOX 46",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca lesiones oculares graves. Provoca irritación cutánea."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "Viton®",
+          "caucho nitrílico",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "gafas de seguridad con protección lateral. Lavarse las manos concienzudamente tras la manipulación. EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes. Quitarse las prendas contaminadas. Lavar las prendas contaminadas antes de volver a usarlas. En caso de irritación cutánea: Consultar a un  médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico."
+        ],
+        "pictograms": [
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00021",
+      "chemical_name": "AMIDET N",
+      "cas_number": "Sustancia",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Provoca irritación cutánea. Nocivo para los organismos acuáticos",
+          "con efectos nocivos duraderos."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: 1 - 4 horas (tiempo de detección): goma de butilo",
+          "Viton®?<1hora(tiempodedetección):neopreno",
+          "cauchonitrílico.Evitar su liberación al medio ambiente. Lavarse las manos concienzudamente tras la manipulación. EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes. En caso de irritación cutánea: Consultar a un médico. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00022",
+      "chemical_name": "AMIET 502 TAMBOR 175 KGS",
+      "cas_number": "61791-26-2",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión. Provoca quemaduras graves en la piel y lesiones oculares graves."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. Llevar prendas de protección: Recomendado: bata de laboratorio",
+          "Traje de protección. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. EN CASO DE INGESTIÓN: Llamar a un centro de información toxicológica o a un médico en caso de malestar. Enjuagarse la boca. EN CASO DE CONTACTO CON LA PIEL: Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®). Quitarse las prendas contaminadas. Lavar las prendas contaminadas antes de volver a usarlas. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "Previn ®)",
+          "levantando ocasionalmente los párpados superior e inferior.  Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar  nmediatamente a un centro de información toxicológica o a un médico. Guardar cerrado. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00024",
+      "chemical_name": "AMIET 515",
+      "cas_number": "61791-26-2",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión. Provoca quemaduras graves en la piel y lesiones oculares graves. Provoca daños en los órganos tras exposiciones prolongadas o repetidas."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "gafas de seguridad con protección lateral. Llevar prendas de protección:  ecomendado: Traje de protección",
+          "bata de laboratorio. No respirar los vapores. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. Consultar a un médico en caso de malestar. EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o ducharse. Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. Guardar cerrado. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS08"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00027",
+      "chemical_name": "CETILICO KALCOL 6098",
+      "cas_number": "36653-82-4",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Líquidos y vapores inflamables."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas antisalpicaduras. Mantener alejado del calor",
+          "de superficies calientes",
+          "de chispas",
+          "de llamas abiertas y de cualquier otra fuente de ignición. No fumar. Utilizar un material eléctrico",
+          "de ventilación",
+          "de iluminación y todos los equipos de manipulación de materiales  ntideflagrantes. Utilizar únicamente herramientas que no produzcan chispas. Tomar  edidas de precaución contra descargas electrostáticas. Mantener el recipiente herméticamente cerrado. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o ducharse. Almacenar en un lugar bien ventilado. Mantener en lugar fresco. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS02"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00032",
+      "chemical_name": "DANOX HC30",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00034",
+      "chemical_name": "DANOX PL-10",
+      "cas_number": "Mezcla",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "H319 Causa seria irritación ocular H315 Causa irritación en piel."
+        ],
+        "p_codes": [
+          "P280 Utilizar equipo de protección personal (lentes",
+          "guantes mascarilla). P264 Lavarse bien después de manipularlo. P305+P351+P338 En caso de tener contacto con los ojos enjuagar con abundante agua",
+          "si es posible retirar los lentes y continuar enjuagando."
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00037",
+      "chemical_name": "DIAMIET 515 s/p",
+      "cas_number": "61790-85-0",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión.\r\nProvoca lesiones oculares graves.\r\nProvoca irritación cutánea."
+        ],
+        "p_codes": [
+          "PREVENCIÓN: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. RESPUESTA: EN CASO DE INGESTIÓN: Llamar a un centro de información toxicológica o a un médico en caso de malestar. Enjuagarse la boca. EN CASO DE CONTACTO CON LA PIEL: Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®). Quitarse las prendas contaminadas. Lavar las prendas contaminadas antes de volver a usarlas. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00039",
+      "chemical_name": "DIAMIN T S/P",
+      "cas_number": "61791-55-7",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H302",
+          "H314",
+          "H318",
+          "H372",
+          "H400",
+          "H410"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "caucho nitrílico. Llevar prendas de protección: Recomendado: Traje de protección",
+          "bata de laboratorio. Llevar gafas o máscara de protección: Recomendado: gafas anti_x0002_salpicaduras",
+          "gafas de seguridad con protección lateral. Evitar su liberación al medio ambiente. No respirar el polvo. No comer",
+          "beber ni fumar durante su utilización. Lavarse concienzudamente tras la manipulación. RESPUESTA: Recoger el vertido. EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Enjuagar la piel con agua. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. Lavar las prendas contaminadas antes de volver a usarlas. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. ALMACENAMIENTO: Guardar bajo llave. ELIMINACIÓN:  Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS08",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00041",
+      "chemical_name": "EMAL 10 PHD S/P",
+      "cas_number": "73296-89-6",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H302",
+          "H315",
+          "H318",
+          "H412"
+        ],
+        "p_codes": [
+          "PREVENCIÓN: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "Viton®",
+          "caucho nitrílico",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. Evitar su liberación al medio ambiente. No comer",
+          "beber ni fumar durante su utilización. Lavarse concienzudamente tras la manipulación. RESPUESTA: EN CASO DE INGESTIÓN: Llamar a un CENTRO DE INFORMACIÓN TOXICOLÓGICA o a un médico si la persona se encuentra mal. Enjuagarse la boca. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En caso de irritación cutánea: Consultar a un médico.EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. ELIMINACION: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales"
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00042",
+      "chemical_name": "EMAL 10-N LAURIL SULFATO DE SODIO",
+      "cas_number": "73296-89-6",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión. Provoca lesiones oculares graves. Provoca irritación cutánea."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "Viton®",
+          "caucho nitrílico",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación.  EN CASO DE INGESTIÓN: Llamar a un centro de información toxicológica o a un médico en caso de malestar. Enjuagarse la boca. EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarrando. Llamar inmediatamente a un centro de información toxicológica o a un médico. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00043",
+      "chemical_name": "EMAL 10G",
+      "cas_number": "73296-89-6",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión. Provoca lesiones oculares graves. Provoca irritación cutánea."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "Viton®",
+          "caucho nitrílico",
+          "neopreno. Llevar gafas o máscara de protección:  Recomendado: gafas anti-salpicaduras. No comer",
+          "beber ni fumar durante su  tilización. Lavarse las manos concienzudamente tras la manipulación.  EN CASO DE INGESTIÓN: Llamar a un centro de información toxicológica o a un médico en caso de malestar. Enjuagarse la boca. EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00048",
+      "chemical_name": "FORMOX DM40",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H315",
+          "H318",
+          "H400",
+          "H411"
+        ],
+        "p_codes": [
+          "PREVENCIÓN: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. Evitar su liberación al medio ambiente. Lavarse concienzudamente tras la manipulación. RESPUESTA: Recoger el vertido. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00054",
+      "chemical_name": "KAOSOFT AGL85",
+      "cas_number": "Mezcla",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Líquidos y vapores inflamables."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas antisalpicaduras. Mantener alejado del calor",
+          "de superficies calientes",
+          "de chispas",
+          "de llamas abiertas y de cualquier otra fuente de ignición. No fumar. Utilizar un material eléctrico",
+          "de ventilación",
+          "de iluminación y todos los equipos de manipulación de materiales  ntideflagrantes. Utilizar únicamente herramientas que no produzcan chispas. Tomar  edidas de precaución contra descargas electrostáticas. Mantener el recipiente herméticamente cerrado. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o ducharse. Almacenar en un lugar bien ventilado. Mantener en lugar fresco. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS02"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00056",
+      "chemical_name": "KAOSOFT AT-50V",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Líquidos y vapores inflamables."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas antisalpicaduras. Mantener alejado del calor",
+          "de superficies calientes",
+          "de chispas",
+          "de llamas abiertas y de cualquier otra fuente de ignición. No fumar. Utilizar un material eléctrico",
+          "de ventilación",
+          "de iluminación y todos los equipos de manipulación de materiales  ntideflagrantes. Utilizar únicamente herramientas que no produzcan chispas. Tomar  edidas de precaución contra descargas electrostáticas. Mantener el recipiente herméticamente cerrado. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o ducharse. Almacenar en un lugar bien ventilado. Mantener en lugar fresco. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS02"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00057",
+      "chemical_name": "KAOSOFCARE  GP1",
+      "cas_number": "29117-02-0",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00060",
+      "chemical_name": "POIZ 535",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "Sin palabra de advertencia.",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00061",
+      "chemical_name": "POIZ 88",
+      "cas_number": "57-55-6, 7732-18-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión. Provoca quemaduras graves en la piel y lesiones oculares graves. Provoca daños en los órganos tras exposiciones prolongadas o repetidas."
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "gafas de seguridad con protección lateral. Llevar prendas de protección:  ecomendado: Traje de protección",
+          "bata de laboratorio. No respirar los vapores. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. Consultar a un médico en caso de malestar. EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o ducharse. Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. Guardar cerrado. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00062",
+      "chemical_name": "QUARTAMIN 60",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca lesiones oculares graves. Provoca irritación cutánea"
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas antisalpicaduras. Lavarse las manos concienzudamente tras la manipulación. EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico."
+        ],
+        "pictograms": [
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00063",
+      "chemical_name": "QUARTAMIN 60 S/P (TOTE)",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca irritación cutánea.\r\nProvoca lesiones oculares graves.\r\nMuy tóxico para los organismos acuáticos",
+          "con efectos nocivos duraderos."
+        ],
+        "p_codes": [
+          "PREVENCION:  Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas anti_x0002_salpicaduras. Evitar su liberación al medio ambiente. Lavarse concienzudamente tras \r\nla manipulación. RESPUESTA: Recoger el vertido. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En \r\ncaso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON \r\nLOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. ELIMINACION:  Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00064",
+      "chemical_name": "QUARTAMIN 60W30P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca lesiones oculares graves. Provoca irritación cutánea"
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "neopreno. Llevar gafas o máscara de protección: Recomendado: gafas antisalpicaduras. Lavarse las manos concienzudamente tras la manipulación. EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico."
+        ],
+        "pictograms": [
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00065",
+      "chemical_name": "QUARTAMIN AB",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Provoca irritación cutánea.\r\nProvoca lesiones oculares graves.\r\nPuede provocar daños en los órganos tras exposiciones prolongadas o repetidas. (tracto gastrointestinal)\r\nMuy tóxico para los organismos acuáticos.\r\nTóxico para los organismos acuáticos",
+          "con efectos nocivos duraderos"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): caucho nitrílico. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "gafas de seguridad con protección lateral. Evitar su liberación al medio ambiente. No respirar el polvo. Lavarse concienzudamente tras la manipulación. RESPUESTA: Recoger el vertido.Consultar a un médico en caso de malestar. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En caso de irritación cutánea: Consultar a un médico.EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando.Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. ELIMINACION: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05",
+          "GHS08",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00066",
+      "chemical_name": "QUARTAMIN B18",
+      "cas_number": "No Aplica",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00067",
+      "chemical_name": "QUARTAMIN D081 S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H226",
+          "H302",
+          "H312",
+          "H314",
+          "H318",
+          "H400"
+        ],
+        "p_codes": [
+          "PREVENCIÓN: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras",
+          "máscara. Llevar prendas de protección: Recomendado: traje protector resistente a los químicos.Mantener alejado del calor",
+          "de superficies calientes",
+          "de chispas",
+          "de llamas abiertas y de cualquier otra fuente de ignición. No fumar. Utilizar un material eléctrico",
+          "de ventilación",
+          "de iluminación y todos los equipos de manipulación de materiales antideflagrantes.Utilizar únicamente herramientas que no produzcan chispas. Tomar medidas de precaución contra descargas electrostáticas. Mantener el recipiente herméticamente cerrado. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. RESPUESTA: EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Aclararse la piel con agua o ducharse. Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LA PIEL: Lavar con agua y jabón abundantes. Llamar a un centro de información toxicológica o a un médico en caso de malestar. Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. ALMACENAMIENTO: Guardar cerrado. Almacenar en un lugar ventilado. Mantener en un lugar fresco. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS02",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00069",
+      "chemical_name": "QUARTAMIN D86P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Nocivo en caso de ingestión. Provoca quemaduras graves en la piel y lesiones oculares graves. Puede ser  ortal en caso de ingestión y penetración en las vías respiratorias. Puede provocar daños en los órganos tras exposiciones prolongadas o repetidas. (tracto gastrointestinal",
+          "sistema inmunológico",
+          "hígado)"
+        ],
+        "p_codes": [
+          "Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: Gafas anti-salpicaduras.",
+          "máscara. Llevar prendas de protección: Recomendado: Bata de  laboratorio. Traje de protección. No respirar el polvo. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. : Consultar a un médico en caso de malestar. EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®). Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS  JOS: Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "revin ®)",
+          "levantando ocasionalmente los párpados superior e inferior.  Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar  nmediatamente a un centro de información toxicológica o a un médico. Guardar cerrado. Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05",
+          "GHS02"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00070",
+      "chemical_name": "TETRANYL AT7590 s/p",
+      "cas_number": "Mezcla",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": true,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Líquido y vapores muy inflamables."
+        ],
+        "p_codes": [
+          "Usar guantes de protección: > 8 horas (tiempo de saturación): caucho butílico",
+          "neopreno. Usar protección para los ojos o la cara: Recomendado: lentes antisalpicaduras. Mantener alejado del calor",
+          "superficies calientes",
+          "chispas",
+          "llamas abiertas y otras fuentes de ignición. No fumar. Todos los equipos eléctricos",
+          "de ventilación",
+          "de iluminación y para la manipulación de materiales deben ser antideflagrantes. No utilizar herramientas que produzcan chispas. Tomar medidas de precaución contra las descargas electrostáticas. Mantener el recipiente herméticamente cerrado. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente toda la ropa contaminada. Lavar la piel con agua o tomar una ducha. Almacenar en un lugar bien ventilado. Mantener fresco. Eliminar el contenido y recipiente conforme a todas las  glamentaciones locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS02"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00072",
+      "chemical_name": "TETRANYL AT7590E",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": false,
+      "has_p_statements": true,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Líquido y vapores muy inflamables."
+        ],
+        "p_codes": [
+          "Usar guantes de protección: > 8 horas (tiempo de saturación): caucho butílico",
+          "neopreno. Usar protección para los ojos o la cara: Recomendado: lentes antisalpicaduras. Mantener alejado del calor",
+          "superficies calientes",
+          "chispas",
+          "llamas abiertas y otras fuentes de ignición. No fumar. Todos los equipos eléctricos",
+          "de ventilación",
+          "de iluminación y para la manipulación de materiales deben ser antideflagrantes. No utilizar herramientas que produzcan chispas. Tomar medidas de precaución contra las descargas electrostáticas. Mantener el recipiente herméticamente cerrado. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente toda la ropa contaminada. Lavar la piel con agua o tomar una ducha. Almacenar en un lugar bien ventilado. Mantener fresco. Eliminar el contenido y recipiente conforme a todas las  glamentaciones locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS02"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00079",
+      "chemical_name": "TETRANYL L17-90E",
+      "cas_number": "Mezcla",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "H226",
+          "H315",
+          "H319",
+          "H412"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "neopreno. Llevar prendas de protección: Recomendado: traje de protección desechable.Llevar gafas o máscara de protección: Recomendado: Gafas anti-salpicaduras..Mantener alejado del calor",
+          "de superficies calientes",
+          "de chispas",
+          "de llamas abiertas y de cualquier otra fuente de ignición. No fumar. Utilizar un material eléctrico",
+          "de ventilación o de iluminación a prueba de explosiones. No utilizar herramientas que produzcan chispas. Tomar medidas de precaución contra las descargas electrostáticas. Mantener el recipiente herméticamente cerrado. Evitar su liberación al medio ambiente. Lavarse concienzudamente tras la manipulación. RESPUESTA: EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Enjuagar la piel con agua. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Si persiste la irritación ocular: Consultar a un médico. ALMACENAMIENTO:  Almacenar en un lugar bien ventilado. Mantener en lugar fresco. ELIMINACION: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00083",
+      "chemical_name": "HRB-1 S/P",
+      "cas_number": "110-30-5",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Puede formar concentraciones de polvo explosivas en el aire."
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00084",
+      "chemical_name": "KAOAMIN 12",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H302",
+          "H314",
+          "H318",
+          "H318",
+          "H400",
+          "H410"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar prendas de protección: Recomendado: Traje de protección. Llevar gafas o máscara de protección: Recomendado: gafas de seguridad con protección lateral máscara. Evitar su liberación al medio ambiente. No comer",
+          "beber ni fumar durante su utilización. Lavarse concienzudamente tras la manipulación. RESPUESTA: EN CASO DE INHALACIÓN: Transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo):Quitar inmediatamente todas las prendas contaminadas. Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®).Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "Previn ®)",
+          "levantando ocasionalmente los párpados superior e inferior. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. ALMACENAMIENTO: Guardar bajo llave. ELIMINACION: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS09"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00086",
+      "chemical_name": "HRB-2 S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H302",
+          "H314",
+          "H318",
+          "H373",
+          "H304"
+        ],
+        "p_codes": [
+          "PREVENCIÓN:  Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: Gafas anti-salpicaduras.",
+          "máscara.Llevar prendas de protección: Recomendado: Bata de laboratorio.",
+          "Traje de protección.No respirar el polvo. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. RESPUESTA:  Consultar a un médico en caso de malestar. EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®). Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "Previn ®)",
+          "levantando ocasionalmente los párpados superior e inferior. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. ALMACENAMIENTO: Guardar cerrado. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS08"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00097",
+      "chemical_name": "DANOX BH-15 (DANOX TLC-24)",
+      "cas_number": "Mezcla",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H315",
+          "H318",
+          "H412"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. Evitar su liberación al medio ambiente. Lavarse concienzudamente tras la manipulación. RESPUESTA: Quitar las prendas contaminadas y lavarlas antes de volver a usarlas. EN CASO DE CONTACTO CON LA PIEL: Lavar con abundante agua. En caso de irritación cutánea: Consultar a un médico. EN CASO DE CONTACTO CON LOS OJOS: Aclarar cuidadosamente con agua durante varios minutos. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un CENTRO DE INFORMACION TOXICOLOGICA o a un médico. ELIMINACIÓN: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00103",
+      "chemical_name": "DIAMIN O",
+      "cas_number": "7173-62-8",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H302",
+          "H314",
+          "H318",
+          "H372"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): caucho nitrílico",
+          "goma de butilo. Llevar gafas o máscara de protección: Recomendado: gafas anti_x0002_salpicaduras",
+          "máscara. Llevar prendas de protección: Recomendado: Traje de protección",
+          "bata de laboratorio. No respirar los vapores. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. RESPUESTA: Consultar a un médico en caso de malestar. EN CASO DE INHALACIÓN: Transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración.Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo): Quitar inmediatamente todas las prendas contaminadas. Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®). Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "Previn ®)",
+          "levantando ocasionalmente los párpados superior e inferior. ALMACENAMIENTO: Guardar cerrado. ELIMINACION: Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS08"
+        ]
+      }
+    },
+    {
+      "product_id": "KAO-QB00104",
+      "chemical_name": "DIAMIN C",
+      "cas_number": "61791-63-7",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H301",
+          "H314",
+          "H318",
+          "H372"
+        ],
+        "p_codes": [
+          "PREVENCION: Llevar guantes de protección: > 8 horas (tiempo de detección): goma de butilo",
+          "Viton®.Llevar gafas o máscara de protección: Recomendado: gafas anti-salpicaduras. Llevar prendas de protección: Recomendado: Traje de protección",
+          "bata de laboratorio. No respirar los vapores. No comer",
+          "beber ni fumar durante su utilización. Lavarse las manos concienzudamente tras la manipulación. RESPUESTA: EN CASO DE INHALACIÓN: Transportar a la víctima al exterior y mantenerla en reposo en una posición confortable para respirar. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE INGESTIÓN: Llamar inmediatamente a un centro de información toxicológica o a un médico. Enjuagarse la boca. NO provocar el vómito. EN CASO DE CONTACTO CON LA PIEL (o el pelo):Quitar inmediatamente todas las prendas contaminadas. Lave la piel contaminada con el de 3% de ácido acético o el agente que contiene Diphoterin (por ejemplo",
+          "Previn ®).Lavar las prendas contaminadas antes de volver a usarlas. Llamar inmediatamente a un centro de información toxicológica o a un médico. EN CASO DE CONTACTO CON LOS OJOS: Lavar inmediatamente con un agente que contenga Diphoterin (por ejemplo",
+          "Previn ®)",
+          "levantando ocasionalmente los párpados superior e inferior. Quitar las lentes de contacto",
+          "si lleva y resulta fácil. Seguir aclarando. Llamar inmediatamente a un centro de información toxicológica o a un médico. ALMACENAMIENTO: Guardar cerrrado. ELIMINACIÓN:  Eliminar el contenido y el recipiente de acuerdo con las normativas locales",
+          "regionales",
+          "nacionales e internacionales."
+        ],
+        "pictograms": [
+          "GHS05",
+          "GHS08",
+          "GHS06"
+        ]
+      }
+    },
+    {
+      "product_id": "LUB-QB00002",
+      "chemical_name": "ACTIPHYTE BLUE AGAVE GL100NP",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "Puede provocar una reacción alérgica en la piel. Provoca lesiones oculares graves."
+        ],
+        "p_codes": [],
+        "pictograms": [
+          "GHS07",
+          "GHS05"
+        ]
+      }
+    },
+    {
+      "product_id": "LUB-QB00003",
+      "chemical_name": "ALGAPUR HSHO",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00004",
+      "chemical_name": "ARBALON R-50 CELLULOSE LIQ",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00009",
+      "chemical_name": "CARBOPOL 940",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00010",
+      "chemical_name": "CARBOPOL 956",
+      "cas_number": "584-08-7",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00014",
+      "chemical_name": "CARBOPOL AQUA SF1",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00023",
+      "chemical_name": "CARBOPOL ULTREZ 10",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "Puede formar concentraciones de polvo combustible en el aire"
+        ],
+        "p_codes": [],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00026",
+      "chemical_name": "CARBOPOL XTRA 11 S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00029",
+      "chemical_name": "FIXATE MT FREESTYLE",
+      "cas_number": "No Aplicable",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00030",
+      "chemical_name": "FIXATE G100",
+      "cas_number": "No Aplicable",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00033",
+      "chemical_name": "FIXATE RSP (GOOD RITE)",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00037",
+      "chemical_name": "GLUCAM P20",
+      "cas_number": "61849-72-7",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00038",
+      "chemical_name": "GLUCAMATE LT",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00039",
+      "chemical_name": "GLUCAMATE SSE20 s/p",
+      "cas_number": "72175-38-4",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00040",
+      "chemical_name": "GLUCATE SS",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00042",
+      "chemical_name": "HIDRAMOL PGPL s/p",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00043",
+      "chemical_name": "MATRIFUSSE s/p",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00045",
+      "chemical_name": "MERQUAT 550PR (POLIQUATERNIUM 7)",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "H402: Nocivo para los organismos acuáticos."
+        ],
+        "p_codes": [
+          "P501: Eliminar el contenido/recipiente en una planta apropiada de tratamiento y eliminación conforme a las leyes/reglamentaciones aplicables y las características del producto en el momento de la eliminación."
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00049",
+      "chemical_name": "NOVERITE 301 S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No se aplica",
+      "has_h_statements": true,
+      "has_p_statements": true,
+      "has_pictograms": true,
+      "missing_fields": [
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "H316: Provoca una leve irritación cutánea."
+        ],
+        "p_codes": [
+          "P332+P313: En caso de irritación cutánea: Consultar a un médico."
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00050",
+      "chemical_name": "NOVETHIX HC200",
+      "cas_number": "No Aplicable",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00056",
+      "chemical_name": "RESULOOK S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00058",
+      "chemical_name": "SCHERCEMOL 318 S/P",
+      "cas_number": "68171-33-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00060",
+      "chemical_name": "SCHERCEMOL IDO",
+      "cas_number": "59231-34-4",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00061",
+      "chemical_name": "SCHERCEMOL NGDO",
+      "cas_number": "28510-23-8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "LUB-QB00067",
+      "chemical_name": "SILSENSE DW-18",
+      "cas_number": "No Aplicable",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "H316: Provoca una leve irritación cutánea"
+        ],
+        "p_codes": [
+          "P332+P313: En caso de irritación cutánea: Consultar a un médico"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00003",
+      "chemical_name": "ACEITE DE CASTOR HIDROGENADO S/P",
+      "cas_number": "61788-85-0",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00004",
+      "chemical_name": "ACEITE DE COCO RBD S/P",
+      "cas_number": "8001-31-8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00010",
+      "chemical_name": "ACIDO OLEICO QB",
+      "cas_number": "No Aplicable",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": true,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "SIN PALABRA",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00014",
+      "chemical_name": "ALCOHOL CETILICO S/P",
+      "cas_number": "36653-82-4",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00023",
+      "chemical_name": "ANTIESPUMANTE",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00032",
+      "chemical_name": "C.M.C.",
+      "cas_number": "9004-32-4, 7647-14-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "Puede provocar irritación cutánea Puede formar concentraciones de polvo combustible en aire."
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00036",
+      "chemical_name": "CERABOSS 4048 BASE",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00041",
+      "chemical_name": "COLAGENO COLLATEIN N359",
+      "cas_number": "92113-31-0",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00043",
+      "chemical_name": "COLOR AMARILLO 5 P/GEL",
+      "cas_number": "-",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00045",
+      "chemical_name": "COLOR AMARILLO AL ACEITE SOLVENTE S/P",
+      "cas_number": "",
+      "current_signal_word": "",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00051",
+      "chemical_name": "COLOR AZUL BASICO 200% S/P",
+      "cas_number": "3521-06-0",
+      "current_signal_word": "No aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00052",
+      "chemical_name": "COLOR AZUL TURQUESA DIRECTO 86 (LIMPIADORES)",
+      "cas_number": "1330-38-7",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00053",
+      "chemical_name": "COLOR DC GREEN No8 (GEL FOSFORECENTE)",
+      "cas_number": "6358-69-6",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00060",
+      "chemical_name": "COLOR ROJO NO. 5 GEL",
+      "cas_number": "-",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00068",
+      "chemical_name": "DANAGEL 9254",
+      "cas_number": "9000-07-1 / 9000-40-2",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00074",
+      "chemical_name": "DIPROPILEN GLICOL",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00077",
+      "chemical_name": "EMULBOSS 54",
+      "cas_number": "143-18-0",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "h_statements",
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00079",
+      "chemical_name": "EMULSION 37 ULTRA S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00081",
+      "chemical_name": "ESPESANTE D150",
+      "cas_number": "9005-08-7",
+      "current_signal_word": "No aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "VAR-QB00083",
+      "chemical_name": "EXFOLIANTE OLIVE 6",
+      "cas_number": "-",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00087",
+      "chemical_name": "EXTRACTO DE JOJOBA ACUOSO",
+      "cas_number": "57-55-6",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00089",
+      "chemical_name": "EXTRACTO DE SEMILLA DE TORONJA (GRADO ACUOSO INGERIBLE)",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00091",
+      "chemical_name": "FISION HAIR MOISTURE",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00092",
+      "chemical_name": "FISION SKIN MOUSTURE S/P",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00099",
+      "chemical_name": "GLICEPOL 160",
+      "cas_number": "31566-31-1, 123-94-4, 11099-07-3, 85666-92-8, 85251-77-0",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00100",
+      "chemical_name": "GLICERINA USP",
+      "cas_number": "56-81-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "Atención",
+        "h_codes": [
+          "Toxicidad aguda por inhalacion"
+        ],
+        "p_codes": [
+          "P261- Evitar respirar nieblas",
+          "vapores o aerosoles. P271- Utilizar solo al aire libre o en un lugar bien ventilado. P304+ P340- En caso de inhalación: transportar a la persona al aire libre y mantenerla en una posición que le facilite la respiración. P312- Llamar a un centro de toxicología/medico si la persona se siente mal."
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "VAR-QB00107",
+      "chemical_name": "KERATINA K100",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00117",
+      "chemical_name": "MONOPROPILEN GLICOL",
+      "cas_number": "57- 55- 6",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00118",
+      "chemical_name": "NACARANTE QB",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "ATENCION",
+        "h_codes": [
+          "H319 Causa seria irritación ocular H315 Causa irritación en piel."
+        ],
+        "p_codes": [
+          "P280 Utilizar equipo de protección personal (lentes",
+          "guantes mascarilla). P264 Lavarse bien después de manipularlo. P305+P351+P338 En caso de tener contacto con los ojos enjuagar con abundante agua",
+          "si es posible retirar los lentes y continuar enjuagando."
+        ],
+        "pictograms": [
+          "GHS07"
+        ]
+      }
+    },
+    {
+      "product_id": "VAR-QB00124",
+      "chemical_name": "NS MICELLAR HYALURONIC",
+      "cas_number": "-",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00131",
+      "chemical_name": "PULIMENTO S-N82 S/P",
+      "cas_number": "1020665- 14- 8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00132",
+      "chemical_name": "PULIMENTO S-N85 s/p",
+      "cas_number": "1020665-14-8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00135",
+      "chemical_name": "SILICON 1000",
+      "cas_number": "63148-62-9",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00137",
+      "chemical_name": "SUPERHUMECTANTE S/P",
+      "cas_number": "308073-86-8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00142",
+      "chemical_name": "TRANSCUTOL CG",
+      "cas_number": "111-90-0",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00143",
+      "chemical_name": "TRANSCUTOL HP",
+      "cas_number": "111-90-0",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00145",
+      "chemical_name": "TWEEN 80 S/p",
+      "cas_number": "9005-65-6",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00146",
+      "chemical_name": "TWEN 20 QE",
+      "cas_number": "9005-64-5",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00148",
+      "chemical_name": "VITAMINA E",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00153",
+      "chemical_name": "ESPESANTE HIDROSOLUBLE 8000",
+      "cas_number": "-",
+      "current_signal_word": "-",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "-"
+        ],
+        "p_codes": [
+          "-"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00157",
+      "chemical_name": "ACIDO POLIFOSFORICO 117% S/P",
+      "cas_number": "8017-16-1",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H301",
+          "H314",
+          "H335"
+        ],
+        "p_codes": [
+          "Ojos: Busque atención médica inmediatamente. NO permita que la víctima se frote ni mantenga los ojos cerrados. Se requiere lavando extenso (al menos 30 minutos).\r\nPiel: Busque atención médica inmediatamente. Lave inmediatamente la piel con abundante agua y jabón durante al menos 15 minutos mientras se quita la ropa y los zapatos contaminados. Lavar la ropa antes de volver a usarla. Destruir zapatos contaminados.\r\nIngestión: NO inducir el vómito. Si la víctima está consciente y alerta",
+          "darle de 2 a 4 tazas de leche o \r\nagua. Nunca le dé nada por vía oral a una persona inconsciente. Obtenga ayuda médica \r\ninmediatamente.\r\nInhalación: Busque atención médica inmediatamente. Retirar de la exposición al aire fresco \r\ninmediatamente. Si no respira",
+          "dar respiración artificial. Si la respiración es difícil",
+          "proporcione oxígeno. \r\nNo utilice respiración boca a boca.\r\nNotas para el médico: Trate sintomáticamente y de apoyo."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS08"
+        ]
+      }
+    },
+    {
+      "product_id": "VAR-QB00158",
+      "chemical_name": "ACIDO POLIFOSFORICO 115% S/P",
+      "cas_number": "8017-16-1",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "PELIGRO",
+        "h_codes": [
+          "H301",
+          "H314",
+          "H335"
+        ],
+        "p_codes": [
+          "Ojos: Busque atención médica inmediatamente. NO permita que la víctima se frote ni mantenga los ojos \r\ncerrados. Se requiere lavando extenso (al menos 30 minutos).\r\nPiel: Busque atención médica inmediatamente. Lave inmediatamente la piel con abundante agua y \r\njabón durante al menos 15 minutos mientras se quita la ropa y los zapatos contaminados. Lavar la ropa \r\nantes de volver a usarla. Destruir zapatos contaminados.\r\nIngestión: NO inducir el vómito. Si la víctima está consciente y alerta",
+          "darle de 2 a 4 tazas de leche o \r\nagua. Nunca le dé nada por vía oral a una persona inconsciente. Obtenga ayuda médica \r\ninmediatamente.\r\nInhalación: Busque atención médica inmediatamente. Retirar de la exposición al aire fresco \r\ninmediatamente. Si no respira",
+          "dar respiración artificial. Si la respiración es difícil",
+          "proporcione oxígeno. \r\nNo utilice respiración boca a boca.\r\nNotas para el médico: Trate sintomáticamente y de apoyo."
+        ],
+        "pictograms": [
+          "GHS07",
+          "GHS05",
+          "GHS08"
+        ]
+      }
+    },
+    {
+      "product_id": "VAR-QB00173",
+      "chemical_name": "P-QUAT 37",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00174",
+      "chemical_name": "FIXATE SUPERHOLD",
+      "cas_number": "Sustancia",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00175",
+      "chemical_name": "POLYQUATERNIUM 7",
+      "cas_number": "26590-05-6",
+      "current_signal_word": "ATENCION",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "H402: Nocivo para los organismos acuáticos."
+        ],
+        "p_codes": [
+          "P501: Eliminar el contenido/recipiente en una planta apropiada de tratamiento y eliminación conforme a las leyes/reglamentaciones aplicables y las características del producto en el momento de la eliminación."
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00176",
+      "chemical_name": "CARBOMER GBM 940",
+      "cas_number": "9003-01-4",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00177",
+      "chemical_name": "PLANCHA FACIL MOD.1",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00178",
+      "chemical_name": "CARBOMER LIQUID QBW",
+      "cas_number": "25212-88-8",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00179",
+      "chemical_name": "VISCOSOL QB280",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00180",
+      "chemical_name": "C.M.C. 10,000",
+      "cas_number": "2836-32-0, 7647-14-5, 9004-32-4",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00182",
+      "chemical_name": "FIJADOR X100",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "-",
+        "h_codes": [
+          "H227",
+          "H315",
+          "H317",
+          "H319",
+          "H411"
+        ],
+        "p_codes": [
+          "P210",
+          "P261",
+          "P264",
+          "P272",
+          "P273",
+          "P280",
+          "P302 + P352",
+          "P305 + P351 + P338",
+          "P333 + P313",
+          "P337 + P313",
+          "P362 + P364",
+          "P370 + P378",
+          "P391",
+          "P403 + P235",
+          "P405",
+          "P501"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00184",
+      "chemical_name": "ESPESANTE GT-940",
+      "cas_number": "9007-20-9",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00185",
+      "chemical_name": "ESPESANTE GT-980",
+      "cas_number": "9007-20-9",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00187",
+      "chemical_name": "ESPESANTE GT-21",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00188",
+      "chemical_name": "ESPESANTE GT-20",
+      "cas_number": "Mezcla",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "VAR-QB00192",
+      "chemical_name": "RESINA SUPER STYLE 30H",
+      "cas_number": "25035-69-2",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "legacy_csv",
+      "legacy_data": {
+        "signal_word": "No Aplicable",
+        "h_codes": [
+          "No Aplicable"
+        ],
+        "p_codes": [
+          "No Aplicable"
+        ],
+        "pictograms": []
+      }
+    },
+    {
+      "product_id": "KAO-QB00001",
+      "chemical_name": "ASFIER 100",
+      "cas_number": "61791-55-7",
+      "current_signal_word": "PELIGRO",
+      "has_h_statements": true,
+      "has_p_statements": false,
+      "has_pictograms": true,
+      "missing_fields": [
+        "p_statements"
+      ],
+      "recovery_source": "needs_manual_lookup",
+      "legacy_data": {
+        "signal_word": "PELIGRO"
+      }
+    },
+    {
+      "product_id": "VAR-QB00127",
+      "chemical_name": "PHANTENOL D",
+      "cas_number": "599-04-2",
+      "current_signal_word": "No Aplicable",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "needs_manual_lookup"
+    },
+    {
+      "product_id": "VAR-QB00152",
+      "chemical_name": "FORMOL PR",
+      "cas_number": "",
+      "current_signal_word": "",
+      "has_h_statements": false,
+      "has_p_statements": false,
+      "has_pictograms": false,
+      "missing_fields": [
+        "h_statements",
+        "p_statements",
+        "pictograms",
+        "signal_word"
+      ],
+      "recovery_source": "needs_manual_lookup"
+    }
+  ],
+  "remaining_products": {
+    "partially_complete": [
+      {
+        "product_id": "VAR-QB00010",
+        "chemical_name": "ACIDO OLEICO QB",
+        "cas_number": "No Aplicable",
+        "signal_word": "No Aplicable",
+        "has_h": false,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "VAR-QB00158",
+        "chemical_name": "ACIDO POLIFOSFORICO 115% S/P",
+        "cas_number": "8017-16-1",
+        "signal_word": "PELIGRO",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "p_statements"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "VAR-QB00157",
+        "chemical_name": "ACIDO POLIFOSFORICO 117% S/P",
+        "cas_number": "8017-16-1",
+        "signal_word": "PELIGRO",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "p_statements"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "LUB-QB00002",
+        "chemical_name": "ACTIPHYTE BLUE AGAVE GL100NP",
+        "cas_number": "Mezcla",
+        "signal_word": "PELIGRO",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "p_statements"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "KAO-QB00001",
+        "chemical_name": "ASFIER 100",
+        "cas_number": "61791-55-7",
+        "signal_word": "PELIGRO",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "p_statements"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "KAO-QB00007",
+        "chemical_name": "ASFIER 216 S/P",
+        "cas_number": "Mezcla",
+        "signal_word": "PELIGRO",
+        "has_h": true,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "ASH-QB00001",
+        "chemical_name": "BENECEL",
+        "cas_number": "Mezcla",
+        "signal_word": "ATENCION",
+        "has_h": true,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "ASH-QB00057",
+        "chemical_name": "BLANOSE CMC 9H4F 421930",
+        "cas_number": "9004-32-4",
+        "signal_word": "ATENCION",
+        "has_h": false,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "VAR-QB00032",
+        "chemical_name": "C.M.C.",
+        "cas_number": "9004-32-4, 7647-14-5",
+        "signal_word": "ATENCION",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "p_statements",
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "LUB-QB00023",
+        "chemical_name": "CARBOPOL ULTREZ 10",
+        "cas_number": "Mezcla",
+        "signal_word": "No Aplicable",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "VAR-QB00077",
+        "chemical_name": "EMULBOSS 54",
+        "cas_number": "143-18-0",
+        "signal_word": "ATENCION",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "h_statements",
+          "p_statements"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "VAR-QB00081",
+        "chemical_name": "ESPESANTE D150",
+        "cas_number": "9005-08-7",
+        "signal_word": "No aplicable",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "signal_word"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "VAR-QB00182",
+        "chemical_name": "FIJADOR X100",
+        "cas_number": "Mezcla",
+        "signal_word": "No Aplicable",
+        "has_h": true,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "LUB-QB00033",
+        "chemical_name": "FIXATE RSP (GOOD RITE)",
+        "cas_number": "Mezcla",
+        "signal_word": "No Aplicable",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "signal_word"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "VAR-QB00100",
+        "chemical_name": "GLICERINA USP",
+        "cas_number": "56-81-5",
+        "signal_word": "Atención",
+        "has_h": false,
+        "has_p": true,
+        "has_pic": true,
+        "missing_fields": [
+          "h_statements"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "KAO-QB00083",
+        "chemical_name": "HRB-1 S/P",
+        "cas_number": "110-30-5",
+        "signal_word": "ATENCION",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "p_statements",
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "LUB-QB00045",
+        "chemical_name": "MERQUAT 550PR (POLIQUATERNIUM 7)",
+        "cas_number": "Mezcla",
+        "signal_word": "No Aplicable",
+        "has_h": true,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "ASH-QB00032",
+        "chemical_name": "NATROSOL HHR250",
+        "cas_number": "Mezcla",
+        "signal_word": "ATENCION",
+        "has_h": true,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "ASH-QB00062",
+        "chemical_name": "N-HANCE HP40",
+        "cas_number": "Mezcla",
+        "signal_word": "ATENCION",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "p_statements",
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "KAO-QB00066",
+        "chemical_name": "QUARTAMIN B18",
+        "cas_number": "No Aplica",
+        "signal_word": "PELIGRO",
+        "has_h": true,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "p_statements"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "IFF-QB00263",
+        "chemical_name": "QUIM SH MOD",
+        "cas_number": "Mezcla",
+        "signal_word": "PELIGRO",
+        "has_h": true,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "LUB-QB00067",
+        "chemical_name": "SILSENSE DW-18",
+        "cas_number": "No Aplicable",
+        "signal_word": "ATENCION",
+        "has_h": true,
+        "has_p": true,
+        "has_pic": false,
+        "missing_fields": [
+          "pictograms"
+        ],
+        "category": "partially_complete"
+      },
+      {
+        "product_id": "IFF-QB00272",
+        "chemical_name": "SOFT BLUE M 68",
+        "cas_number": "-",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": true,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "signal_word"
+        ],
+        "category": "partially_complete"
+      }
+    ],
+    "needs_sds_lookup": [
+      {
+        "product_id": "IFF-QB00180",
+        "chemical_name": "BOSS 3023 ACQUA DI GIO",
+        "cas_number": "Mezcla",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "IFF-QB00323",
+        "chemical_name": "CESCO LV40",
+        "cas_number": "-",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "IFF-QB00082",
+        "chemical_name": "CHIRSTMAS GINGERAPPLE 712 FV",
+        "cas_number": "Mezcla",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "IFF-QB00084",
+        "chemical_name": "CHOCOLAT MOD",
+        "cas_number": "Mezcla",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "VAR-QB00043",
+        "chemical_name": "COLOR AMARILLO 5 P/GEL",
+        "cas_number": "-",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "VAR-QB00045",
+        "chemical_name": "COLOR AMARILLO AL ACEITE SOLVENTE S/P",
+        "cas_number": "",
+        "signal_word": "",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "VAR-QB00060",
+        "chemical_name": "COLOR ROJO NO. 5 GEL",
+        "cas_number": "-",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "ASH-QB00009",
+        "chemical_name": "CONDITIONIZE 37E",
+        "cas_number": "Mezcla",
+        "signal_word": "1-800-274-5263",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "VAR-QB00153",
+        "chemical_name": "ESPESANTE HIDROSOLUBLE 8000",
+        "cas_number": "-",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "VAR-QB00083",
+        "chemical_name": "EXFOLIANTE OLIVE 6",
+        "cas_number": "-",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "VAR-QB00152",
+        "chemical_name": "FORMOL PR",
+        "cas_number": "",
+        "signal_word": "",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "KAO-QB00057",
+        "chemical_name": "KAOSOFCARE  GP1",
+        "cas_number": "29117-02-0",
+        "signal_word": "ATENCION",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "IFF-QB00191",
+        "chemical_name": "MEN 500",
+        "cas_number": "Mezcla",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "VAR-QB00124",
+        "chemical_name": "NS MICELLAR HYALURONIC",
+        "cas_number": "-",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "IFF-QB00302",
+        "chemical_name": "SER 1011 LAVANDA",
+        "cas_number": "Mezcla",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      },
+      {
+        "product_id": "IFF-QB00119",
+        "chemical_name": "UVA AIR 814",
+        "cas_number": "Mezcla",
+        "signal_word": "-",
+        "has_h": false,
+        "has_p": false,
+        "has_pic": false,
+        "missing_fields": [
+          "h_statements",
+          "p_statements",
+          "pictograms",
+          "signal_word"
+        ],
+        "category": "needs_sds_lookup"
+      }
+    ],
+    "no_ghs_classification": [
+      {
+        "product_id": "VAR-QB00003",
+        "chemical_name": "ACEITE DE CASTOR HIDROGENADO S/P"
+      },
+      {
+        "product_id": "VAR-QB00004",
+        "chemical_name": "ACEITE DE COCO RBD S/P"
+      },
+      {
+        "product_id": "VAR-QB00014",
+        "chemical_name": "ALCOHOL CETILICO S/P"
+      },
+      {
+        "product_id": "KAO-QB00018",
+        "chemical_name": "ALCOHOL ESTEARILICO KALKOL 8098"
+      },
+      {
+        "product_id": "LUB-QB00003",
+        "chemical_name": "ALGAPUR HSHO"
+      },
+      {
+        "product_id": "ASH-QB00081",
+        "chemical_name": "ALLIANZ OPT PAIL"
+      },
+      {
+        "product_id": "ASH-QB00078",
+        "chemical_name": "ANTARON SOJA"
+      },
+      {
+        "product_id": "VAR-QB00023",
+        "chemical_name": "ANTIESPUMANTE"
+      },
+      {
+        "product_id": "ASH-QB00071",
+        "chemical_name": "AQUALON EC-N200 PC"
+      },
+      {
+        "product_id": "LUB-QB00004",
+        "chemical_name": "ARBALON R-50 CELLULOSE LIQ"
+      },
+      {
+        "product_id": "VAR-QB00180",
+        "chemical_name": "C.M.C. 10,000"
+      },
+      {
+        "product_id": "ASH-QB00002",
+        "chemical_name": "CAPAUXEIN G2 BIOFUNTIONAL"
+      },
+      {
+        "product_id": "VAR-QB00176",
+        "chemical_name": "CARBOMER GBM 940"
+      },
+      {
+        "product_id": "VAR-QB00178",
+        "chemical_name": "CARBOMER LIQUID QBW"
+      },
+      {
+        "product_id": "LUB-QB00009",
+        "chemical_name": "CARBOPOL 940"
+      },
+      {
+        "product_id": "LUB-QB00010",
+        "chemical_name": "CARBOPOL 956"
+      },
+      {
+        "product_id": "LUB-QB00014",
+        "chemical_name": "CARBOPOL AQUA SF1"
+      },
+      {
+        "product_id": "LUB-QB00026",
+        "chemical_name": "CARBOPOL XTRA 11 S/P"
+      },
+      {
+        "product_id": "VAR-QB00036",
+        "chemical_name": "CERABOSS 4048 BASE"
+      },
+      {
+        "product_id": "ASH-QB00004",
+        "chemical_name": "CERAPHYL 230 S/P"
+      },
+      {
+        "product_id": "ASH-QB00005",
+        "chemical_name": "CERAPHYL 70"
+      },
+      {
+        "product_id": "ASH-QB00069",
+        "chemical_name": "CERAPHYL ODS"
+      },
+      {
+        "product_id": "ASH-QB00007",
+        "chemical_name": "CERAPHYL SLK S/P"
+      },
+      {
+        "product_id": "ASH-QB00008",
+        "chemical_name": "CHROMAFEN S/P"
+      },
+      {
+        "product_id": "VAR-QB00041",
+        "chemical_name": "COLAGENO COLLATEIN N359"
+      },
+      {
+        "product_id": "VAR-QB00051",
+        "chemical_name": "COLOR AZUL BASICO 200% S/P"
+      },
+      {
+        "product_id": "VAR-QB00052",
+        "chemical_name": "COLOR AZUL TURQUESA DIRECTO 86 (LIMPIADORES)"
+      },
+      {
+        "product_id": "VAR-QB00053",
+        "chemical_name": "COLOR DC GREEN No8 (GEL FOSFORECENTE)"
+      },
+      {
+        "product_id": "VAR-QB00068",
+        "chemical_name": "DANAGEL 9254"
+      },
+      {
+        "product_id": "KAO-QB00032",
+        "chemical_name": "DANOX HC30"
+      },
+      {
+        "product_id": "VAR-QB00074",
+        "chemical_name": "DIPROPILEN GLICOL"
+      },
+      {
+        "product_id": "ASH-QB00012",
+        "chemical_name": "DYNAGEN S7P"
+      },
+      {
+        "product_id": "ASH-QB00013",
+        "chemical_name": "EDERLINE S/P"
+      },
+      {
+        "product_id": "VAR-QB00079",
+        "chemical_name": "EMULSION 37 ULTRA S/P"
+      },
+      {
+        "product_id": "VAR-QB00188",
+        "chemical_name": "ESPESANTE GT-20"
+      },
+      {
+        "product_id": "VAR-QB00187",
+        "chemical_name": "ESPESANTE GT-21"
+      },
+      {
+        "product_id": "VAR-QB00184",
+        "chemical_name": "ESPESANTE GT-940"
+      },
+      {
+        "product_id": "VAR-QB00185",
+        "chemical_name": "ESPESANTE GT-980"
+      },
+      {
+        "product_id": "VAR-QB00087",
+        "chemical_name": "EXTRACTO DE JOJOBA ACUOSO"
+      },
+      {
+        "product_id": "VAR-QB00089",
+        "chemical_name": "EXTRACTO DE SEMILLA DE TORONJA (GRADO ACUOSO INGERIBLE)"
+      },
+      {
+        "product_id": "VAR-QB00091",
+        "chemical_name": "FISION HAIR MOISTURE"
+      },
+      {
+        "product_id": "VAR-QB00092",
+        "chemical_name": "FISION SKIN MOUSTURE S/P"
+      },
+      {
+        "product_id": "LUB-QB00030",
+        "chemical_name": "FIXATE G100"
+      },
+      {
+        "product_id": "LUB-QB00029",
+        "chemical_name": "FIXATE MT FREESTYLE"
+      },
+      {
+        "product_id": "VAR-QB00174",
+        "chemical_name": "FIXATE SUPERHOLD"
+      },
+      {
+        "product_id": "VAR-QB00099",
+        "chemical_name": "GLICEPOL 160"
+      },
+      {
+        "product_id": "LUB-QB00037",
+        "chemical_name": "GLUCAM P20"
+      },
+      {
+        "product_id": "LUB-QB00038",
+        "chemical_name": "GLUCAMATE LT"
+      },
+      {
+        "product_id": "LUB-QB00039",
+        "chemical_name": "GLUCAMATE SSE20 s/p"
+      },
+      {
+        "product_id": "LUB-QB00040",
+        "chemical_name": "GLUCATE SS"
+      },
+      {
+        "product_id": "ASH-QB00021",
+        "chemical_name": "GP4G S/P"
+      },
+      {
+        "product_id": "LUB-QB00042",
+        "chemical_name": "HIDRAMOL PGPL s/p"
+      },
+      {
+        "product_id": "VAR-QB00107",
+        "chemical_name": "KERATINA K100"
+      },
+      {
+        "product_id": "ASH-QB00084",
+        "chemical_name": "LIFTYL"
+      },
+      {
+        "product_id": "ASH-QB00074",
+        "chemical_name": "LUBRAGEL MARINE"
+      },
+      {
+        "product_id": "ASH-QB00022",
+        "chemical_name": "LUBRAJEL 0IL S/P"
+      },
+      {
+        "product_id": "ASH-QB00080",
+        "chemical_name": "LUBRAJEL DV"
+      },
+      {
+        "product_id": "LUB-QB00043",
+        "chemical_name": "MATRIFUSSE s/p"
+      },
+      {
+        "product_id": "VAR-QB00117",
+        "chemical_name": "MONOPROPILEN GLICOL"
+      },
+      {
+        "product_id": "ASH-QB00029",
+        "chemical_name": "NATRIANCE BRIGHTENER S/P"
+      },
+      {
+        "product_id": "ASH-QB00030",
+        "chemical_name": "NATRIANCE SELF HYDRATE"
+      },
+      {
+        "product_id": "ASH-QB00031",
+        "chemical_name": "NATRIANCE WRINKLE LESS"
+      },
+      {
+        "product_id": "ASH-QB00026",
+        "chemical_name": "N-DURHANCE A1000"
+      },
+      {
+        "product_id": "ASH-QB00028",
+        "chemical_name": "N-HANCE SP100"
+      },
+      {
+        "product_id": "LUB-QB00050",
+        "chemical_name": "NOVETHIX HC200"
+      },
+      {
+        "product_id": "ASH-QB00033",
+        "chemical_name": "OPACIFICANTE A-430"
+      },
+      {
+        "product_id": "ASH-QB00036",
+        "chemical_name": "P.V.P.K 30"
+      },
+      {
+        "product_id": "ASH-QB00082",
+        "chemical_name": "PERFECTYL"
+      },
+      {
+        "product_id": "VAR-QB00127",
+        "chemical_name": "PHANTENOL D"
+      },
+      {
+        "product_id": "VAR-QB00177",
+        "chemical_name": "PLANCHA FACIL MOD.1"
+      },
+      {
+        "product_id": "KAO-QB00060",
+        "chemical_name": "POIZ 535"
+      },
+      {
+        "product_id": "VAR-QB00173",
+        "chemical_name": "P-QUAT 37"
+      },
+      {
+        "product_id": "ASH-QB00038",
+        "chemical_name": "PROTECTAGEN S/P"
+      },
+      {
+        "product_id": "VAR-QB00131",
+        "chemical_name": "PULIMENTO S-N82 S/P"
+      },
+      {
+        "product_id": "VAR-QB00132",
+        "chemical_name": "PULIMENTO S-N85 s/p"
+      },
+      {
+        "product_id": "ASH-QB00039",
+        "chemical_name": "PVP K90 S/P"
+      },
+      {
+        "product_id": "ASH-QB00040",
+        "chemical_name": "PVP/VA S-630 S/P"
+      },
+      {
+        "product_id": "ASH-QB00041",
+        "chemical_name": "RAPITIX A-100 S/P"
+      },
+      {
+        "product_id": "VAR-QB00192",
+        "chemical_name": "RESINA SUPER STYLE 30H"
+      },
+      {
+        "product_id": "LUB-QB00056",
+        "chemical_name": "RESULOOK S/P"
+      },
+      {
+        "product_id": "ASH-QB00079",
+        "chemical_name": "ROSALISS"
+      },
+      {
+        "product_id": "LUB-QB00058",
+        "chemical_name": "SCHERCEMOL 318 S/P"
+      },
+      {
+        "product_id": "LUB-QB00060",
+        "chemical_name": "SCHERCEMOL IDO"
+      },
+      {
+        "product_id": "LUB-QB00061",
+        "chemical_name": "SCHERCEMOL NGDO"
+      },
+      {
+        "product_id": "VAR-QB00135",
+        "chemical_name": "SILICON 1000"
+      },
+      {
+        "product_id": "ASH-QB00043",
+        "chemical_name": "SOREZ 100"
+      },
+      {
+        "product_id": "ASH-QB00044",
+        "chemical_name": "SOREZ H5205"
+      },
+      {
+        "product_id": "ASH-QB00063",
+        "chemical_name": "STYLEZE CC-10"
+      },
+      {
+        "product_id": "ASH-QB00086",
+        "chemical_name": "STYLEZE ES-FORZA"
+      },
+      {
+        "product_id": "ASH-QB00073",
+        "chemical_name": "STYLIZE W-17"
+      },
+      {
+        "product_id": "ASH-QB00045",
+        "chemical_name": "STYLIZE W20"
+      },
+      {
+        "product_id": "ASH-QB00046",
+        "chemical_name": "SUBERLIFTT LIPOPHILE S/P"
+      },
+      {
+        "product_id": "VAR-QB00137",
+        "chemical_name": "SUPERHUMECTANTE S/P"
+      },
+      {
+        "product_id": "ASH-QB00049",
+        "chemical_name": "TOMASA SHEA BUTTER"
+      },
+      {
+        "product_id": "VAR-QB00142",
+        "chemical_name": "TRANSCUTOL CG"
+      },
+      {
+        "product_id": "VAR-QB00143",
+        "chemical_name": "TRANSCUTOL HP"
+      },
+      {
+        "product_id": "VAR-QB00145",
+        "chemical_name": "TWEEN 80 S/p"
+      },
+      {
+        "product_id": "VAR-QB00146",
+        "chemical_name": "TWEN 20 QE"
+      },
+      {
+        "product_id": "VAR-QB00179",
+        "chemical_name": "VISCOSOL QB280"
+      },
+      {
+        "product_id": "VAR-QB00148",
+        "chemical_name": "VITAMINA E"
+      },
+      {
+        "product_id": "ASH-QB00051",
+        "chemical_name": "VITS PRIMASPONGES BLUE SS MICROESFERA"
+      }
+    ]
+  }
+}

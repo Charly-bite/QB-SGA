@@ -1,0 +1,941 @@
+
+> <script src="{{ url_for('static', filename='js/print_agent.js', v=range(1, 100000)|random) }}"></script>
+> <script>
+      function labelQueue() {
+          return {
+              queue: [],
+              searchQuery: '',
+              searchResults: [],
+              showResults: false,
+              scanSuccess: false,
+              scanError: false,
+              sapOrderNumber: '',
+              sapOrder: null,
+              loadingSAP: false,
+              showPreview: false,
+              previewUrl: '',
+              previewItemName: '',
+              previewItemCode: '',
+              showPrintModal: false,
+              selectedItems: [],
+              generating: false,
+              previewPanelItem: null,
+              panelPreviewUrl: '',
+              // Template selection (persisted in localStorage)
+              selectedTemplate: localStorage.getItem('ghs_selected_template') || 'default',
+              templates: [],
+              _templatesLoaded: false,
+              isAdmin: {{ 'true' if current_user.is_admin() else 'false' }},
+              //
+              // Queue checkbox selection (for direct print from main table)
+              queueSelectedItems: [],
+              // Print Agent state
+              printAgent: null,
+              agentOnline: false,
+              printAgentOnline: false,
+              agentPrinter: '',
+              printAgentUrl: 'http://127.0.0.1:5555',
+              directPrinting: false,
+              printDpi: localStorage.getItem('ghs_print_dpi') || '600',
+              directPrintRotation: localStorage.getItem('ghs_direct_print_rotation') || '270',
+              userWarehouse: '{{ user_warehouse|default("", true) }}',
+              username: '{{ current_user.username|default("", true) }}',
+  
+              // ── Quick Add Product state ──────────────────────────
+              showQuickAdd: false,
+              quickAddSaving: false,
+              quickAddError: '',
+              quickAddSuccess: '',
+              quickAddForm: { },
+              quickAddPictograms: [
+                  { name: 'Exclamación', label: 'Exclamación' },
+                  { name: 'Corrosión', label: 'Corrosión' },
+                  { name: 'Peligro para la salud', label: 'Salud' },
+                  { name: 'Calavera', label: 'Calavera' },
+                  { name: 'Llama', label: 'Llama' },
+                  { name: 'Ambiente', label: 'Ambiente' },
+                  { name: 'Llama sobre círculo', label: 'Oxidante' },
+                  { name: 'Bomba explotando', label: 'Explosivo' },
+                  { name: 'Cilindro de gas', label: 'Gas' },
+              ],
+  
+          init() {
+          this.loadQueue();
+          this.initPrintAgent();
+          this.loadTemplates();
+          // Persist template selection whenever it changes (only after templates loaded, admin only)
+          this.$watch('selectedTemplate', (val) => {
+              if (this._templatesLoaded && this.isAdmin) {
+                  localStorage.setItem('ghs_selected_template', val);
+              }
+          });
+          // Persist direct print rotation selection
+          this.$watch('directPrintRotation', (val) => {
+              localStorage.setItem('ghs_direct_print_rotation', val);
+          });
+      },
+  
+              async initPrintAgent() {
+          this.printAgent = new PrintAgent(5555);
+          this.agentOnline = await this.printAgent.checkStatus();
+          this.printAgentOnline = this.agentOnline;
+          if (this.agentOnline) {
+              this.agentPrinter = this.printAgent.printerName;
+              console.log('✅ Print Agent online:', this.agentPrinter);
+          } else {
+              // console.log('ℹ️ Print Agent not available — using browser print');
+          }
+          // Re-check with adaptive interval (backs off when agent is offline)
+          const pollAgent = async () => {
+              this.agentOnline = await this.printAgent.checkStatus();
+              this.printAgentOnline = this.agentOnline;
+              if (this.agentOnline) this.agentPrinter = this.printAgent.printerName;
+              setTimeout(pollAgent, this.printAgent.pollInterval);
+          };
+          setTimeout(pollAgent, this.printAgent.pollInterval);
+      },
+  
+              async directPrintLabels() {
+          if (this.selectedItems.length === 0) {
+              alert('Selecciona al menos una etiqueta');
+              return;
+          }
+          if (!this.agentOnline) {
+              alert('⚠️ Print Agent no disponible.\nAsegúrate de que esté corriendo en esta PC (start_agent.bat)');
+              return;
+          }
+  
+          this.directPrinting = true;
+          try {
+              // 1. Get images as base64 from the server
+              const rotation = parseInt(this.directPrintRotation) || 90;
+              const res = await fetch('/labels/generate_images', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      item_ids: this.selectedItems,
+                      template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                      rotation: rotation
+                  })
+              });
+  
+              if (!res.ok) {
+                  const err = await res.json().catch(() => ({}));
+                  alert(err.error || 'Error al generar imágenes');
+                  this.directPrinting = false;
+                  return;
+              }
+  
+              const data = await res.json();
+              if (!data.success || !data.images || data.images.length === 0) {
+                  alert('No se generaron imágenes');
+                  this.directPrinting = false;
+                  return;
+              }
+  
+              // 2. Send images to the local Print Agent
+              const printResult = await this.printAgent.printImages(data.images);
+  
+              if (printResult.success) {
+                  // Success — clear printed items from UI queue
+                  const count = this.selectedItems.length;
+                  this.queue = this.queue.filter(item => !this.selectedItems.includes(item.id));
+                  this.selectedItems = [];
+                  this.showPrintModal = false;
+                  // Brief success notification
+                  this.showToast(`✅ ${printResult.total_printed} etiqueta(s) enviada(s) a ${this.agentPrinter}`);
+              } else {
+                  const errMsg = (printResult.errors || []).join('\n') || 'Error desconocido';
+                  alert(`❌ Error de impresión:\n${errMsg}`);
+              }
+          } catch (e) {
+              console.error('Direct print error:', e);
+              alert('Error en impresión directa: ' + e.message);
+          }
+          this.directPrinting = false;
+      },
+  
+      showToast(message) {
+          // Simple toast notification
+          const toast = document.createElement('div');
+          toast.className = 'fixed top-4 right-4 z-[9999] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium transition-all duration-300';
+          toast.textContent = message;
+          document.body.appendChild(toast);
+          setTimeout(() => {
+              toast.style.opacity = '0';
+              toast.style.transform = 'translateY(-10px)';
+              setTimeout(() => toast.remove(), 300);
+          }, 3000);
+      },
+  
+      // ══════ Queue Checkbox Methods ══════
+  
+      toggleQueueSelectAll() {
+          if (this.queueSelectedItems.length === this.queue.length) {
+              this.queueSelectedItems = [];
+          } else {
+              this.queueSelectedItems = this.queue.map(i => i.id);
+          }
+      },
+  
+      toggleQueueItem(itemId) {
+          const idx = this.queueSelectedItems.indexOf(itemId);
+          if (idx > -1) {
+              this.queueSelectedItems.splice(idx, 1);
+          } else {
+              this.queueSelectedItems.push(itemId);
+          }
+      },
+  
+              // ══════ Direct Print from Queue ══════
+  
+              async directPrintQueue() {
+          if (this.queueSelectedItems.length === 0) {
+              alert('Selecciona al menos una etiqueta con los checkboxes');
+              return;
+          }
+          if (!this.printAgentOnline) {
+              alert('Print Agent no disponible.\n\nInicia start_agent.bat en la PC del almacén.');
+              return;
+          }
+  
+          this.directPrinting = true;
+          try {
+              // Use the existing generate_images endpoint (same as print modal's directPrintLabels)
+              const rotation = parseInt(this.directPrintRotation) || 90;
+              const res = await fetch('/labels/generate_images', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      item_ids: this.queueSelectedItems,
+                      template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                      print_dpi: parseInt(this.printDpi) || 600,
+                      rotation: rotation
+                  })
+              });
+  
+              if (!res.ok) {
+                  const err = await res.json().catch(() => ({}));
+                  alert(err.error || 'Error al generar imágenes');
+                  return;
+              }
+  
+              const data = await res.json();
+              if (!data.success || !data.images || data.images.length === 0) {
+                  alert('No se generaron imágenes');
+                  return;
+              }
+  
+              // Send images to the local Print Agent
+              const printResult = await this.printAgent.printImages(data.images);
+  
+              if (printResult.success) {
+                  const count = this.queueSelectedItems.length;
+                  // Remove printed items from queue
+                  this.queue = this.queue.filter(item => !this.queueSelectedItems.includes(item.id));
+                  this.queueSelectedItems = [];
+                  this.showToast(`✅ ${printResult.total_printed} etiqueta(s) enviada(s) a ${this.agentPrinter}`);
+              } else {
+                  const errMsg = (printResult.errors || []).join('\n') || 'Error desconocido';
+                  alert(`❌ Error de impresión:\n${errMsg}`);
+              }
+          } catch (e) {
+              console.error('Direct print error:', e);
+              alert('Error en impresión directa: ' + e.message);
+          } finally {
+              this.directPrinting = false;
+          }
+      },
+  
+              async cancelDirectPrint() {
+          if (!this.printAgentOnline || !this.printAgent) {
+              this.showToast("Print Agent no disponible para cancelar.");
+              return;
+          }
+          const success = await this.printAgent.cancelPrint();
+          if (success) {
+              this.showToast("🛑 Señal de parada de emergencia enviada al impresor local.", "warning");
+          } else {
+              this.showToast("⚠️ Fallo al enviar señal de parada.", "error");
+          }
+      },
+  
+              async loadQueue() {
+          try {
+              const res = await fetch('/labels/queue');
+              const data = await res.json();
+              this.queue = data.queue || [];
+              // Select all by default for both print modal and queue checkboxes
+              this.selectedItems = this.queue.map(i => i.id);
+              this.queueSelectedItems = this.queue.map(i => i.id);
+          } catch (e) {
+              console.error('Error loading queue:', e);
+          }
+      },
+  
+              async loadTemplates() {
+          try {
+              const res = await fetch('/templates/api/list');
+              const data = await res.json();
+              this.templates = (data.templates || []).sort((a, b) =>
+                  (a.name || '').localeCompare(b.name || '')
+              );
+  
+              // Auto-select template based on warehouse for non-admin users
+              const wh = this.userWarehouse;
+              let targetName = 'Almacen1'; // Default base
+              if (wh === '02' || wh === 'Almacen2') {
+                  targetName = 'Almacen2';
+              } else if (wh === 'Monterrey' || this.username === 'AlmMty') {
+                  targetName = 'Almacen Monterrey';
+              }
+  
+              if (!this.isAdmin) {
+                  const match = this.templates.find(t => t.name === targetName);
+                  if (match) {
+                      this.selectedTemplate = match.id;
+                  }
+              } else {
+                  // Admin fallback
+                  if (this.selectedTemplate === 'default' || !this.templates.some(t => t.id === this.selectedTemplate)) {
+                      const match = this.templates.find(t => t.name === targetName);
+                      this.selectedTemplate = match ? match.id : 'default';
+                  }
+              }
+              // Mark templates as loaded — enables localStorage persistence
+              this._templatesLoaded = true;
+          } catch (e) {
+              console.error('Error loading templates:', e);
+              this._templatesLoaded = true;
+          }
+      },
+  
+              async searchProducts() {
+          // Sanitize special characters to prevent search/render loops
+          const sanitized = this.searchQuery.replace(/[\\\/\%\*\+\$]/g, '');
+          if (sanitized !== this.searchQuery) {
+              this.searchQuery = sanitized;
+              return; // changing the model will trigger another debounced input event
+          }
+  
+          const currentQuery = this.searchQuery;
+          if (currentQuery.length < 1) {
+              this.searchResults = [];
+              return;
+          }
+          try {
+              const res = await fetch(`/products/search?q=${encodeURIComponent(currentQuery)}&limit=50`);
+              if (!res.ok) {
+                  throw new Error(`Error ${res.status}: ${res.statusText}`);
+              }
+              const data = await res.json();
+              if (this.searchQuery === currentQuery) {
+                  this.searchResults = data.products || [];
+                  this.showResults = true;
+              }
+          } catch (e) {
+              console.error('Error searching:', e);
+              this.showToast('Error de conexión al buscar productos', 'error');
+          }
+      },
+  
+              async handleScan(e) {
+          // If it's a barcode scan, we usually get an exact match quickly
+          const code = this.searchQuery.trim();
+          if (!code) return;
+  
+          // Try to add directly
+          const added = await this.addToQueue(code, true);
+          if (added) {
+              // Success visual feedback
+              this.scanSuccess = true;
+              this.searchQuery = '';
+              this.searchResults = [];
+              this.showResults = false;
+              setTimeout(() => {
+                  this.scanSuccess = false;
+                  if (this.$refs.searchInput) this.$refs.searchInput.focus();
+              }, 500);
+          } else {
+              // Error visual feedback
+              this.scanError = true;
+              setTimeout(() => {
+                  this.scanError = false;
+                  if (this.$refs.searchInput) this.$refs.searchInput.focus();
+              }, 800);
+          }
+      },
+  
+      handleBlur() {
+          // Delay hiding the results to allow the click event on the dropdown to register first
+          setTimeout(() => {
+              this.showResults = false;
+          }, 200);
+      },
+  
+              async addToQueue(code, isScan = false) {
+          try {
+              const res = await fetch('/labels/queue/add', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ code, quantity: 1 })
+              });
+              const data = await res.json();
+              if (data.success) {
+                  this.queue.push(data.item);
+                  this.queueSelectedItems.push(data.item.id);
+                  this.searchQuery = '';
+                  this.searchResults = [];
+                  this.showResults = false;
+                  return true;
+              } else {
+                  if (!isScan) alert(data.error || 'Error adding to queue');
+                  return false;
+              }
+          } catch (e) {
+              console.error('Error adding to queue:', e);
+              return false;
+          }
+      },
+  
+      // ══════ Quick Add Product ══════
+  
+      _emptyQuickAddForm() {
+          return {
+              'Codigo interno': '',
+              'Chemical Name': '',
+              'CAS Number': '',
+              'Signal Word': '',
+              'Emergencia': '',
+              'H-Statements': '',
+              'Consejos (Frases P)': '',
+              'Exclamación': '',
+              'Corrosión': '',
+              'Peligro para la salud': '',
+              'Calavera': '',
+              'Llama': '',
+              'Ambiente': '',
+              'Llama sobre círculo': '',
+              'Bomba explotando': '',
+              'Cilindro de gas': '',
+          };
+      },
+  
+      openQuickAdd(prefill) {
+          this.quickAddForm = this._emptyQuickAddForm();
+          this.quickAddError = '';
+          this.quickAddSuccess = '';
+          this.quickAddSaving = false;
+          // If search text looks like a code (contains dash or starts with letters+numbers), prefill code; otherwise prefill name
+          if (prefill) {
+              const looksLikeCode = /^[A-Za-z]{2,}-/.test(prefill) || /^\d+$/.test(prefill);
+              if (looksLikeCode) {
+                  this.quickAddForm['Codigo interno'] = prefill;
+              } else {
+                  this.quickAddForm['Chemical Name'] = prefill;
+              }
+          }
+          this.showQuickAdd = true;
+      },
+  
+              async submitQuickAdd() {
+          this.quickAddError = '';
+          this.quickAddSuccess = '';
+  
+          // Client-side validation
+          const code = (this.quickAddForm['Codigo interno'] || '').trim();
+          const name = (this.quickAddForm['Chemical Name'] || '').trim();
+          if (!code || !name) {
+              this.quickAddError = 'Código interno y Nombre Químico son campos obligatorios.';
+              return;
+          }
+  
+          this.quickAddSaving = true;
+          try {
+              const res = await fetch('/labels/api/quick-add-product', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(this.quickAddForm)
+              });
+              const data = await res.json();
+  
+              if (res.ok && data.success) {
+                  this.quickAddSuccess = `✅ Producto "${data.name}" (${data.code}) creado exitosamente. Agregando a cola...`;
+                  // Wait a moment then add to queue and close
+                  setTimeout(async () => {
+                      await this.addToQueue(data.code);
+                      this.showQuickAdd = false;
+                      this.showToast(`Producto ${data.code} creado y agregado a la cola`);
+                  }, 800);
+              } else {
+                  this.quickAddError = data.error || 'Error desconocido al crear producto';
+              }
+          } catch (e) {
+              console.error('Quick add error:', e);
+              this.quickAddError = 'Error de conexión. Intenta de nuevo.';
+          } finally {
+              this.quickAddSaving = false;
+          }
+      },
+  
+              async removeFromQueue(itemId) {
+          try {
+              await fetch(`/labels/queue/remove/${itemId}`, { method: 'DELETE' });
+              this.queue = this.queue.filter(i => i.id !== itemId);
+              this.queueSelectedItems = this.queueSelectedItems.filter(id => id !== itemId);
+          } catch (e) {
+              console.error('Error removing:', e);
+          }
+      },
+  
+              async duplicateItem(item) {
+          try {
+              const res = await fetch('/labels/queue/add', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      code: item.code,
+                      quantity: item.quantity,
+                      peso_tara: item.peso_tara,
+                      batch_number: item.batch_number,
+                      batch_date: item.batch_date,
+                      reinspection_date: item.reinspection_date,
+                      copies: item.copies,
+                      warehouse: item.warehouse || ''
+                  })
+              });
+              const data = await res.json();
+              if (data.success) {
+                  // Insert the duplicate right after the original item
+                  const idx = this.queue.findIndex(i => i.id === item.id);
+                  if (idx !== -1) {
+                      this.queue.splice(idx + 1, 0, data.item);
+                  } else {
+                      this.queue.push(data.item);
+                  }
+                  this.queueSelectedItems.push(data.item.id);
+                  this.showToast(`✅ Duplicado: ${item.product_name}`);
+              } else {
+                  alert(data.error || 'Error al duplicar');
+              }
+          } catch (e) {
+              console.error('Error duplicating:', e);
+          }
+      },
+  
+              async updateItem(item) {
+          try {
+              await fetch(`/labels/queue/update/${item.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      batch_number: item.batch_number,
+                      batch_date: item.batch_date,
+                      reinspection_date: item.reinspection_date,
+                      copies: item.copies,
+                      peso_tara: item.peso_tara,
+                      quantity: item.quantity
+                  })
+              });
+          } catch (e) {
+              console.error('Error updating:', e);
+          }
+      },
+  
+      // Auto-calculate reinspection date when batch_date changes (+1 year)
+      onBatchDateChange(item) {
+          if (item.batch_date) {
+              try {
+                  const bd = new Date(item.batch_date + 'T00:00:00');
+                  const rd = new Date(bd);
+                  rd.setFullYear(rd.getFullYear() + 1);
+                  item.reinspection_date = rd.toISOString().split('T')[0];
+              } catch (e) {
+                  console.error('Error calculating reinspection date:', e);
+              }
+          }
+          this.updateItem(item);
+      },
+  
+              async updateItemInModal(item) {
+          // Update item in the session queue (same as updateItem but with visual feedback)
+          try {
+              const res = await fetch(`/labels/queue/update/${item.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      batch_number: item.batch_number,
+                      batch_date: item.batch_date,
+                      reinspection_date: item.reinspection_date,
+                      copies: item.copies,
+                      peso_tara: item.peso_tara,
+                      quantity: item.quantity
+                  })
+              });
+              if (!res.ok) {
+                  console.error('Failed to update item');
+              }
+          } catch (e) {
+              console.error('Error updating item in modal:', e);
+          }
+      },
+  
+              async clearQueue() {
+          if (!confirm('¿Limpiar toda la cola?')) return;
+          try {
+              await fetch('/labels/queue/clear', { method: 'POST' });
+              this.queue = [];
+              this.queueSelectedItems = [];
+          } catch (e) {
+              console.error('Error clearing:', e);
+          }
+      },
+  
+              async loadFromSAP() {
+          if (!this.sapOrderNumber || this.loadingSAP) return;
+  
+          // Prevent duplicate load via scanner ENTER bug
+          if (this.sapOrder && this.sapOrder.DocNum == this.sapOrderNumber) {
+              if (document.activeElement) document.activeElement.blur();
+              return;
+          }
+  
+          // Check if queue has items and ask for confirmation to clear
+          if (this.queue.length > 0) {
+              const confirmClear = confirm(
+                  `La cola actual tiene ${this.queue.length} etiqueta(s).\n\n` +
+                  `¿Deseas limpiar la cola antes de cargar el pedido SAP #${this.sapOrderNumber}?`
+              );
+              if (confirmClear) {
+                  try {
+                      await fetch('/labels/queue/clear', { method: 'POST' });
+                      this.queue = [];
+                      this.queueSelectedItems = [];
+                  } catch (e) {
+                      console.error('Error clearing queue:', e);
+                  }
+              } else {
+                  // User wants to keep existing items and append new ones
+                  const confirmAppend = confirm(
+                      '¿Agregar los productos del pedido SAP a la cola existente?'
+                  );
+                  if (!confirmAppend) {
+                      this.loadingSAP = false;
+                      return; // User cancelled
+                  }
+              }
+          }
+  
+          this.loadingSAP = true;
+          try {
+              const res = await fetch('/labels/sap/load', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ order_number: this.sapOrderNumber })
+              });
+              const data = await res.json();
+              if (data.success) {
+                  this.sapOrder = data.order;
+                  if (document.activeElement) document.activeElement.blur(); // Remove focus to prevent barcode scanner bug
+                  // Add items to queue with better error handling
+                  let addedCount = 0;
+                  let skippedCount = 0;
+                  const errors = [];
+  
+                  for (const item of data.order.items || []) {
+                      const itemCode = item.ItemCode;
+                      if (!itemCode) {
+                          console.warn('Skipping item without ItemCode:', item);
+                          skippedCount++;
+                          continue;
+                      }
+                      try {
+                          const addRes = await fetch('/labels/queue/add', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                  code: itemCode,
+                                  quantity: item.Quantity || 1,
+                                  peso_tara: item.PesoTara || 0,
+                                  batch_number: item.Lote || '',
+                                  batch_date: item.FechaLote || '',
+                                  reinspection_date: item.FechaVencimiento || '',
+                                  warehouse: item.Warehouse || ''
+                              })
+                          });
+                          const addData = await addRes.json();
+                          if (addData.success) {
+                              this.queue.push(addData.item);
+                              this.queueSelectedItems.push(addData.item.id);
+                              addedCount++;
+                          } else {
+                              console.warn(`Error adding ${itemCode}:`, addData.error);
+                              errors.push(`${itemCode}: ${addData.error}`);
+                          }
+                      } catch (e) {
+                          console.error(`Error adding ${itemCode}:`, e);
+                          errors.push(`${itemCode}: Error de conexión`);
+                      }
+                  }
+  
+                  // Show summary with better formatting
+                  if (addedCount > 0) {
+                      let message = `Pedido SAP #${this.sapOrderNumber} cargado. ${addedCount} producto(s) agregado(s).`;
+                      if (errors.length > 0) {
+                          message += ` ${errors.length} con error.`;
+                      }
+                      this.$dispatch('notify', { msg: message, type: errors.length > 0 ? 'warning' : 'success' });
+  
+                      // Optional: detailed alert for errors if needed still, but toast is better.
+                      if (errors.length > 0) {
+                          let errMessage = `⚠️ ${errors.length} producto(s) no encontrado(s) en la base de datos:\n`;
+                          errMessage += errors.slice(0, 5).join('\n');
+                          if (errors.length > 5) {
+                              errMessage += `\n... y ${errors.length - 5} más`;
+                          }
+                          setTimeout(() => alert(errMessage), 500);
+                      }
+                  } else if (errors.length > 0) {
+                      this.$dispatch('notify', { msg: `No se pudo agregar ningún producto. ${errors.length} con error.`, type: 'error' });
+                      let errMessage = `❌ No se pudo agregar ningún producto del pedido.\n\nProductos no encontrados:\n${errors.slice(0, 5).join('\n')}${errors.length > 5 ? '\n...' : ''}`;
+                      setTimeout(() => alert(errMessage), 500);
+                  } else {
+                      this.$dispatch('notify', { msg: 'El pedido no contiene productos válidos.', type: 'warning' });
+                  }
+              } else {
+                  this.$dispatch('notify', { msg: data.error || 'Error loading SAP order', type: 'error' });
+              }
+          } catch (e) {
+              console.error('Error loading from SAP:', e);
+              this.$dispatch('notify', { msg: 'Error de conexión con SAP: ' + e.message, type: 'error' });
+          }
+          this.loadingSAP = false;
+      },
+  
+              async previewLabel(item) {
+          // First sync item data to backend session before preview
+          try {
+              await fetch(`/labels/queue/update/${item.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      batch_number: item.batch_number,
+                      batch_date: item.batch_date,
+                      reinspection_date: item.reinspection_date,
+                      copies: item.copies,
+                      peso_tara: item.peso_tara,
+                      quantity: item.quantity
+                  })
+              });
+          } catch (e) {
+              console.error('Error syncing item before preview:', e);
+          }
+  
+          // Force refresh by clearing first
+          this.previewUrl = null;
+          this.showPreview = true; // Show modal immediately with loading state if needed
+  
+          await this.$nextTick();
+  
+          // Add timestamp and template_id to force refresh with correct template
+          const tmpl1 = this.selectedTemplate && this.selectedTemplate !== 'default' ? `&template_id=${encodeURIComponent(this.selectedTemplate)}` : '';
+          this.previewUrl = `/labels/preview/${item.id}?t=${Date.now()}${tmpl1}`;
+          this.previewItemName = item.product_name || 'Vista Previa';
+          this.previewItemCode = item.code || '';
+      },
+  
+              async showItemPreview(item) {
+          // First sync item data to backend session before preview
+          try {
+              await fetch(`/labels/queue/update/${item.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      batch_number: item.batch_number,
+                      batch_date: item.batch_date,
+                      reinspection_date: item.reinspection_date,
+                      copies: item.copies,
+                      peso_tara: item.peso_tara,
+                      quantity: item.quantity
+                  })
+              });
+          } catch (e) {
+              console.error('Error syncing item before preview:', e);
+          }
+  
+          // Force refresh by clearing first
+          this.previewUrl = null;
+          this.showPreview = true;
+  
+          await this.$nextTick();
+  
+          // Add timestamp and template_id to force refresh with correct template
+          const tmpl2 = this.selectedTemplate && this.selectedTemplate !== 'default' ? `&template_id=${encodeURIComponent(this.selectedTemplate)}` : '';
+          this.previewUrl = `/labels/preview/${item.id}?t=${Date.now()}${tmpl2}`;
+          this.previewItemName = item.product_name || 'Vista Previa';
+          this.previewItemCode = item.code || '';
+      },
+  
+              async togglePreviewPanel(item) {
+          // Toggle the side preview panel in print modal
+          if (this.previewPanelItem?.id === item.id) {
+              this.previewPanelItem = null;
+              this.panelPreviewUrl = '';
+              return;
+          }
+  
+          // Clear current preview
+          this.panelPreviewUrl = null;
+          this.previewPanelItem = item;
+  
+          // Sync item data first
+          try {
+              await fetch(`/labels/queue/update/${item.id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      batch_number: item.batch_number,
+                      batch_date: item.batch_date,
+                      reinspection_date: item.reinspection_date,
+                      copies: item.copies,
+                      peso_tara: item.peso_tara,
+                      quantity: item.quantity
+                  })
+              });
+          } catch (e) {
+              console.error('Error syncing item before panel preview:', e);
+          }
+  
+          await this.$nextTick();
+  
+          const tmpl3 = this.selectedTemplate && this.selectedTemplate !== 'default' ? `&template_id=${encodeURIComponent(this.selectedTemplate)}` : '';
+          this.panelPreviewUrl = `/labels/preview/${item.id}?t=${Date.now()}${tmpl3}`;
+      },
+  
+      quickPrint() {
+          if (this.queueSelectedItems.length === 0) {
+              alert('Selecciona al menos una etiqueta en la tabla para imprimir');
+              return;
+          }
+          this.selectedItems = [...this.queueSelectedItems]; // copy queue selected items
+          this.generateSelectedLabels(); // Skip modal and generate directly
+      },
+  
+      openPrintModal() {
+          // Select all items by default when opening the modal
+          this.selectedItems = this.queue.map(i => i.id);
+          this.previewPanelItem = null;
+          this.panelPreviewUrl = '';
+          this.showPrintModal = true;
+      },
+  
+      toggleSelectAll(selectAll) {
+          if (selectAll) {
+              this.selectedItems = this.queue.map(i => i.id);
+          } else {
+              this.selectedItems = [];
+          }
+      },
+  
+      toggleItemSelection(itemId) {
+          const index = this.selectedItems.indexOf(itemId);
+          if (index > -1) {
+              this.selectedItems.splice(index, 1);
+          } else {
+              this.selectedItems.push(itemId);
+          }
+      },
+  
+              async generateSelectedLabels() {
+          if (this.selectedItems.length === 0) {
+              alert('Selecciona al menos una etiqueta');
+              return;
+          }
+  
+          this.generating = true;
+          try {
+              // Use the image-based print page for exact dimensions
+              const res = await fetch('/labels/generate_print', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      item_ids: this.selectedItems,
+                      template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                      print_dpi: parseInt(this.printDpi) || 600
+                  })
+              });
+  
+              if (!res.ok) {
+                  // Server returned an error (JSON)
+                  try {
+                      const errorData = await res.json();
+                      alert(errorData.error || 'Error al generar etiquetas');
+                  } catch (e) {
+                      alert('Error al generar etiquetas');
+                  }
+                  this.generating = false;
+                  return;
+              }
+  
+              // Response is an HTML page — open it in a new window for printing
+              const html = await res.text();
+              const printWindow = window.open('', '_blank');
+  
+              if (printWindow) {
+                  printWindow.document.write(html);
+                  printWindow.document.close();
+                  // The print page auto-triggers window.print() via its own JS
+              } else {
+                  // Popup blocked — fall back to PDF download
+                  const pdfRes = await fetch('/labels/generate', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                          item_ids: this.selectedItems,
+                          template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                          print_dpi: parseInt(this.printDpi) || 600
+                      })
+                  });
+                  if (!pdfRes.ok) {
+                      try {
+                          const errData = await pdfRes.json();
+                          alert(errData.error || 'Error al generar PDF');
+                      } catch (e) {
+                          alert('Error al generar PDF');
+                      }
+                      this.generating = false;
+                      return;
+                  }
+                  const blob = await pdfRes.blob();
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'etiquetas.pdf';
+                  a.click();
+                  setTimeout(() => URL.revokeObjectURL(url), 60000);
+                  alert('⚠️ El navegador bloqueó la ventana de impresión.\n\nEl PDF se ha descargado. Ábrelo e imprímelo manualmente.');
+              }
+  
+              // Clear printed items from queue
+              const count = this.selectedItems.length;
+              this.queue = this.queue.filter(item => !this.selectedItems.includes(item.id));
+              this.queueSelectedItems = this.queueSelectedItems.filter(id => !this.selectedItems.includes(id));
+              this.selectedItems = [];
+              this.showPrintModal = false;
+  
+          } catch (e) {
+              console.error('Error generating:', e);
+              alert('Error al generar etiquetas: ' + e.message);
+          }
+          this.generating = false;
+      },
+  
+              async generateLabels() {
+          // Redirect to the new modal-based flow
+          this.openPrintModal();
+      }
+          };
+      }
+  </script>
+  {% endblock %}
+

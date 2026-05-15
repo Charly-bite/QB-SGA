@@ -1,0 +1,104 @@
+{
+  "project": "SGA Labeling System (GHS) - UX/UI Improvement Plan",
+  "generated_date": "2026-03-18",
+  "target_environments": [
+    "Desktop Application (Tkinter)",
+    "Web Interface (Tailwind CSS + Alpine.js)"
+  ],
+  "current_state_analysis": {
+    "desktop": {
+      "paradigm": "Utilitarian, function-over-form layout.",
+      "strengths": [
+        "Native performance with no network latency overhead.",
+        "Direct hardware access for Zebra printer integrations.",
+        "Styled dialogs provide a pseudo-modern feel."
+      ],
+      "weaknesses": [
+        "Lack of dynamic scaling across different DPI monitors."
+      ]
+    },
+    "web": {
+      "paradigm": "Modern, responsive, utility-first design.",
+      "strengths": [
+        "Consistent visual hierarchy via Tailwind CSS.",
+        "Lightweight interactivity via Alpine.js tailored for warehouse tablets."
+      ],
+      "weaknesses": [
+        "Strict-dimension thermal printing requires complex CSS media queries."
+      ]
+    }
+  },
+  "areas_of_improvement": [
+    {
+      "id": "UX-01",
+      "category": "Input & Barcode Scanning Ergonomics",
+      "current_issue": "Loss of focus during scanning results in gibberish input into random fields.",
+      "proposed_solutions": {
+        "desktop": "Implement a hidden keystroke interceptor bound to <Key> at the top-level window to buffer rapid keystrokes globally.",
+        "web": "Implement Alpine.js aggressive auto-focus on main search fields. Add audio/visual confirmation cues (green flash/beep) upon successful scan."
+      }
+    },
+    {
+      "id": "UX-02",
+      "category": "Visual Hierarchy & Status Indications",
+      "current_issue": "Dense tables on the Order Status Dashboard are unreadable from a distance (e.g., on a warehouse TV).",
+      "proposed_solutions": {
+        "global": "Transition to semantic color-coded cards or Kanban-style boards (Red=Error, Yellow=In Progress, Green=Ready). Integrate clear SVG Heroicons for quick status recognition."
+      }
+    },
+    {
+      "id": "UX-03",
+      "category": "Error Handling & User Dead Ends",
+      "current_issue": "Silent degradation during SAP connection loss or missing GHS data leaves users without actionable context.",
+      "proposed_solutions": {
+        "global": "Implement 'Toast' notifications for connection states.",
+        "data_entry": "Highlight missing GHS fields (H/P codes) directly on the grid and provide a 'Quick Fix' inline modal to prevent PDF generation failures."
+      }
+    },
+    {
+      "id": "UX-04",
+      "category": "Label Preview Limitations (ReportLab)",
+      "current_issue": "Users must blindly queue labels or generate a PDF to see if text exceeds label boundaries.",
+      "proposed_solutions": {
+        "desktop": "Generate and display a low-resolution PyMuPDF/Ghostscript preview image in a Tkinter Label before printing.",
+        "web": "Build a live HTML/Tailwind exact-scale div preview that updates in real-time as users modify batch data."
+      }
+    },
+    {
+      "id": "UX-05",
+      "category": "Complex Data Grids",
+      "current_issue": "Overwhelming column density in the unified product database view.",
+      "proposed_solutions": {
+        "global": "Adopt Progressive Disclosure: show only ItemCode, Description, and Status by default. Implement expandable rows/accordion views to reveal Pictograms, H-Codes, and Tara weights."
+      }
+    }
+  ],
+  "actionable_roadmap": [
+    {
+      "phase": 1,
+      "initiative": "Unify the Design Language",
+      "tasks": [
+        "Extract Tailwind color hex codes (#1e40af, #ef4444).",
+        "Map Tailwind palette to a global Tkinter theme dictionary.",
+        "Apply standard styling to all Tkinter frames, buttons, and styled_dialogs.py."
+      ]
+    },
+    {
+      "phase": 2,
+      "initiative": "Standardize Print Workflows",
+      "tasks": [
+        "Migrate print settings (printer selection, offsets) to a dedicated discrete modal.",
+        "Declutter the primary operational workspace."
+      ]
+    },
+    {
+      "phase": 3,
+      "initiative": "Accessibility (a11y) & Environment Alignment",
+      "tasks": [
+        "Review Tailwind templates for high-contrast ratios (combating warehouse glare).",
+        "Ensure critical chemical hazard warnings avoid low-contrast grey-on-white text.",
+        "Verify aria-labels are present across all web interactive elements."
+      ]
+    }
+  ]
+}

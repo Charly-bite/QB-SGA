@@ -1,0 +1,63 @@
+{
+  "deployment_type": "shared",
+  "system_id": "admin1",
+  "system_role": "administrator",
+  
+  "shared_base_path": "/mnt/sga_shared",
+  
+  "paths": {
+    "master_data": "${shared_base_path}/master_data",
+    "unified_db": "${shared_base_path}/master_data/unified_db",
+    "original_data": "${shared_base_path}/master_data/original_data",
+    "assets": "${shared_base_path}/assets",
+    "operational": "${shared_base_path}/operational",
+    "config": "${shared_base_path}/config",
+    "logs": "${shared_base_path}/logs",
+    "generated_labels": "${shared_base_path}/generated_labels"
+  },
+  
+  "files": {
+    "label_queue": "${operational}/label_queue.json",
+    "history": "${operational}/history.json",
+    "users": "${config}/users.json",
+    "settings": "${config}/settings.json",
+    "barcode_db": "${config}/mock_barcode_db.json"
+  },
+  
+  "local_cache": {
+    "enabled": true,
+    "path": "/opt/sga/cache",
+    "sync_interval_seconds": 300,
+    "cache_master_data": true
+  },
+  
+  "network": {
+    "mount_check_enabled": true,
+    "mount_path": "/mnt/sga_shared",
+    "server_address": "20.0.1.9",
+    "share_name": "B1_SHF",
+    "username": "sga",
+    "fallback_to_local": false,
+    "connection_timeout_seconds": 5,
+    "comment": "Using existing B1_SHF share - change to sga_shared once created"
+  },
+  
+  "file_locking": {
+    "enabled": true,
+    "lock_timeout_seconds": 10,
+    "retry_delay_seconds": 0.1
+  },
+  
+  "backup": {
+    "enabled": true,
+    "backup_before_write": true,
+    "rotation_days": 7
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "file": "${logs}/${system_id}_${date}.log",
+    "max_size_mb": 10,
+    "backup_count": 5
+  }
+}

@@ -1,0 +1,88 @@
+{
+    "project_name": "GHS Sticker Management System",
+    "description": "System to manage and print GHS compliant chemical product stickers for two warehouses (Wholesale and Retail) using a centralized Excel database.",
+    "actors": {
+        "SAP": {
+            "role": "Central ERP",
+            "interaction": "Exchanges data with Development module (Source of Truth)"
+        },
+        "Desarrollo": {
+            "role": "Label Management System (Current Project)",
+            "responsibilities": [
+                "Read product data from Master Excel/CSV",
+                "Resolve GHS codes (Smart Label Logic)",
+                "Generate compliant PDF labels",
+                "Manage warehouse-specific configurations",
+                "Handle Barcode Scanning (Father/Son hierarchy)"
+            ]
+        },
+        "Almacen_1": {
+            "name": "Ventas Menudeo (Small Purchases)",
+            "needs": [
+                "Ability to print stickers",
+                "Ability to modify/override specific sticker details locally",
+                "Scanner Integration for Variants"
+            ],
+            "config_file": "config_retail.json"
+        },
+        "Almacen_2": {
+            "name": "Ventas Mayoreo (Big Purchases)",
+            "needs": [
+                "Ability to print stickers based on master data"
+            ],
+            "role": "Maintains the Master Excel File"
+        }
+    },
+    "current_state": {
+        "data_layer": {
+            "status": "Ready",
+            "files": [
+                "GHS Sample DataBase Tectronic QB2 (ACTUALIZADO).xlsx",
+                "original_data/*.csv"
+            ],
+            "logic": "smart_label.py (Data loading, cleaning, heuristic resolution)"
+        },
+        "assets": {
+            "status": "Ready",
+            "location": "assets/pictograms/",
+            "content": "9 Standard GHS Pictograms (extracted & named)"
+        },
+        "output_layer": {
+            "status": "Prototype Ready",
+            "logic": "generate_ghs_label.py (NOM-018-STPS-2015 compliant PDF generation)"
+        }
+    },
+    "implementation_roadmap": [
+        {
+            "phase": 1,
+            "goal": "Core Backend & Compliance",
+            "status": "Completed",
+            "items": [
+                "Convert Excel to CSV",
+                "Analyze data quality",
+                "Implement fuzzy logic for code resolution",
+                "Extract and map pictograms",
+                "Generate compliant PDF"
+            ]
+        },
+        {
+            "phase": 2,
+            "goal": "Warehouse Configuration System",
+            "status": "Pending",
+            "items": [
+                "Create 'Settings' module for Almacen 1 overrides",
+                "Allow editing of Signal Words, Pictograms, or Text for specific batches/products without touching Master DB"
+            ]
+        },
+        {
+            "phase": 3,
+            "goal": "Integration & UI",
+            "status": "Planned",
+            "items": [
+                "Connect to SAP (Mock/Shim for now)",
+                "Simple Interface to select product and warehouse context",
+                "Validation workflow (Review label before print)"
+            ]
+        }
+    ]
+}

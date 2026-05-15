@@ -1,0 +1,25 @@
+{
+  "session_summary": "Bug fixes for server startup, scope errors, security warnings, and Waitress/SAP segmentation faults.",
+  "changes": [
+    {
+      "file": "tara_weight_manager.py",
+      "description": "Fixed UnboundLocalError and NameError by adding 'import pandas as pd' and reinstating 'df = pd.DataFrame(records)' before saving classifications to SQL."
+    },
+    {
+      "file": ".env",
+      "description": "Changed SQL_TRUST_CERTIFICATE from 'yes' to 'no' to resolve MITM security warnings."
+    },
+    {
+      "file": "sap_connector.py",
+      "description": "Added timeout arguments (timeout=10, connectTimeout=10000) and a comprehensive Exception block with exc_info=True to prevent silent driver crashes during database connection drops."
+    },
+    {
+      "file": "sga_web/app.py",
+      "description": "Disabled the background _sync_loop on Windows environments (os.name == 'nt') to prevent hdbcli C-extension segmentation faults caused by Waitress multithreading thread forks."
+    },
+    {
+      "file": "install_service.bat (New)",
+      "description": "Installed NSSM via winget and generated install_service.bat to configure watchdog.py as an automatic background Windows Service to ensure pre-production server uptime."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+/* Tailwind CSS v4 - Monitor page source (standalone, custom fonts) */
+@import "tailwindcss" source("../../templates/orders");
+
+@theme {
+    --font-sans: "Fira Sans", Frutiger, "Segoe UI", "Helvetica Neue", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+}

@@ -1,0 +1,16 @@
+{
+    "warehouse_id": "ALMACEN_1_RETAIL",
+    "description": "Configuration overrides for Small Purchases Warehouse",
+    "print_settings": {
+        "sticker_size": "4x6",
+        "default_copies": 1
+    },
+    "product_overrides": {
+        "IFF-QB00122": {
+            "comment": "Override example: Menta needs extra warning for retail customers",
+            "signal_word_override": "PELIGRO (MAJ)",
+            "add_h_statements": ["H999 - Mantener cerrado herméticamente en venta al público"],
+            "custom_text": "VENTA EXCLUSIVA MENUDEO"
+        }
+    }
+}

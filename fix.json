@@ -1,0 +1,50 @@
+{
+  "title": "Connect Development to SGA Server",
+  "date": "2026-03-27",
+  "objective": "Connect the development environment to the SGA server at 192.168.2.218:5000",
+  "current_status": {
+    "client": "Disconnected or pointing to local/wrong URL",
+    "app_mode": "Needs to point to 192.168.2.218:5000"
+  },
+  "known_client_config": {
+    "file": "shared_config.json",
+    "deployment_type": "client",
+    "server": {
+      "ip_address": "192.168.2.218",
+      "port": "5000",
+      "base_url": "http://192.168.2.218:5000"
+    }
+  },
+  "server_steps": [
+    {
+      "id": 1,
+      "name": "Update configuration files",
+      "commands": [
+        "Update the application config to point API requests to http://192.168.2.218:5000"
+      ],
+      "expected": "API and backend services resolve to 192.168.2.218:5000"
+    },
+    {
+      "id": 2,
+      "name": "Restart application",
+      "commands": [
+        "Restart the Flask or Node development server"
+      ],
+      "expected": "Application uses new configuration"
+    },
+    {
+      "id": 3,
+      "name": "Verify connection",
+      "commands": [
+        "Test an API endpoint or dashboard page"
+      ],
+      "expected": "Connection is successful without 'Connection Refused' or timeouts"
+    }
+  ],
+  "post_check": {
+    "log_markers": [
+      "Connected to 192.168.2.218:5000"
+    ],
+    "pass_condition": "Requests are successfully routed to the target IP and port."
+  }
+}

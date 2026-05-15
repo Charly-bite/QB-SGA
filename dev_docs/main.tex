@@ -1,0 +1,93 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\title{\textbf{SGA System Architecture \& Technical Deep Dive}}
+\author{Development Team - SGA\_dev}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The Globally Harmonized System (SGA) application is a critical infrastructure software tailored for generating compliant chemical labels, tracking production batches, and interfacing securely with ERP environments (SAP B1). This document defines the technical backbone, environmental separation, and code structure of the platform.
+
+\section{System Architecture}
+The SGA application operates on a strict 3-tier architecture to enforce scalability, data integrity, and cross-system compatibility over shared networks.
+
+\subsection{1. Presentation Layer (Web/Frontend)}
+Previously a Tkinter desktop application, the system has successfully migrated to a modern HTTP-based web application.
+\begin{itemize}
+    \item \textbf{Framework:} Flask (Python) handles routing, endpoint creation, and session management.
+    \item \textbf{UI/UX:} HTML5 rendered with Tailwind CSS to ensure a responsive layout and Alpine.js for lightweight state interactions without heavy SPA frameworks.
+    \item \textbf{PDF Generation:} Handled by ReportLab mapping vector graphics and text onto $(x,y)$ coordinates starting from the bottom-left. Images are injected using absolute file paths via resource mapping.
+\end{itemize}
+
+\subsection{2. Controller / Logic Layer}
+This middle-tier acts as the brain of the SGA subsystem, orchestrating data sanitization and queue logic before saving state.
+\begin{itemize}
+    \item \textbf{\texttt{sga\_controller.py}:} Manages the active 'Label Queue', parses batch/lot structures, and applies system settings.
+    \item \textbf{\texttt{shared\_file\_manager.py}:} Utilizes precise low-level IO locking (\texttt{fcntl}/\texttt{msvcrt}) to prevent file corruption. When operators from multiple workstations interact with \texttt{users.json} or \texttt{history.json}, the system employs synchronized read/write blocks.
+\end{itemize}
+
+\subsection{3. Data \& Integration Layer}
+A strictly managed data aggregation node connecting physical resources to SQL/SAP endpoints.
+\begin{itemize}
+    \item \textbf{SAP Connector (\texttt{sap\_connector.py}):} Utilizes \texttt{hdbcli} to run read-only polling against live SAP HANA systems, fetching Order, Item, and Stock structures. Wraps all transactions in defensive \texttt{try/except} handlers.
+    \item \textbf{Master Data Resolver:} \texttt{smart\_label.py} intersects SAP context with local CSV metadata (\texttt{Unified\_GHS\_Database.csv}).
+    \item \textbf{SQL Database (\texttt{database\_client.py}):} Bridges to the local and pre-production SQL Servers via SQLAlchemy. Enforces \textbf{STRICT READ-ONLY} limitations via system-level configuration to prevent code from mutating pre-production structures.
+\end{itemize}
+
+\section{Multi-Client Networking Strategy}
+Due to the multi-system nature of the plant, the SGA software is designed to execute as a single source of truth mounted on a CIFS/Samba shared directory (e.g., \texttt{/mnt/sga\_shared}).
+
+\begin{tcolorbox}[colback=red!5!white,colframe=red!75!black,title=Critical Constraint: State Locking]
+All persistent states (such as active queues and locally managed users) are kept in local `.json` files wrapped by \texttt{SharedFileManager}. Previous SQL override bugs were mitigated by isolating user authorization specifically to synced JSON logic.
+\end{tcolorbox}
+
+\section{Defensive Coding Standards}
+When modifying \texttt{SGA\_dev}, developers must adhere to the following:
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Isolation:} \texttt{SGA\_dev} must never cross paths with \texttt{SGAv1.01} code unless migrated through verified deployments (\texttt{deploy\_to\_preprod.bat}).
+    \item \textbf{Type Enforcement:} CSV codes (H-codes, P-codes) are strictly coerced to \texttt{str} inside Pandas DataFrames to prevent arbitrary numeric casting (e.g., truncation of leading zeros).
+    \item \textbf{Security:} CSRF tokens (\texttt{X-CSRFToken}) are required for all asynchronous fetch/AJAX queries communicating with the Flask backend.
+\end{enumerate}
+
+\end{document}

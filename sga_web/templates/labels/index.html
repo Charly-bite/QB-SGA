@@ -1,0 +1,2362 @@
+{% extends "base.html" %}
+
+{% block title %}Etiquetas GHS{% endblock %}
+{% block page_title %}Generación de Etiquetas GHS{% endblock %}
+
+{% block content %}
+<div x-data="labelQueue()" x-init="init()" class="relative">
+
+    <!-- Loading Overlay for Labels Generation -->
+    <div x-show="generating || directPrinting || loadingSAP" x-cloak
+        class="inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm shadow-2xl h-screen w-full fixed">
+        <div
+            class="bg-white rounded-2xl px-12 py-8 flex flex-col items-center border border-blue-100 shadow-xl max-w-sm w-full mx-4">
+            <div class="relative w-20 h-20 mb-6">
+                <!-- Outer Spin -->
+                <svg class="animate-[spin_1.5s_linear_infinite] w-20 h-20 text-blue-100" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-100" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                </svg>
+                <!-- Inner Spin -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="animate-spin w-12 h-12 text-blue-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-slate-800 mb-2 text-center"
+                x-text="loadingSAP ? 'Conectando con SAP' : (directPrinting ? 'Imprimiendo Etiquetas' : 'Generando Etiquetas')">
+            </h3>
+            <p class="text-slate-500 text-center text-sm mb-4"
+                x-text="loadingSAP ? 'Recuperando posiciones y materiales...' : (directPrinting ? 'Enviando a la impresora...' : 'Procesando documento...')">
+            </p>
+
+            <div class="w-full bg-slate-100 rounded-full h-1.5 mb-4 overflow-hidden">
+                <div class="bg-blue-600 h-1.5 rounded-full animate-[pulse_1.5s_ease-in-out_infinite]"
+                    style="width: 100%"></div>
+            </div>
+
+            <div
+                class="flex items-center text-xs font-mono text-slate-500 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Tiempo: <span class="font-bold text-blue-600 ml-1 text-sm"><span x-text="generatingTime"></span>s</span>
+            </div>
+        </div>
+    </div>
+    <!-- Top Controls -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex flex-wrap items-end gap-4">
+            <!-- Product Search / Scanner Input -->
+            <div class="flex-1 min-w-[280px]">
+                <label class="block text-sm font-medium text-slate-700 mb-1">Buscar Producto o Escanear</label>
+                <div class="relative" @click.outside="showResults = false">
+                    <input type="text" x-ref="searchInput" autofocus x-model="searchQuery"
+                        @input.debounce.300ms="searchProducts()" @keydown.enter.prevent="handleScan($event)"
+                        @focus="showResults = true" placeholder="Código, nombre o escanear..."
+                        class="w-full px-4 py-2 pr-10 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                        :class="{'border-emerald-500 bg-emerald-50': scanSuccess, 'border-red-500 bg-red-50': scanError}">
+                    <svg class="absolute right-3 top-2.5 w-5 h-5 text-slate-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+
+                    <!-- Search Results Dropdown -->
+                    <div x-show="showResults && (searchResults.length > 0 || (searchQuery.length >= 1 && searchResults.length === 0))"
+                        x-cloak
+                        class="absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg border max-h-60 overflow-y-auto">
+                        <template x-for="product in searchResults" :key="product.code">
+                            <button @click="addToQueue(product.code)"
+                                class="w-full px-4 py-3 text-left hover:bg-slate-50 border-b last:border-b-0">
+                                <div class="font-medium text-slate-800" x-text="product.name"></div>
+                                <div>
+                                    <span x-text="product.code"></span>
+                                    <template x-if="product.cas">
+                                        <span> &bull; CAS: <span x-text="product.cas"></span></span>
+                                    </template>
+                                </div>
+                            </button>
+                        </template>
+                        <!-- No results: offer to add new product -->
+                        {% if current_user.can_add_products() %}
+                        <div x-show="searchQuery.length >= 1 && searchResults.length === 0"
+                            class="px-4 py-3 border-t border-slate-100">
+                            <p class="text-sm text-slate-500 mb-2">No se encontraron productos</p>
+                            <button @click="openQuickAdd(searchQuery); showResults = false"
+                                class="w-full flex items-center gap-2 px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg transition-colors text-sm font-medium">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                                Agregar Nuevo Producto
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- SAP Order Input -->
+            <div class="w-64 shrink-0">
+                <label class="block text-sm font-medium text-slate-700 mb-1">Pedido SAP</label>
+                <div class="flex">
+                    <input type="text" x-model="sapOrderNumber" @keyup.enter="loadFromSAP()" placeholder="Ej: 10168"
+                        class="flex-1 min-w-0 px-3 py-2 rounded-l-lg border border-r-0 border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    <button @click="loadFromSAP()" :disabled="!sapOrderNumber || loadingSAP"
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white rounded-r-lg transition-colors whitespace-nowrap text-sm">
+                        <span x-show="!loadingSAP">Cargar</span>
+                        <span x-show="loadingSAP">...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SAP Order Info (when loaded) -->
+        <div x-show="sapOrder" x-cloak x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+            class="mt-4 p-4 bg-linear-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-slate-800">Pedido SAP #<span x-text="sapOrder?.DocNum"></span></p>
+                        <p class="text-sm text-slate-600">
+                            Cliente: <span class="font-medium" x-text="sapOrder?.CardName"></span>
+                            <span class="mx-2 text-slate-400">•</span>
+                            <span class="font-medium" x-text="sapOrder?.items?.length"></span> productos cargados
+                        </p>
+                    </div>
+                </div>
+                <button @click="sapOrder = null; sapOrderNumber = ''"
+                    class="p-2 text-slate-500 hover:text-red-600 hover:bg-white/50 rounded-lg transition-colors"
+                    title="Limpiar información del pedido">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Queue Table -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b flex items-center justify-between gap-4">
+            <!-- Left: title -->
+            <h3 class="font-semibold text-slate-800 whitespace-nowrap">
+                Cola de Impresión
+                <span class="text-slate-400 font-normal">(<span x-text="queue.length"></span> items)</span>
+            </h3>
+
+            <!-- Center: Template Selector (admin only) -->
+            {% if current_user.is_admin() %}
+            <div class="flex items-center gap-2 flex-1 justify-center">
+                <label class="text-sm font-medium text-slate-600 whitespace-nowrap">Plantilla:</label>
+                <div class="relative w-52">
+                    <select x-model="selectedTemplate"
+                        class="w-full pl-3 pr-8 py-1.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white appearance-none text-sm text-slate-800 cursor-pointer">
+                        <option value="default">— Por defecto —</option>
+                        <template x-for="tpl in templates" :key="tpl.id">
+                            <option :value="tpl.id" x-text="tpl.name"></option>
+                        </template>
+                    </select>
+                    <svg class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+                <span x-show="selectedTemplate !== 'default'"
+                    class="text-[10px] text-slate-400 whitespace-nowrap">Guardado localmente</span>
+            </div>
+            {% else %}
+            <!-- Non-admin: show active template name -->
+            <div class="flex items-center gap-2 flex-1 justify-center">
+                <span class="text-sm text-slate-500">Plantilla:</span>
+                <span class="text-sm font-medium text-slate-700"
+                    x-text="(templates.find(t => t.id === selectedTemplate) || {}).name || 'Por defecto'"></span>
+            </div>
+            {% endif %}
+
+            <!-- Right: actions -->
+            <div class="flex gap-2 shrink-0 items-center">
+                <!-- MM/YYYY Format Toggle -->
+                <div x-show="queue.length > 0"
+                    class="flex items-center gap-1 bg-amber-50 px-2 py-1.5 rounded-lg border border-amber-200">
+                    <label class="flex items-center gap-2 cursor-pointer"
+                        title="Imprimir fecha como Mes/Año (ej: 05/2026 en lugar de 06/05/2026)">
+                        <input type="checkbox" x-model="useMYFormat"
+                            @change="localStorage.setItem('ghs_use_my_format', useMYFormat)"
+                            class="w-3.5 h-3.5 text-amber-600 border-amber-300 rounded focus:ring-amber-500 bg-white">
+                        <span
+                            class="text-xs font-semibold text-amber-700 whitespace-nowrap hidden sm:inline">Mes/Año</span>
+                        <span class="text-xs font-semibold text-amber-700 whitespace-nowrap sm:hidden">M/A</span>
+                    </label>
+                </div>
+                <!-- Resolution selector (DPI) -->
+                <div x-show="queue.length > 0" class="flex items-center gap-1">
+                    <label class="text-xs text-slate-500 whitespace-nowrap" title="Calidad de Impresión (DPI)">
+                        <svg class="w-4 h-4 inline text-slate-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 10h18M3 14h18M5 6h14a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z" />
+                        </svg>
+                    </label>
+                    <div class="relative">
+                        <select x-model="printDpi" @change="localStorage.setItem('ghs_print_dpi', printDpi)"
+                            class="pl-2 pr-6 py-1.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white appearance-none text-xs text-slate-700 cursor-pointer"
+                            title="Calidad de impresión (DPI)">
+                            <option value="203">203 DPI</option>
+                            <option value="300">300 DPI</option>
+                            <option value="600">600 DPI</option>
+                            <option value="1200">1200 DPI</option>
+                        </select>
+                        <svg class="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+                <!-- Rotation selector for direct print -->
+                <div x-show="queue.length > 0 && printAgentOnline" class="flex items-center gap-1">
+                    <label class="text-xs text-slate-500 whitespace-nowrap"
+                        title="Rotación de la etiqueta para impresión directa">
+                        <svg class="w-4 h-4 inline text-slate-400" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                    </label>
+                    <div class="relative">
+                        <select x-model="directPrintRotation"
+                            class="pl-2 pr-6 py-1.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none bg-white appearance-none text-xs text-slate-700 cursor-pointer"
+                            title="Rotación de etiqueta">
+                            <option value="0">0°</option>
+                            <option value="90">90°</option>
+                            <option value="180">180°</option>
+                            <option value="270">270°</option>
+                        </select>
+                        <svg class="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+                <!-- Direct Print Agent (prints selected queue items) -->
+                <div class="flex items-center gap-2">
+                    <button @click="directPrintQueue()" x-show="queue.length > 0"
+                        class="px-4 py-2 text-sm text-white rounded-lg transition-colors flex items-center gap-1.5 font-medium"
+                        :class="printAgentOnline && queueSelectedItems.length > 0 && !directPrinting ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-400 cursor-not-allowed'"
+                        :disabled="!printAgentOnline || queueSelectedItems.length === 0 || directPrinting"
+                        :title="!printAgentOnline ? 'Print Agent no disponible (localhost:5555)' : queueSelectedItems.length === 0 ? 'Selecciona etiquetas con los checkboxes' : 'Impresión directa de ' + queueSelectedItems.length + ' etiqueta(s) via ' + agentPrinter">
+                        <span x-show="!directPrinting">⚡</span>
+                        <span x-show="directPrinting" class="animate-spin">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </span>
+                        <span
+                            x-text="directPrinting ? 'Enviando...' : (printAgentOnline ? `⚡ Directa (${queueSelectedItems.length})` : 'Agent ✗')"></span>
+                    </button>
+                    <!-- Emergency Stop Print Button -->
+                    <button @click="cancelDirectPrint()" x-show="queue.length > 0"
+                        class="px-4 py-2 text-sm text-white rounded-lg bg-red-600 hover:bg-red-700 transition-colors flex items-center gap-1.5 font-medium"
+                        :disabled="!printAgentOnline" title="Emergencia: Detener impresión en curso">
+                        <span>🛑</span>
+                        <span>Detener</span>
+                    </button>
+                </div>
+                <button @click="clearQueue()" x-show="queue.length > 0"
+                    class="px-4 py-2 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
+                    Limpiar Todo
+                </button>
+                <button @click="quickPrint()" x-show="queue.length > 0" :disabled="generating"
+                    class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors flex items-center gap-2">
+                    <span x-show="!generating">Imprimir Etiquetas</span>
+                    <span x-show="generating">Imprimiendo...</span>
+                </button>
+            </div>
+        </div>
+
+        <div x-show="queue.length === 0" class="p-12 text-center text-slate-500">
+            <svg class="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <p class="text-lg font-medium">Cola vacía</p>
+            <p class="text-sm">Busca productos o carga un pedido SAP para comenzar</p>
+        </div>
+
+        <table x-show="queue.length > 0" class="w-full">
+            <thead class="bg-slate-50">
+                <tr class="text-left text-sm text-slate-600">
+                    <th class="pl-6 pr-2 py-3 w-10">
+                        <button @click="toggleQueueSelectAll()"
+                            class="flex items-center justify-center w-5 h-5 rounded border-2 transition-all cursor-pointer"
+                            :class="queueSelectedItems.length === queue.length && queue.length > 0
+                                ? 'bg-emerald-600 border-emerald-600'
+                                : queueSelectedItems.length > 0
+                                    ? 'bg-emerald-100 border-emerald-400'
+                                    : 'border-slate-300 hover:border-emerald-400'">
+                            <svg x-show="queueSelectedItems.length === queue.length && queue.length > 0"
+                                class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                stroke-width="3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <svg x-show="queueSelectedItems.length > 0 && queueSelectedItems.length < queue.length"
+                                class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                stroke-width="3">
+                                <path stroke-linecap="round" d="M6 12h12" />
+                            </svg>
+                        </button>
+                    </th>
+                    <th class="px-4 py-3">Producto</th>
+                    <th class="px-6 py-3">KG</th>
+                    <th class="px-6 py-3">Lote</th>
+                    <th class="px-6 py-3">Fecha Lote</th>
+                    <th class="px-6 py-3">Fecha Reinspección</th>
+                    <th class="px-6 py-3">Peso Tara</th>
+                    <th class="px-4 py-3 text-center">Copias</th>
+                    <th class="px-6 py-3 text-right">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="item in queue" :key="item.id">
+                    <tr class="border-b border-slate-100 hover:bg-slate-50"
+                        :class="queueSelectedItems.includes(item.id) ? 'bg-emerald-50/50' : ''">
+                        <td class="pl-6 pr-2 py-4 w-10">
+                            <button @click="toggleQueueItem(item.id)"
+                                class="flex items-center justify-center w-5 h-5 rounded border-2 transition-all cursor-pointer"
+                                :class="queueSelectedItems.includes(item.id)
+                                    ? 'bg-emerald-600 border-emerald-600'
+                                    : 'border-slate-300 hover:border-emerald-400'">
+                                <svg x-show="queueSelectedItems.includes(item.id)" class="w-3 h-3 text-white"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                        </td>
+                        <td class="px-4 py-4">
+                            <div class="font-medium text-slate-800" x-text="item.product_name"></div>
+                            <div class="text-sm text-slate-500" x-text="item.code"></div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="relative inline-block">
+                                <input type="number" x-model.number="item.quantity"
+                                    @input.debounce.500ms="onKgChange(item)" step="0.01" min="0"
+                                    class="w-24 px-2 py-1 border rounded text-center"
+                                    :class="item.kgLoading ? 'pr-8' : ''">
+                                <!-- Loading spinner -->
+                                <div x-show="item.kgLoading" x-cloak class="absolute right-2 top-1/2 -translate-y-1/2">
+                                    <svg class="animate-spin h-4 w-4 text-blue-500" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                            stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <input type="text" x-model="item.batch_number" @change="updateItem(item)"
+                                placeholder="Nº Lote" class="w-28 px-2 py-1 border rounded">
+                        </td>
+                        <td class="px-6 py-4">
+                            <input type="date" x-model="item.batch_date" @change="onBatchDateChange(item)"
+                                class="px-2 py-1 border rounded">
+                        </td>
+                        <td class="px-6 py-4">
+                            <input type="date" x-model="item.reinspection_date" @change="updateItem(item)"
+                                class="px-2 py-1 border rounded">
+                        </td>
+                        <td class="px-6 py-4">
+                            <!-- Tara Weight Smart Selector -->
+                            <div class="relative"
+                                x-data="{ showTaraMenu: false, taraSuggestions: [], taraLoading: false, taraStyle: '' }">
+                                <div class="flex items-center gap-1">
+                                    <input type="number" x-model.number="item.peso_tara" @change="updateItem(item)"
+                                        step="0.01" min="0" class="w-20 px-2 py-1 border rounded text-center text-sm">
+                                    <button @click.stop="showTaraMenu = !showTaraMenu; if(showTaraMenu) { const r=$el.getBoundingClientRect(); const below=window.innerHeight-r.bottom; if(below<220){taraStyle='bottom:'+(window.innerHeight-r.top+4)+'px;right:'+Math.max(8,window.innerWidth-r.right)+'px'}else{taraStyle='top:'+(r.bottom+4)+'px;right:'+Math.max(8,window.innerWidth-r.right)+'px'} taraLoading=true; fetch(`/api/tara/suggestions?peso_neto=${item.quantity || 0}&product_code=${encodeURIComponent(item.code || '')}`)
+                                        .then(r=>r.json()).then(d=>{ taraSuggestions=d.suggestions||[]; taraLoading=false; })
+                                        .catch(()=>{ taraLoading=false; }); }"
+                                        class="p-1 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                                        title="Seleccionar envase">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <!-- Dropdown -->
+                                <div x-show="showTaraMenu" @click.outside="showTaraMenu=false"
+                                    @scroll.window="showTaraMenu=false" x-cloak
+                                    class="fixed z-[9999] w-72 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden"
+                                    :style="taraStyle">
+                                    <div class="px-3 py-2 bg-slate-50 border-b border-slate-200">
+                                        <span
+                                            class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Seleccionar
+                                            Envase</span>
+                                        <span class="text-xs text-slate-400 ml-1"
+                                            x-text="item.quantity ? `(${item.quantity} kg)` : ''"></span>
+                                    </div>
+                                    <div class="max-h-48 overflow-y-auto">
+                                        <template x-if="taraLoading">
+                                            <div class="px-3 py-3 text-center text-sm text-slate-400">Cargando...</div>
+                                        </template>
+                                        <template x-for="sug in taraSuggestions" :key="sug.id">
+                                            <button
+                                                @click="if(sug.id !== 'custom') { item.peso_tara = sug.tara_kg; updateItem(item); showTaraMenu=false; } else { showTaraMenu=false; }"
+                                                class="w-full px-3 py-2 text-left text-sm hover:bg-blue-50 border-b border-slate-100 last:border-0 flex items-center justify-between transition-colors"
+                                                :class="sug.is_default ? 'bg-emerald-50/50' : ''">
+                                                <div>
+                                                    <span class="font-medium text-slate-700" x-text="sug.name"></span>
+                                                    <span class="text-slate-400 text-xs ml-1"
+                                                        x-text="sug.source === 'product_history' ? '⭐' : sug.is_default ? '✓ más común' : ''"></span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-xs text-slate-400"
+                                                        x-text="sug.usage_pct > 0 ? sug.usage_pct + '%' : ''"></span>
+                                                    <span class="font-mono text-xs font-semibold px-1.5 py-0.5 rounded"
+                                                        :class="sug.is_default ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'"
+                                                        x-text="sug.tara_kg > 0 ? sug.tara_kg + ' kg' : '—'"></span>
+                                                </div>
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-center">
+                            <input type="number" x-model.number="item.copies" @change="updateItem(item)" min="1"
+                                max="50" class="w-16 px-2 py-1 border rounded text-center">
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <!-- Split -->
+                            <button @click="splitItem(item)" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded"
+                                title="Dividir envases">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7v8a2 2 0 002 2h6M8 7l-3 3m3-3l3 3m5 0V7a2 2 0 00-2-2h-6" />
+                                </svg>
+                            </button>
+                            <!-- Duplicate -->
+                            <button @click="duplicateItem(item)"
+                                class="p-2 text-emerald-600 hover:bg-emerald-50 rounded" title="Duplicar etiqueta">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                            <!-- Preview -->
+                            <button @click="previewLabel(item)" class="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                title="Vista previa">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                            <!-- Delete -->
+                            <button @click="removeFromQueue(item.id)" class="p-2 text-red-600 hover:bg-red-50 rounded"
+                                title="Eliminar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Preview Modal (Single Label) - Full Screen Overlay -->
+    <div x-show="showPreview" x-cloak x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-60"
+        @click.self="showPreview = false" @keydown.escape.window="showPreview = false">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] overflow-hidden flex flex-col"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+            <!-- Header -->
+            <div class="px-6 py-3 border-b bg-slate-50 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800" x-text="previewItemName || 'Vista Previa'"></h3>
+                        <p class="text-xs text-slate-500" x-text="previewItemCode || ''"></p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Download button -->
+                    <a :href="previewUrl" download x-show="previewUrl"
+                        class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        title="Descargar PDF">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </a>
+                    <!-- Open in new tab -->
+                    <a :href="previewUrl" target="_blank" x-show="previewUrl"
+                        class="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        title="Abrir en nueva pestaña">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </a>
+                    <div class="w-px h-6 bg-slate-200 mx-1"></div>
+                    <button @click="showPreview = false"
+                        class="p-2 hover:bg-slate-200 rounded-lg text-slate-500 hover:text-slate-700 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- PDF Content -->
+            <div class="flex-1 bg-slate-200 p-4 overflow-auto">
+                <div class="w-full h-full min-h-[70vh] bg-white rounded-lg shadow-inner">
+                    <template x-if="previewUrl">
+                        <object :data="previewUrl" type="application/pdf" class="w-full rounded-lg"
+                            style="height: 75vh;">
+                            <iframe :src="previewUrl" class="w-full rounded-lg" style="height: 75vh;"></iframe>
+                        </object>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Selection Modal - Redesigned -->
+    <div x-show="showPrintModal" x-cloak x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+        @click.self="showPrintModal = false" @keydown.escape.window="showPrintModal = false">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[92vh] overflow-hidden flex flex-col"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+
+            <!-- Modal Header -->
+            <div
+                class="px-6 py-4 border-b flex items-center justify-between bg-linear-to-r from-blue-600 to-blue-700 shrink-0">
+                <div>
+                    <h3 class="font-semibold text-lg text-white">Seleccionar Etiquetas para Imprimir</h3>
+                    <p class="text-sm text-blue-200">Selecciona las etiquetas que deseas generar y edita los datos si es
+                        necesario</p>
+                </div>
+                <button @click="showPrintModal = false"
+                    class="p-2 hover:bg-white/20 rounded-lg text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Content: Split View (List + Preview) -->
+            <div class="flex-1 flex overflow-hidden">
+                <!-- Left: Items List -->
+                <div class="flex-1 overflow-auto p-4 bg-slate-50" :class="previewPanelItem ? 'w-1/2' : 'w-full'">
+                    <!-- Select All Bar -->
+                    <div class="mb-3 bg-white rounded-xl p-3 shadow-sm border border-slate-200">
+                        <div class="flex items-center justify-between">
+                            <button @click="toggleSelectAll(selectedItems.length !== queue.length)"
+                                class="flex items-center gap-3 group cursor-pointer select-none">
+                                <!-- Custom Checkbox -->
+                                <div class="w-6 h-6 rounded-md border-2 flex items-center justify-center transition-all duration-150"
+                                    :class="selectedItems.length === queue.length && queue.length > 0 
+                                        ? 'bg-blue-600 border-blue-600 shadow-sm shadow-blue-200' 
+                                        : selectedItems.length > 0 
+                                            ? 'bg-blue-100 border-blue-400' 
+                                            : 'border-slate-300 group-hover:border-blue-400'">
+                                    <!-- Checkmark -->
+                                    <svg x-show="selectedItems.length === queue.length && queue.length > 0"
+                                        class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        stroke-width="3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    <!-- Dash (partial) -->
+                                    <svg x-show="selectedItems.length > 0 && selectedItems.length < queue.length"
+                                        class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24" stroke-width="3">
+                                        <path stroke-linecap="round" d="M6 12h12" />
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-slate-700 text-sm">
+                                    Seleccionar Todas
+                                    <span class="text-slate-400">(<span x-text="queue.length"></span>)</span>
+                                </span>
+                            </button>
+                            <span class="text-xs font-medium px-2.5 py-1 rounded-full"
+                                :class="selectedItems.length === queue.length ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'"
+                                x-text="selectedItems.length + '/' + queue.length + ' seleccionadas'">
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Items List -->
+                    <div class="space-y-2">
+                        <template x-for="(item, index) in queue" :key="item.id">
+                            <div class="bg-white rounded-xl shadow-sm border-2 transition-all duration-150 overflow-hidden"
+                                :class="selectedItems.includes(item.id) 
+                                    ? 'border-blue-400 ring-1 ring-blue-100' 
+                                    : 'border-transparent hover:border-slate-200'">
+
+                                <!-- Top Row: Checkbox + Product Name + Preview Button -->
+                                <div class="flex items-center gap-3 px-4 py-3 cursor-pointer select-none"
+                                    @click="toggleItemSelection(item.id)">
+
+                                    <!-- Custom Checkbox -->
+                                    <div class="shrink-0 w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-all duration-150"
+                                        :class="selectedItems.includes(item.id) 
+                                            ? 'bg-blue-600 border-blue-600 shadow-sm shadow-blue-200' 
+                                            : 'border-slate-300 hover:border-blue-400'">
+                                        <svg x-show="selectedItems.includes(item.id)"
+                                            x-transition:enter="transition ease-out duration-150"
+                                            x-transition:enter-start="opacity-0 scale-50"
+                                            x-transition:enter-end="opacity-100 scale-100" class="w-4 h-4 text-white"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+
+                                    <!-- Item Number Badge -->
+                                    <span
+                                        class="shrink-0 w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500"
+                                        x-text="index + 1"></span>
+
+                                    <!-- Product Name + Code -->
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="font-bold text-slate-800 truncate text-sm leading-tight"
+                                            x-text="item.product_name"></h4>
+                                        <p class="text-xs text-slate-500 font-mono" x-text="item.code"></p>
+                                    </div>
+
+                                    <!-- KG Badge (Editable) -->
+                                    <div class="shrink-0 w-24">
+                                        <div class="relative">
+                                            <input type="number" x-model.number="item.quantity"
+                                                @change="updateItemInModal(item)" @click.stop step="0.01" min="0"
+                                                class="w-full pl-2 pr-8 py-1 text-sm font-bold text-slate-700 bg-slate-100 border border-transparent hover:bg-white hover:border-blue-300 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg transition-all outline-none text-center">
+                                            <span
+                                                class="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-500 font-medium pointer-events-none">kg</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Preview Button -->
+                                    <button @click.stop="togglePreviewPanel(item)"
+                                        class="shrink-0 p-2 rounded-lg transition-colors" :class="previewPanelItem?.id === item.id 
+                                                ? 'bg-blue-100 text-blue-600' 
+                                                : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50'"
+                                        title="Vista previa">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Bottom Row: Editable Fields (collapsible on click) -->
+                                <div class="px-4 pb-3 pt-0">
+                                    <div class="grid grid-cols-6 gap-2">
+                                        <!-- Lote -->
+                                        <div class="relative" @click.stop>
+                                            <label
+                                                class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">Lote</label>
+                                            <input type="text" x-model="item.batch_number"
+                                                @change="updateItemInModal(item)" @click.stop placeholder="Nº Lote..."
+                                                class="w-full px-2.5 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50 hover:bg-white transition-colors">
+                                        </div>
+                                        <!-- Fecha Lote -->
+                                        <div class="relative" @click.stop>
+                                            <label
+                                                class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">Fecha
+                                                Lote</label>
+                                            <input type="date" x-model="item.batch_date"
+                                                @change="onBatchDateChange(item)" @click.stop
+                                                class="w-full px-2.5 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50 hover:bg-white transition-colors">
+                                        </div>
+                                        <!-- Fecha Reinspección -->
+                                        <div class="relative" @click.stop>
+                                            <label
+                                                class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">F.
+                                                Reinspección</label>
+                                            <input type="date" x-model="item.reinspection_date"
+                                                @change="updateItemInModal(item)" @click.stop
+                                                class="w-full px-2.5 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50 hover:bg-white transition-colors">
+                                        </div>
+                                        <!-- Peso Neto -->
+                                        <div class="relative" @click.stop>
+                                            <label
+                                                class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">Peso
+                                                Neto</label>
+                                            <input type="number" x-model.number="item.quantity"
+                                                @change="updateItemInModal(item)" @click.stop step="0.01" min="0"
+                                                placeholder="0.00"
+                                                class="w-full px-2.5 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50 hover:bg-white transition-colors">
+                                        </div>
+                                        <!-- Peso Tara with Smart Selector -->
+                                        <div class="relative" @click.stop
+                                            x-data="{ showModalTara: false, modalTaraSuggestions: [], modalTaraLoading: false, modalTaraStyle: '' }">
+                                            <label
+                                                class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">Peso
+                                                Tara</label>
+                                            <div class="flex items-center gap-0.5">
+                                                <input type="number" x-model.number="item.peso_tara"
+                                                    @change="updateItemInModal(item)" @click.stop step="0.01" min="0"
+                                                    placeholder="0.00"
+                                                    class="flex-1 min-w-0 px-2.5 py-1.5 text-sm border border-slate-200 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50 hover:bg-white transition-colors">
+                                                <button @click.stop="showModalTara = !showModalTara; if(showModalTara) { const r=$el.getBoundingClientRect(); const below=window.innerHeight-r.bottom; if(below<200){modalTaraStyle='bottom:'+(window.innerHeight-r.top+4)+'px;left:'+r.left+'px'}else{modalTaraStyle='top:'+(r.bottom+4)+'px;left:'+r.left+'px'} modalTaraLoading=true; fetch(`/api/tara/suggestions?peso_neto=${item.quantity || 0}&product_code=${encodeURIComponent(item.code || '')}`)
+                                                    .then(r=>r.json()).then(d=>{ modalTaraSuggestions=d.suggestions||[]; modalTaraLoading=false; })
+                                                    .catch(()=>{ modalTaraLoading=false; }); }"
+                                                    class="px-1.5 py-1.5 border border-l-0 border-slate-200 rounded-r-lg bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-colors"
+                                                    title="Seleccionar envase">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <!-- Tara Dropdown in Modal -->
+                                            <div x-show="showModalTara" @click.outside="showModalTara=false"
+                                                @scroll.window="showModalTara=false" x-cloak
+                                                class="fixed z-[9999] w-64 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden"
+                                                :style="modalTaraStyle">
+                                                <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200">
+                                                    <span
+                                                        class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Envase</span>
+                                                    <span class="text-[10px] text-slate-400 ml-1"
+                                                        x-text="item.quantity ? `(${item.quantity} kg)` : ''"></span>
+                                                </div>
+                                                <div class="max-h-40 overflow-y-auto">
+                                                    <template x-if="modalTaraLoading">
+                                                        <div class="px-3 py-2 text-center text-xs text-slate-400">
+                                                            Cargando...</div>
+                                                    </template>
+                                                    <template x-for="sug in modalTaraSuggestions" :key="sug.id">
+                                                        <button
+                                                            @click.stop="if(sug.id !== 'custom') { item.peso_tara = sug.tara_kg; updateItemInModal(item); showModalTara=false; } else { showModalTara=false; }"
+                                                            class="w-full px-3 py-1.5 text-left text-xs hover:bg-blue-50 border-b border-slate-100 last:border-0 flex items-center justify-between"
+                                                            :class="sug.is_default ? 'bg-emerald-50/50' : ''">
+                                                            <div class="truncate">
+                                                                <span class="font-medium text-slate-700"
+                                                                    x-text="sug.name"></span>
+                                                                <span class="text-slate-400 ml-0.5"
+                                                                    x-text="sug.source === 'product_history' ? '⭐' : sug.is_default ? '✓' : ''"></span>
+                                                            </div>
+                                                            <span
+                                                                class="font-mono text-[10px] font-semibold px-1 py-0.5 rounded shrink-0 ml-2"
+                                                                :class="sug.is_default ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'"
+                                                                x-text="sug.tara_kg > 0 ? sug.tara_kg + ' kg' : '—'"></span>
+                                                        </button>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Copias -->
+                                        <div class="relative" @click.stop>
+                                            <label
+                                                class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-0.5">Copias</label>
+                                            <input type="number" x-model.number="item.copies"
+                                                @change="updateItemInModal(item)" @click.stop min="1" max="50"
+                                                placeholder="1"
+                                                class="w-full px-2.5 py-1.5 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-slate-50 hover:bg-white transition-colors">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Right: Preview Panel (slides in) -->
+                <div x-show="previewPanelItem" x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-x-8"
+                    x-transition:enter-end="opacity-100 translate-x-0"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 translate-x-0"
+                    x-transition:leave-end="opacity-0 translate-x-8"
+                    class="w-1/2 border-l border-slate-200 bg-white flex flex-col shrink-0">
+                    <!-- Preview Header -->
+                    <div class="px-4 py-3 border-b bg-slate-50 flex items-center justify-between shrink-0">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <span class="font-medium text-sm text-slate-700 truncate"
+                                x-text="previewPanelItem?.product_name"></span>
+                        </div>
+                        <div class="flex items-center gap-1 shrink-0">
+                            <!-- Open fullscreen preview -->
+                            <button @click="showItemPreview(previewPanelItem)"
+                                class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="Pantalla completa">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                            <button @click="previewPanelItem = null"
+                                class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                title="Cerrar panel">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Preview Content -->
+                    <div class="flex-1 bg-slate-100 p-3 overflow-auto">
+                        <div class="bg-white rounded-lg shadow-sm w-full h-full min-h-75">
+                            <template x-if="panelPreviewUrl">
+                                <object :data="panelPreviewUrl" type="application/pdf" class="w-full rounded-lg"
+                                    style="height: calc(100% - 0px); min-height: 400px;">
+                                    <iframe :src="panelPreviewUrl" class="w-full rounded-lg"
+                                        style="height: 100%; min-height: 400px;"></iframe>
+                                </object>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div
+                class="px-6 py-3 border-t bg-white flex items-center justify-between shrink-0 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <div class="flex items-center gap-3">
+                    <!-- Selection counter with progress ring -->
+                    <div class="relative w-11 h-11">
+                        <svg class="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e2e8f0" stroke-width="2.5" />
+                            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#2563eb" stroke-width="2.5"
+                                stroke-dasharray="97.4"
+                                :stroke-dashoffset="97.4 - (97.4 * selectedItems.length / Math.max(queue.length, 1))"
+                                stroke-linecap="round" class="transition-all duration-300" />
+                        </svg>
+                        <span class="absolute inset-0 flex items-center justify-center text-sm font-bold text-blue-600"
+                            x-text="selectedItems.length"></span>
+                    </div>
+                    <div class="text-sm">
+                        <div class="font-medium text-slate-700">Etiquetas seleccionadas</div>
+                        <div class="text-slate-400 text-xs">de <span x-text="queue.length"></span> en total</div>
+                    </div>
+                </div>
+                <div class="flex gap-3 items-center">
+                    <!-- Agent status indicator -->
+                    <div x-show="agentOnline"
+                        class="flex items-center gap-1.5 text-xs text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200"
+                        title="Print Agent conectado">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                        <span x-text="agentPrinter"></span>
+                    </div>
+                    <div x-show="!agentOnline"
+                        class="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200"
+                        title="Print Agent no disponible">
+                        <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+                        Sin agente
+                    </div>
+
+                    <button @click="showPrintModal = false"
+                        class="px-5 py-2.5 text-slate-600 bg-white border border-slate-300 rounded-xl hover:bg-slate-50 transition-colors font-medium text-sm">
+                        Cancelar
+                    </button>
+
+                    <!-- Emergency Stop Print Button -->
+                    <button x-show="agentOnline" @click="cancelDirectPrint()"
+                        class="px-6 py-2.5 bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-xl transition-all font-medium flex items-center gap-2 shadow-md hover:shadow-lg text-sm"
+                        title="Detener impresión en curso por error (Agente Local)">
+                        <span>🛑 Detener</span>
+                    </button>
+
+                    <!-- Direct Print button (only when agent is online) -->
+                    <button x-show="agentOnline" @click="directPrintLabels()"
+                        :disabled="selectedItems.length === 0 || directPrinting"
+                        class="px-6 py-2.5 bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed text-white rounded-xl transition-all font-medium flex items-center gap-2 shadow-md hover:shadow-lg text-sm"
+                        title="Impresión directa sin diálogo de Chrome">
+                        <span x-show="!directPrinting">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </span>
+                        <span x-show="directPrinting" class="animate-spin">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </span>
+                        <span
+                            x-text="directPrinting ? 'Enviando...' : `⚡ Impresión Directa (${selectedItems.length})`"></span>
+                    </button>
+
+                    <!-- Standard Chrome print button (always available) -->
+                    <button @click="generateSelectedLabels()" :disabled="selectedItems.length === 0 || generating"
+                        class="px-6 py-2.5 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed text-white rounded-xl transition-all font-medium flex items-center gap-2 shadow-md hover:shadow-lg text-sm">
+                        <span x-show="!generating">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                        </span>
+                        <span x-show="generating" class="animate-spin">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </span>
+                        <span
+                            x-text="generating ? 'Imprimiendo...' : `Imprimir ${selectedItems.length} Etiqueta${selectedItems.length !== 1 ? 's' : ''}`"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- Quick Add Product Modal (Operators + Admins)              -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    {% if current_user.can_add_products() %}
+    <div x-show="showQuickAdd" x-cloak x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+        @click.self="showQuickAdd = false" @keydown.escape.window="showQuickAdd = false">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-y-auto"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+
+            <!-- Header -->
+            <div
+                class="px-6 py-4 border-b bg-linear-to-r from-emerald-600 to-emerald-700 rounded-t-2xl flex items-center justify-between">
+                <div>
+                    <h3 class="font-semibold text-lg text-white">Agregar Nuevo Producto</h3>
+                    <p class="text-sm text-emerald-200">Ingresa los datos del producto para agregarlo a la base de datos
+                    </p>
+                </div>
+                <button @click="showQuickAdd = false"
+                    class="p-2 hover:bg-white/20 rounded-lg text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 space-y-6">
+                <!-- Error message -->
+                <div x-show="quickAddError" x-cloak
+                    class="px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700"
+                    x-text="quickAddError"></div>
+                <!-- Success message -->
+                <div x-show="quickAddSuccess" x-cloak
+                    class="px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-700"
+                    x-text="quickAddSuccess"></div>
+
+                <!-- Basic Info -->
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <span
+                            class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">1</span>
+                        Información Básica
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Código Interno <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" x-model="quickAddForm['Codigo interno']"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                placeholder="ej. IFF-QB00123">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Número CAS</label>
+                            <input type="text" x-model="quickAddForm['CAS Number']"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                placeholder="ej. 64-17-5">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Nombre Químico <span
+                                    class="text-red-500">*</span></label>
+                            <input type="text" x-model="quickAddForm['Chemical Name']"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                placeholder="Nombre completo del producto">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Palabra de Advertencia</label>
+                            <select x-model="quickAddForm['Signal Word']"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm bg-white">
+                                <option value="">Seleccionar...</option>
+                                <option value="PELIGRO">PELIGRO</option>
+                                <option value="ATENCION">ATENCIÓN</option>
+                                <option value="NO APLICABLE">NO APLICABLE</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Teléfono de Emergencia</label>
+                            <input type="text" x-model="quickAddForm['Emergencia']"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                placeholder="ej. 01 800 002 1400">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GHS Codes -->
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <span
+                            class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">2</span>
+                        Códigos GHS
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Indicaciones de Peligro (H)
+                                <span class="text-[10px] text-slate-400">ej: H225, H319</span></label>
+                            <textarea x-model="quickAddForm['H-Statements']" rows="2"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm font-mono"
+                                placeholder="H225, H319, H336"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Consejos de Prudencia (P) <span
+                                    class="text-[10px] text-slate-400">ej: P210, P305</span></label>
+                            <textarea x-model="quickAddForm['Consejos (Frases P)']" rows="2"
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm font-mono"
+                                placeholder="P210, P305+P351+P338"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pictograms -->
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                        <span
+                            class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">3</span>
+                        Pictogramas
+                    </h4>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
+                        <template x-for="pic in quickAddPictograms" :key="pic.name">
+                            <button type="button"
+                                @click="quickAddForm[pic.name] = quickAddForm[pic.name] === 'X' ? '' : 'X'"
+                                class="flex flex-col items-center p-2 border-2 rounded-lg cursor-pointer transition-all text-center"
+                                :class="quickAddForm[pic.name] === 'X' 
+                                    ? 'border-emerald-500 bg-emerald-50 shadow-sm' 
+                                    : 'border-slate-200 hover:border-slate-300 bg-white'">
+                                <img :src="'/api/pictograms/' + pic.name" :alt="pic.name"
+                                    class="w-10 h-10 object-contain mb-1">
+                                <span class="text-[9px] leading-tight font-medium text-slate-600"
+                                    x-text="pic.label"></span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-6 py-4 border-t bg-slate-50 rounded-b-2xl flex items-center justify-between">
+                <p class="text-xs text-slate-400">Los campos con <span class="text-red-500">*</span> son obligatorios
+                </p>
+                <div class="flex items-center gap-3">
+                    <button @click="showQuickAdd = false"
+                        class="px-4 py-2 text-sm text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                    <button @click="submitQuickAdd()" :disabled="quickAddSaving"
+                        class="px-5 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white rounded-lg transition-colors font-medium flex items-center gap-2">
+                        <svg x-show="quickAddSaving" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span x-text="quickAddSaving ? 'Guardando...' : 'Crear y Agregar a Cola'"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- Custom Confirm Modal (replaces native confirm() blocked     -->
+    <!-- by Chrome when served from a network IP address)           -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div x-show="showConfirmModal" x-cloak
+        x-transition:enter="transition ease-out duration-150"
+        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-100"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[200]"
+        @keydown.escape.window="_confirmModalAnswer(false)">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4"
+            x-transition:enter="transition ease-out duration-150"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+            <!-- Header -->
+            <div class="px-6 pt-6 pb-2 flex items-start gap-4">
+                <div class="shrink-0 w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-slate-800 text-base" x-text="confirmModalTitle"></h3>
+                    <p class="text-sm text-slate-600 mt-1" x-text="confirmModalMessage"></p>
+                </div>
+            </div>
+            <!-- Actions -->
+            <div class="px-6 py-4 flex justify-end gap-3">
+                <button @click="_confirmModalAnswer(false)"
+                    class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                    Cancelar
+                </button>
+                <button @click="_confirmModalAnswer(true)"
+                    class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
+                    Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/print_agent.js', v=range(1, 100000)|random) }}"></script>
+<script>
+    function labelQueue() {
+        return {
+            queue: [],
+            searchQuery: '',
+            searchResults: [],
+            showResults: false,
+            scanSuccess: false,
+            scanError: false,
+            sapOrderNumber: '',
+            sapOrder: null,
+            loadingSAP: false,
+            showPreview: false,
+            previewUrl: '',
+            previewItemName: '',
+            previewItemCode: '',
+            showPrintModal: false,
+            showQuickAdd: false,
+            selectedItems: [],
+            generating: false,
+            generatingTime: 0,
+            generationInterval: null,
+            previewPanelItem: null,
+            panelPreviewUrl: '',
+            // Template selection (persisted in localStorage)
+            selectedTemplate: localStorage.getItem('ghs_selected_template') || 'default',
+            templates: [],
+            _templatesLoaded: false,
+{% if current_user.is_admin() %}
+        isAdmin: true,
+            {% else %}
+    isAdmin: false,
+        {% endif %}
+    // Queue checkbox selection (for direct print from main table)
+    queueSelectedItems: [],
+        // Print Agent state
+        printAgent: null,
+            agentOnline: false,
+                printAgentOnline: false,
+                    agentPrinter: '',
+                        printAgentUrl: 'http://127.0.0.1:5555',
+                            directPrinting: false,
+                                printDpi: localStorage.getItem('ghs_print_dpi') || '600',
+                                    directPrintRotation: localStorage.getItem('ghs_direct_print_rotation') || '270',
+                                        useMYFormat: localStorage.getItem('ghs_use_my_format') === 'true' || false,
+                                            quickAddSaving: false,
+                                                quickAddError: '',
+                                                    quickAddSuccess: '',
+                                                        quickAddForm: { },
+            // Custom confirm modal (replaces native confirm() which Chrome blocks on network IPs)
+            showConfirmModal: false,
+            confirmModalMessage: '',
+            confirmModalTitle: '',
+            _confirmResolve: null,
+    quickAddPictograms: [
+        { name: 'Exclamación', label: 'Exclamación' },
+        { name: 'Corrosión', label: 'Corrosión' },
+        { name: 'Peligro para la salud', label: 'Salud' },
+        { name: 'Calavera', label: 'Calavera' },
+        { name: 'Llama', label: 'Llama' },
+        { name: 'Ambiente', label: 'Ambiente' },
+        { name: 'Llama sobre círculo', label: 'Oxidante' },
+        { name: 'Bomba explotando', label: 'Explosivo' },
+        { name: 'Cilindro de gas', label: 'Gas' },
+    ],
+
+        init() {
+        this.loadQueue();
+        this.initPrintAgent();
+        this.loadTemplates();
+        // Persist template selection whenever it changes (only after templates loaded, admin only)
+        this.$watch('selectedTemplate', (val) => {
+            if (this._templatesLoaded && this.isAdmin) {
+                localStorage.setItem('ghs_selected_template', val);
+            }
+        });
+        // Persist direct print rotation selection
+        this.$watch('directPrintRotation', (val) => {
+            localStorage.setItem('ghs_direct_print_rotation', val);
+        });
+    },
+
+            async initPrintAgent() {
+        this.printAgent = new PrintAgent(5555);
+        this.agentOnline = await this.printAgent.checkStatus();
+        this.printAgentOnline = this.agentOnline;
+        if (this.agentOnline) {
+            this.agentPrinter = this.printAgent.printerName;
+            console.log('✅ Print Agent online:', this.agentPrinter);
+        } else {
+            // console.log('ℹ️ Print Agent not available — using browser print');
+        }
+        // Re-check with adaptive interval (backs off when agent is offline)
+        const pollAgent = async () => {
+            this.agentOnline = await this.printAgent.checkStatus();
+            this.printAgentOnline = this.agentOnline;
+            if (this.agentOnline) this.agentPrinter = this.printAgent.printerName;
+            setTimeout(pollAgent, this.printAgent.pollInterval);
+        };
+        setTimeout(pollAgent, this.printAgent.pollInterval);
+    },
+
+            async directPrintLabels() {
+        if (this.selectedItems.length === 0) {
+            alert('Selecciona al menos una etiqueta');
+            return;
+        }
+        if (!this.agentOnline) {
+            alert('⚠️ Print Agent no disponible.\nAsegúrate de que esté corriendo en esta PC (start_agent.bat)');
+            return;
+        }
+
+        this.directPrinting = true;
+        this.generatingTime = 0;
+        const startTimestamp = Date.now();
+        this.generationInterval = setInterval(() => {
+            this.generatingTime = Math.floor((Date.now() - startTimestamp) / 1000);
+        }, 1000);
+        try {
+            // 1. Get images as base64 from the server
+            const rotation = parseInt(this.directPrintRotation) || 90;
+            const res = await fetch('/labels/generate_images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    item_ids: this.selectedItems,
+                    template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                    use_m_y_format: this.useMYFormat,
+                    rotation: rotation,
+                    order_id: this.sapOrder ? this.sapOrder.DocNum : null
+                })
+            });
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                alert(err.error || 'Error al generar imágenes');
+                return;
+            }
+
+            const data = await res.json();
+            if (!data.success || !data.images || data.images.length === 0) {
+                alert('No se generaron imágenes');
+                return;
+            }
+
+            // 2. Send images to the local Print Agent
+            const printResult = await this.printAgent.printImages(data.images);
+
+            if (printResult.success) {
+                // Success — clear printed items from UI queue
+                const count = this.selectedItems.length;
+                this.queue = this.queue.filter(item => !this.selectedItems.includes(item.id));
+                this.selectedItems = [];
+                this.showPrintModal = false;
+                // Brief success notification
+                this.showToast(`✅ ${printResult.total_printed} etiqueta(s) enviada(s) a ${this.agentPrinter}`);
+                // Notify if order status was auto-updated
+                if (data.order_status_updated) {
+                    this.showToast(`📋 Pedido #${this.sapOrder?.DocNum} → En Proceso`);
+                }
+            } else {
+                const errMsg = (printResult.errors || []).join('\n') || 'Error desconocido';
+                alert(`❌ Error de impresión:\n${errMsg}`);
+            }
+        } catch (e) {
+            console.error('Direct print error:', e);
+            alert('Error en impresión directa: ' + e.message);
+        } finally {
+            this.directPrinting = false;
+            clearInterval(this.generationInterval);
+            this.generationInterval = null;
+        }
+    },
+
+    showToast(message) {
+        // Simple toast notification
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 z-[9999] bg-emerald-600 text-white px-6 py-3 rounded-xl shadow-lg text-sm font-medium transition-all duration-300';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    },
+
+    // ══════ Queue Checkbox Methods ══════
+
+    toggleQueueSelectAll() {
+        if (this.queueSelectedItems.length === this.queue.length) {
+            this.queueSelectedItems = [];
+        } else {
+            this.queueSelectedItems = this.queue.map(i => i.id);
+        }
+    },
+
+    toggleQueueItem(itemId) {
+        const idx = this.queueSelectedItems.indexOf(itemId);
+        if (idx > -1) {
+            this.queueSelectedItems.splice(idx, 1);
+        } else {
+            this.queueSelectedItems.push(itemId);
+        }
+    },
+
+            // ══════ Direct Print from Queue ══════
+
+            async directPrintQueue() {
+        if (this.queueSelectedItems.length === 0) {
+            alert('Selecciona al menos una etiqueta con los checkboxes');
+            return;
+        }
+        if (!this.printAgentOnline) {
+            alert('Print Agent no disponible.\n\nInicia start_agent.bat en la PC del almacén.');
+            return;
+        }
+
+        this.directPrinting = true;
+        this.generatingTime = 0;
+        const startTimestamp = Date.now();
+        this.generationInterval = setInterval(() => {
+            this.generatingTime = Math.floor((Date.now() - startTimestamp) / 1000);
+        }, 1000);
+        try {
+            // Use the existing generate_images endpoint (same as print modal's directPrintLabels)
+            const rotation = parseInt(this.directPrintRotation) || 90;
+            const res = await fetch('/labels/generate_images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    item_ids: this.queueSelectedItems,
+                    template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                    use_m_y_format: this.useMYFormat,
+                    print_dpi: parseInt(this.printDpi) || 600,
+                    rotation: rotation,
+                    order_id: this.sapOrder ? this.sapOrder.DocNum : null
+                })
+            });
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                alert(err.error || 'Error al generar imágenes');
+                return;
+            }
+
+            const data = await res.json();
+            if (!data.success || !data.images || data.images.length === 0) {
+                alert('No se generaron imágenes');
+                return;
+            }
+
+            // Send images to the local Print Agent
+            const printResult = await this.printAgent.printImages(data.images);
+
+            if (printResult.success) {
+                const count = this.queueSelectedItems.length;
+                // Remove printed items from queue
+                this.queue = this.queue.filter(item => !this.queueSelectedItems.includes(item.id));
+                this.queueSelectedItems = [];
+                this.showToast(`✅ ${printResult.total_printed} etiqueta(s) enviada(s) a ${this.agentPrinter}`);
+                // Notify if order status was auto-updated
+                if (data.order_status_updated) {
+                    this.showToast(`📋 Pedido #${this.sapOrder?.DocNum} → En Proceso`);
+                }
+            } else {
+                const errMsg = (printResult.errors || []).join('\n') || 'Error desconocido';
+                alert(`❌ Error de impresión:\n${errMsg}`);
+            }
+        } catch (e) {
+            console.error('Direct print error:', e);
+            alert('Error en impresión directa: ' + e.message);
+        } finally {
+            this.directPrinting = false;
+            clearInterval(this.generationInterval);
+            this.generationInterval = null;
+        }
+    },
+
+            async cancelDirectPrint() {
+        if (!this.printAgentOnline || !this.printAgent) {
+            this.showToast("Print Agent no disponible para cancelar.");
+            return;
+        }
+        const success = await this.printAgent.cancelPrint();
+        if (success) {
+            this.showToast("🛑 Señal de parada de emergencia enviada al impresor local.", "warning");
+        } else {
+            this.showToast("⚠️ Fallo al enviar señal de parada.", "error");
+        }
+    },
+
+            async loadQueue() {
+        try {
+            const res = await fetch('/labels/queue');
+            const data = await res.json();
+            this.queue = data.queue || [];
+            // Select all by default for both print modal and queue checkboxes
+            this.selectedItems = this.queue.map(i => i.id);
+            this.queueSelectedItems = this.queue.map(i => i.id);
+        } catch (e) {
+            console.error('Error loading queue:', e);
+        }
+    },
+
+            async loadTemplates() {
+        try {
+            const res = await fetch('/templates/api/list');
+            const data = await res.json();
+            this.templates = (data.templates || []).sort((a, b) =>
+                (a.name || '').localeCompare(b.name || '')
+            );
+
+            // Auto-select template based on warehouse for non-admin users
+            const wh = this.userWarehouse;
+            let targetName = 'Almacen1'; // Default base
+            if (wh === '02' || wh === 'Almacen2') {
+                targetName = 'Almacen2';
+            } else if (wh === 'Monterrey' || this.username === 'AlmMty') {
+                targetName = 'Almacen Monterrey';
+            }
+
+            if (!this.isAdmin) {
+                const match = this.templates.find(t => t.name === targetName);
+                if (match) {
+                    this.selectedTemplate = match.id;
+                }
+            } else {
+                // Admin fallback
+                if (this.selectedTemplate === 'default' || !this.templates.some(t => t.id === this.selectedTemplate)) {
+                    const match = this.templates.find(t => t.name === targetName);
+                    this.selectedTemplate = match ? match.id : 'default';
+                }
+            }
+            // Mark templates as loaded — enables localStorage persistence
+            this._templatesLoaded = true;
+        } catch (e) {
+            console.error('Error loading templates:', e);
+            this._templatesLoaded = true;
+        }
+    },
+
+            async searchProducts() {
+        // Sanitize special characters to prevent search/render loops
+        const sanitized = this.searchQuery.replace(/[\\\/\%\*\+\$]/g, '');
+        if (sanitized !== this.searchQuery) {
+            this.searchQuery = sanitized;
+            return; // changing the model will trigger another debounced input event
+        }
+
+        const currentQuery = this.searchQuery;
+        if (currentQuery.length < 1) {
+            this.searchResults = [];
+            this.showResults = false;
+            return;
+        }
+
+        // Add visual loading indicator logic here if needed (optional)
+
+        try {
+            console.log(`Starting search for: ${currentQuery}`);
+            const res = await fetch(`/products/search?q=${encodeURIComponent(currentQuery)}&limit=50`);
+
+            // Session expired — backend returns 401 JSON
+            if (res.status === 401) {
+                this.showToast('Sesión expirada. Por favor recarga la página.', 'error');
+                this.searchResults = [];
+                this.showResults = false;
+                return;
+            }
+
+            // Reconstruct error handling intentionally
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.error(`Search error status: ${res.status}`, errorText);
+                throw new Error(`Error en servidor (${res.status}): ${res.statusText}`);
+            }
+
+            let data;
+            try {
+                data = await res.json();
+            } catch (jsonErr) {
+                console.error("Failed to parse JSON response:", jsonErr);
+                throw new Error("El servidor devolvió una respuesta inválida (no JSON).");
+            }
+
+            console.log(`Search returned ${data.products ? data.products.length : 0} results.`);
+
+            if (this.searchQuery === currentQuery) {
+                this.searchResults = data.products || [];
+                this.showResults = true;
+            }
+        } catch (e) {
+            console.error('Error detallado buscando productos:', e);
+            this.searchResults = [];
+
+            if (e.message.includes('servidor')) {
+                this.showToast(e.message, 'error');
+            } else {
+                this.showToast('Error de conexión o de respuesta al buscar productos', 'error');
+            }
+
+            // Keep showing results window so we might trigger "Add new product" logic if empty
+            this.showResults = true;
+        }
+    },
+
+            async handleScan(e) {
+        // If it's a barcode scan, we usually get an exact match quickly
+        const code = this.searchQuery.trim();
+        if (!code) return;
+
+        // Try to add directly
+        const added = await this.addToQueue(code, true);
+        if (added) {
+            // Success visual feedback
+            this.scanSuccess = true;
+            this.searchQuery = '';
+            this.searchResults = [];
+            this.showResults = false;
+            setTimeout(() => {
+                this.scanSuccess = false;
+                if (this.$refs.searchInput) this.$refs.searchInput.focus();
+            }, 500);
+        } else {
+            // Error visual feedback
+            this.scanError = true;
+            setTimeout(() => {
+                this.scanError = false;
+                if (this.$refs.searchInput) this.$refs.searchInput.focus();
+            }, 800);
+        }
+    },
+
+    handleBlur() {
+        // Delay hiding the results to allow the click event on the dropdown to register first
+        setTimeout(() => {
+            this.showResults = false;
+        }, 200);
+    },
+
+            async addToQueue(code, isScan = false) {
+        try {
+            const res = await fetch('/labels/queue/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, quantity: 1 })
+            });
+
+            // Session expired
+            if (res.status === 401) {
+                this.showToast('Sesión expirada. Por favor recarga la página.', 'error');
+                return false;
+            }
+
+            // Check content-type before parsing
+            const ct = res.headers.get('content-type') || '';
+            if (!ct.includes('application/json')) {
+                console.error(`addToQueue: expected JSON but got "${ct}" (status ${res.status})`);
+                this.showToast('Error del servidor al agregar producto. Recarga la página.', 'error');
+                return false;
+            }
+
+            const data = await res.json();
+            if (data.success) {
+                this.queue.push(data.item);
+                this.queueSelectedItems.push(data.item.id);
+                this.searchQuery = '';
+                this.searchResults = [];
+                this.showResults = false;
+                return true;
+            } else {
+                if (!isScan) this.showToast(data.error || 'Error al agregar a la cola', 'error');
+                return false;
+            }
+        } catch (e) {
+            console.error('Error adding to queue:', e);
+            this.showToast('Error de conexión al agregar producto', 'error');
+            return false;
+        }
+    },
+
+    // ══════ Quick Add Product ══════
+
+    _emptyQuickAddForm() {
+        return {
+            'Codigo interno': '',
+            'Chemical Name': '',
+            'CAS Number': '',
+            'Signal Word': '',
+            'Emergencia': '',
+            'H-Statements': '',
+            'Consejos (Frases P)': '',
+            'Exclamación': '',
+            'Corrosión': '',
+            'Peligro para la salud': '',
+            'Calavera': '',
+            'Llama': '',
+            'Ambiente': '',
+            'Llama sobre círculo': '',
+            'Bomba explotando': '',
+            'Cilindro de gas': '',
+        };
+    },
+
+    openQuickAdd(prefill) {
+        this.quickAddForm = this._emptyQuickAddForm();
+        this.quickAddError = '';
+        this.quickAddSuccess = '';
+        this.quickAddSaving = false;
+        // If search text looks like a code (contains dash or starts with letters+numbers), prefill code; otherwise prefill name
+        if (prefill) {
+            const looksLikeCode = /^[A-Za-z]{2,}-/.test(prefill) || /^\d+$/.test(prefill);
+            if (looksLikeCode) {
+                this.quickAddForm['Codigo interno'] = prefill;
+            } else {
+                this.quickAddForm['Chemical Name'] = prefill;
+            }
+        }
+        this.showQuickAdd = true;
+    },
+
+            async submitQuickAdd() {
+        this.quickAddError = '';
+        this.quickAddSuccess = '';
+
+        // Client-side validation
+        const code = (this.quickAddForm['Codigo interno'] || '').trim();
+        const name = (this.quickAddForm['Chemical Name'] || '').trim();
+        if (!code || !name) {
+            this.quickAddError = 'Código interno y Nombre Químico son campos obligatorios.';
+            return;
+        }
+
+        this.quickAddSaving = true;
+        try {
+            const res = await fetch('/labels/api/quick-add-product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(this.quickAddForm)
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                this.quickAddSuccess = `✅ Producto "${data.name}" (${data.code}) creado exitosamente. Agregando a cola...`;
+                // Wait a moment then add to queue and close
+                setTimeout(async () => {
+                    await this.addToQueue(data.code);
+                    this.showQuickAdd = false;
+                    this.showToast(`Producto ${data.code} creado y agregado a la cola`);
+                }, 800);
+            } else {
+                this.quickAddError = data.error || 'Error desconocido al crear producto';
+            }
+        } catch (e) {
+            console.error('Quick add error:', e);
+            this.quickAddError = 'Error de conexión. Intenta de nuevo.';
+        } finally {
+            this.quickAddSaving = false;
+        }
+    },
+
+            async removeFromQueue(itemId) {
+        try {
+            await fetch(`/labels/queue/remove/${itemId}`, { method: 'DELETE' });
+            this.queue = this.queue.filter(i => i.id !== itemId);
+            this.queueSelectedItems = this.queueSelectedItems.filter(id => id !== itemId);
+        } catch (e) {
+            console.error('Error removing:', e);
+        }
+    },
+
+    async splitItem(item) {
+        const input = prompt(`Cantidad del producto actual: ${item.quantity} KG\n\n¿De cuántos KG será cada nuevo envase (capacidad)?`, "20");
+        if (!input) return;
+        const splitSize = parseFloat(input);
+        if (isNaN(splitSize) || splitSize <= 0) {
+            alert('Tamaño de envase inválido.');
+            return;
+        }
+
+        let remaining = parseFloat(item.quantity);
+        if (splitSize >= remaining) {
+            alert('El tamaño del envase proporcionado es mayor o igual a la cantidad actual.');
+            return;
+        }
+
+        const sizes = [];
+        while (remaining > 0) {
+            if (remaining >= splitSize) {
+                sizes.push(splitSize);
+                // parseFloat with toFixed to prevent precision errors
+                remaining = parseFloat((remaining - splitSize).toFixed(3));
+            } else {
+                sizes.push(remaining);
+                remaining = 0;
+            }
+        }
+
+        if (!confirm(`Se dividirá el item en ${sizes.length} etiquetas con las siguientes cantidades:\n${sizes.map(s => s + ' KG').join(', ')}\n\n¿Deseas continuar?`)) return;
+
+        // Create the new split items
+        let anySuccess = false;
+        for (const s of sizes) {
+            try {
+                const res = await fetch('/labels/queue/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        code: item.code,
+                        quantity: s,
+                        // Do not copy the original tare weight so the backend calculates the correct one for the new size
+                        peso_tara: 0,
+                        batch_number: item.batch_number,
+                        batch_date: item.batch_date,
+                        reinspection_date: item.reinspection_date,
+                        copies: item.copies,
+                        warehouse: item.warehouse || ''
+                    })
+                });
+                if (res.ok) anySuccess = true;
+            } catch (e) {
+                console.error('Error adding split item:', e);
+            }
+        }
+
+        // Remove the original item if at least one piece was added successfully to avoid data loss
+        if (anySuccess) {
+            await this.removeFromQueue(item.id);
+            this.showToast(`Producto dividido en ${sizes.length} envases con éxito.`);
+        }
+
+        await this.loadQueue();
+    },
+
+            async duplicateItem(item) {
+        try {
+            const res = await fetch('/labels/queue/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: item.code,
+                    quantity: item.quantity,
+                    peso_tara: item.peso_tara,
+                    batch_number: item.batch_number,
+                    batch_date: item.batch_date,
+                    reinspection_date: item.reinspection_date,
+                    copies: item.copies,
+                    warehouse: item.warehouse || ''
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                // Insert the duplicate right after the original item
+                const idx = this.queue.findIndex(i => i.id === item.id);
+                if (idx !== -1) {
+                    this.queue.splice(idx + 1, 0, data.item);
+                } else {
+                    this.queue.push(data.item);
+                }
+                this.queueSelectedItems.push(data.item.id);
+                this.showToast(`✅ Duplicado: ${item.product_name}`);
+            } else {
+                alert(data.error || 'Error al duplicar');
+            }
+        } catch (e) {
+            console.error('Error duplicating:', e);
+        }
+    },
+
+            async updateItem(item) {
+        try {
+            await fetch(`/labels/queue/update/${item.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    batch_number: item.batch_number,
+                    batch_date: item.batch_date,
+                    reinspection_date: item.reinspection_date,
+                    copies: item.copies,
+                    peso_tara: item.peso_tara,
+                    quantity: item.quantity
+                })
+            });
+        } catch (e) {
+            console.error('Error updating:', e);
+        }
+    },
+
+    // Auto-calculate reinspection date when batch_date changes (+1 year)
+    onBatchDateChange(item) {
+        if (item.batch_date) {
+            try {
+                const bd = new Date(item.batch_date + 'T00:00:00');
+                const rd = new Date(bd);
+                rd.setFullYear(rd.getFullYear() + 1);
+                item.reinspection_date = rd.toISOString().split('T')[0];
+            } catch (e) {
+                console.error('Error calculating reinspection date:', e);
+            }
+        }
+        this.updateItem(item);
+    },
+
+    // Auto-update tara weight when KG changes (with loading animation)
+    async onKgChange(item) {
+        if (!item.quantity || item.quantity <= 0) return;
+
+        // Show loading state
+        item.kgLoading = true;
+
+        try {
+            // Fetch tara suggestions based on new quantity
+            const res = await fetch(`/api/tara/suggestions?peso_neto=${item.quantity}&product_code=${encodeURIComponent(item.code || '')}`);
+            if (!res.ok) return;
+
+            const data = await res.json();
+            const suggestions = data.suggestions || [];
+
+            // Find the best suggestion (default or first one)
+            const bestSuggestion = suggestions.find(s => s.is_default) || suggestions[0];
+
+            if (bestSuggestion && bestSuggestion.tara_kg > 0) {
+                // Apply the suggested tara weight
+                item.peso_tara = bestSuggestion.tara_kg;
+                this.showToast(`✅ Tara actualizada: ${bestSuggestion.tara_kg} kg`);
+            }
+
+            // Update the item in the queue
+            this.updateItem(item);
+        } catch (e) {
+            console.error('Error updating tara weight:', e);
+            // Still update the item even if tara fetch fails
+            this.updateItem(item);
+        } finally {
+            // Hide loading state
+            item.kgLoading = false;
+        }
+    },
+
+            async updateItemInModal(item) {
+        // Update item in the session queue (same as updateItem but with visual feedback)
+        try {
+            const res = await fetch(`/labels/queue/update/${item.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    batch_number: item.batch_number,
+                    batch_date: item.batch_date,
+                    reinspection_date: item.reinspection_date,
+                    copies: item.copies,
+                    peso_tara: item.peso_tara,
+                    quantity: item.quantity
+                })
+            });
+            if (!res.ok) {
+                console.error('Failed to update item');
+            }
+        } catch (e) {
+            console.error('Error updating item in modal:', e);
+        }
+    },
+
+            async clearQueue() {
+        const ok = await this.showCustomConfirm('¿Limpiar toda la cola?', 'Limpiar Todo');
+        if (!ok) return;
+        try {
+            await fetch('/labels/queue/clear', { method: 'POST' });
+            this.queue = [];
+            this.queueSelectedItems = [];
+            this.sapOrder = null;
+            this.sapOrderNumber = '';
+        } catch (e) {
+            console.error('Error clearing:', e);
+        }
+    },
+
+            // Custom confirm modal helper – returns a Promise<boolean>
+            showCustomConfirm(message, title = 'Confirmar') {
+        this.confirmModalMessage = message;
+        this.confirmModalTitle = title;
+        this.showConfirmModal = true;
+        return new Promise((resolve) => {
+            this._confirmResolve = resolve;
+        });
+    },
+
+            _confirmModalAnswer(result) {
+        this.showConfirmModal = false;
+        if (this._confirmResolve) {
+            this._confirmResolve(result);
+            this._confirmResolve = null;
+        }
+    },
+
+            async loadFromSAP() {
+        if (!this.sapOrderNumber || this.loadingSAP) return;
+
+        // Prevent duplicate load via scanner ENTER bug
+        if (this.sapOrder && this.sapOrder.DocNum == this.sapOrderNumber) {
+            if (document.activeElement) document.activeElement.blur();
+            return;
+        }
+
+        // Check if queue has items and ask for confirmation to clear
+        if (this.queue.length > 0) {
+            const confirmClear = await this.showCustomConfirm(
+                `La cola actual tiene ${this.queue.length} etiqueta(s). ¿Limpiar la cola antes de cargar el pedido SAP #${this.sapOrderNumber}?`,
+                'Cargar Pedido SAP'
+            );
+            if (confirmClear) {
+                try {
+                    await fetch('/labels/queue/clear', { method: 'POST' });
+                    this.queue = [];
+                    this.queueSelectedItems = [];
+                } catch (e) {
+                    console.error('Error clearing queue:', e);
+                }
+            } else {
+                // User wants to keep existing items and append new ones
+                const confirmAppend = await this.showCustomConfirm(
+                    '¿Agregar los productos del pedido SAP a la cola existente?',
+                    'Agregar a Cola'
+                );
+                if (!confirmAppend) {
+                    this.loadingSAP = false;
+                    return; // User cancelled
+                }
+            }
+        }
+
+        this.loadingSAP = true;
+        this.generatingTime = 0;
+        const startTimestamp = Date.now();
+        this.generationInterval = setInterval(() => {
+            this.generatingTime = Math.floor((Date.now() - startTimestamp) / 1000);
+        }, 1000);
+
+        const controller = new AbortController();
+        // Set a 60 second timeout for SAP queries so they don't hang indefinitely
+        const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+        try {
+            const res = await fetch('/labels/sap/load', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_number: this.sapOrderNumber }),
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            // Robust Parsing
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.error(`SAP load error status: ${res.status}`, errorText);
+                throw new Error(`Respuesta del servidor (${res.status}). Intente nuevamente.`);
+            }
+
+            let data;
+            try {
+                // native rapid parsing to avoid JS string manipulation freezing UI on slower hardware
+                data = await res.clone().json();
+            } catch (jsonErr) {
+                console.warn("Standard validation failed, attempting robust string replacements:", jsonErr);
+                const rawText = await res.text();
+                const sanitizedText = rawText.replace(/:\s*NaN/g, ': null')
+                    .replace(/:\s*Infinity/g, ': null')
+                    .replace(/:\s*-Infinity/g, ': null');
+                try {
+                    data = JSON.parse(sanitizedText);
+                } catch (fallbackErr) {
+                    console.error("Failed to parse JSON response:", fallbackErr, rawText.substring(0, 200));
+                    throw new Error("El servidor devolvió una respuesta inválida al consultar el pedido.");
+                }
+            }
+
+            if (data.success) {
+                this.sapOrder = data.order;
+                if (document.activeElement) document.activeElement.blur(); // Remove focus to prevent barcode scanner bug
+                // Add items to queue with better error handling
+                let addedCount = 0;
+                let skippedCount = 0;
+                const errors = [];
+
+                for (const item of data.order.items || []) {
+                    const itemCode = item.ItemCode;
+                    if (!itemCode) {
+                        console.warn('Skipping item without ItemCode:', item);
+                        skippedCount++;
+                        continue;
+                    }
+                    try {
+                        const addRes = await fetch('/labels/queue/add', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                code: itemCode,
+                                quantity: item.Quantity || 1,
+                                peso_tara: item.PesoTara || 0,
+                                batch_number: item.Lote || '',
+                                batch_date: item.FechaLote || '',
+                                reinspection_date: item.FechaVencimiento || '',
+                                warehouse: item.Warehouse || ''
+                            })
+                        });
+                        const addData = await addRes.json();
+                        if (addData.success) {
+                            this.queue.push(addData.item);
+                            this.queueSelectedItems.push(addData.item.id);
+                            addedCount++;
+                        } else {
+                            console.warn(`Error adding ${itemCode}:`, addData.error);
+                            errors.push(`${itemCode}: ${addData.error}`);
+                        }
+                    } catch (e) {
+                        console.error(`Error adding ${itemCode}:`, e);
+                        errors.push(`${itemCode}: Error de conexión`);
+                    }
+                }
+
+                // Show summary with better formatting
+                if (addedCount > 0) {
+                    let message = `Pedido SAP #${this.sapOrderNumber} cargado. ${addedCount} producto(s) agregado(s).`;
+                    if (errors.length > 0) {
+                        message += ` ${errors.length} con error.`;
+                    }
+                    this.$dispatch('notify', { msg: message, type: errors.length > 0 ? 'warning' : 'success' });
+
+                    // Optional: detailed alert for errors if needed still, but toast is better.
+                    if (errors.length > 0) {
+                        let errMessage = `⚠️ ${errors.length} producto(s) no encontrado(s) en la base de datos:\n`;
+                        errMessage += errors.slice(0, 5).join('\n');
+                        if (errors.length > 5) {
+                            errMessage += `\n... y ${errors.length - 5} más`;
+                        }
+                        setTimeout(() => alert(errMessage), 500);
+                    }
+                } else if (errors.length > 0) {
+                    this.$dispatch('notify', { msg: `No se pudo agregar ningún producto. ${errors.length} con error.`, type: 'error' });
+                    let errMessage = `❌ No se pudo agregar ningún producto del pedido.\n\nProductos no encontrados:\n${errors.slice(0, 5).join('\n')}${errors.length > 5 ? '\n...' : ''}`;
+                    setTimeout(() => alert(errMessage), 500);
+                } else {
+                    this.$dispatch('notify', { msg: 'El pedido no contiene productos válidos.', type: 'warning' });
+                }
+            } else {
+                this.$dispatch('notify', { msg: data.error || 'Error loading SAP order', type: 'error' });
+            }
+        } catch (e) {
+            console.error('Error loading from SAP:', e);
+            if (e.name === 'AbortError') {
+                this.$dispatch('notify', { msg: 'Tiempo de espera agotado al conectar con SAP (60s).', type: 'error' });
+            } else {
+                this.$dispatch('notify', { msg: 'Error de conexión con SAP: ' + e.message, type: 'error' });
+            }
+        } finally {
+            this.loadingSAP = false;
+            clearInterval(this.generationInterval);
+            this.generationInterval = null;
+        }
+    },
+
+            async previewLabel(item) {
+        // First sync item data to backend session before preview
+        try {
+            await fetch(`/labels/queue/update/${item.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    batch_number: item.batch_number,
+                    batch_date: item.batch_date,
+                    reinspection_date: item.reinspection_date,
+                    copies: item.copies,
+                    peso_tara: item.peso_tara,
+                    quantity: item.quantity
+                })
+            });
+        } catch (e) {
+            console.error('Error syncing item before preview:', e);
+        }
+
+        // Force refresh by clearing first
+        this.previewUrl = null;
+        this.showPreview = true; // Show modal immediately with loading state if needed
+
+        await this.$nextTick();
+
+        // Add timestamp and template_id to force refresh with correct template
+        const tmpl1 = this.selectedTemplate && this.selectedTemplate !== 'default' ? `&template_id=${encodeURIComponent(this.selectedTemplate)}` : '';
+        this.previewUrl = `/labels/preview/${item.id}?t=${Date.now()}${tmpl1}`;
+        this.previewItemName = item.product_name || 'Vista Previa';
+        this.previewItemCode = item.code || '';
+    },
+
+            async showItemPreview(item) {
+        // First sync item data to backend session before preview
+        try {
+            await fetch(`/labels/queue/update/${item.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    batch_number: item.batch_number,
+                    batch_date: item.batch_date,
+                    reinspection_date: item.reinspection_date,
+                    copies: item.copies,
+                    peso_tara: item.peso_tara,
+                    quantity: item.quantity
+                })
+            });
+        } catch (e) {
+            console.error('Error syncing item before preview:', e);
+        }
+
+        // Force refresh by clearing first
+        this.previewUrl = null;
+        this.showPreview = true;
+
+        await this.$nextTick();
+
+        // Add timestamp and template_id to force refresh with correct template
+        const tmpl2 = this.selectedTemplate && this.selectedTemplate !== 'default' ? `&template_id=${encodeURIComponent(this.selectedTemplate)}` : '';
+        this.previewUrl = `/labels/preview/${item.id}?t=${Date.now()}${tmpl2}`;
+        this.previewItemName = item.product_name || 'Vista Previa';
+        this.previewItemCode = item.code || '';
+    },
+
+            async togglePreviewPanel(item) {
+        // Toggle the side preview panel in print modal
+        if (this.previewPanelItem?.id === item.id) {
+            this.previewPanelItem = null;
+            this.panelPreviewUrl = '';
+            return;
+        }
+
+        // Clear current preview
+        this.panelPreviewUrl = null;
+        this.previewPanelItem = item;
+
+        // Sync item data first
+        try {
+            await fetch(`/labels/queue/update/${item.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    batch_number: item.batch_number,
+                    batch_date: item.batch_date,
+                    reinspection_date: item.reinspection_date,
+                    copies: item.copies,
+                    peso_tara: item.peso_tara,
+                    quantity: item.quantity
+                })
+            });
+        } catch (e) {
+            console.error('Error syncing item before panel preview:', e);
+        }
+
+        await this.$nextTick();
+
+        const tmpl3 = this.selectedTemplate && this.selectedTemplate !== 'default' ? `&template_id=${encodeURIComponent(this.selectedTemplate)}` : '';
+        this.panelPreviewUrl = `/labels/preview/${item.id}?t=${Date.now()}${tmpl3}`;
+    },
+
+    quickPrint() {
+        if (this.queueSelectedItems.length === 0) {
+            alert('Selecciona al menos una etiqueta en la tabla para imprimir');
+            return;
+        }
+        this.selectedItems = [...this.queueSelectedItems]; // copy queue selected items
+        this.generateSelectedLabels(); // Skip modal and generate directly
+    },
+
+    openPrintModal() {
+        // Select all items by default when opening the modal
+        this.selectedItems = this.queue.map(i => i.id);
+        this.previewPanelItem = null;
+        this.panelPreviewUrl = '';
+        this.showPrintModal = true;
+    },
+
+    toggleSelectAll(selectAll) {
+        if (selectAll) {
+            this.selectedItems = this.queue.map(i => i.id);
+        } else {
+            this.selectedItems = [];
+        }
+    },
+
+    toggleItemSelection(itemId) {
+        const index = this.selectedItems.indexOf(itemId);
+        if (index > -1) {
+            this.selectedItems.splice(index, 1);
+        } else {
+            this.selectedItems.push(itemId);
+        }
+    },
+
+            async generateSelectedLabels() {
+        if (this.selectedItems.length === 0) {
+            alert('Selecciona al menos una etiqueta');
+            return;
+        }
+
+        this.generating = true;
+        this.generatingTime = 0;
+        const startTimestamp = Date.now();
+        this.generationInterval = setInterval(() => {
+            this.generatingTime = Math.floor((Date.now() - startTimestamp) / 1000);
+        }, 1000);
+        try {
+            // Use the image-based print page for exact dimensions
+            const res = await fetch('/labels/generate_print', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    item_ids: this.selectedItems,
+                    template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                    use_m_y_format: this.useMYFormat,
+                    print_dpi: parseInt(this.printDpi) || 600,
+                    order_id: this.sapOrder ? this.sapOrder.DocNum : null
+                })
+            });
+
+            if (!res.ok) {
+                // Server returned an error (JSON)
+                try {
+                    const errorData = await res.json();
+                    alert(errorData.error || 'Error al generar etiquetas');
+                } catch (e) {
+                    alert('Error al generar etiquetas');
+                }
+                return;
+            }
+
+            // Response is an HTML page — open it in a new window for printing
+            const html = await res.text();
+            const printWindow = window.open('', '_blank');
+
+            if (printWindow) {
+                printWindow.document.write(html);
+                printWindow.document.close();
+                // The print page auto-triggers window.print() via its own JS
+            } else {
+                // Popup blocked — fall back to PDF download
+                const pdfRes = await fetch('/labels/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        item_ids: this.selectedItems,
+                        template_id: this.selectedTemplate !== 'default' ? this.selectedTemplate : null,
+                        use_m_y_format: this.useMYFormat,
+                        print_dpi: parseInt(this.printDpi) || 600,
+                        order_id: this.sapOrder ? this.sapOrder.DocNum : null
+                    })
+                });
+                if (!pdfRes.ok) {
+                    try {
+                        const errData = await pdfRes.json();
+                        alert(errData.error || 'Error al generar PDF');
+                    } catch (e) {
+                        alert('Error al generar PDF');
+                    }
+                    return;
+                }
+                const blob = await pdfRes.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'etiquetas.pdf';
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(url), 60000);
+                alert('⚠️ El navegador bloqueó la ventana de impresión.\n\nEl PDF se ha descargado. Ábrelo e imprímelo manualmente.');
+            }
+
+            // Clear printed items from queue
+            const count = this.selectedItems.length;
+            this.queue = this.queue.filter(item => !this.selectedItems.includes(item.id));
+            this.queueSelectedItems = this.queueSelectedItems.filter(id => !this.selectedItems.includes(id));
+            this.selectedItems = [];
+            this.showPrintModal = false;
+
+        } catch (e) {
+            console.error('Error generating:', e);
+            alert('Error al generar etiquetas: ' + e.message);
+        } finally {
+            this.generating = false;
+            clearInterval(this.generationInterval);
+            this.generationInterval = null;
+        }
+    },
+
+            async generateLabels() {
+        // Redirect to the new modal-based flow
+        this.openPrintModal();
+    }
+        };
+    }
+</script>
+{% endblock %}

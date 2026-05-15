@@ -1,0 +1,1230 @@
+================================================================================
+  HDS DATABASE UPDATE
+  2026-04-06 14:02:26
+================================================================================
+
+Total changes: 269
+Products affected: 87
+
+────────────────────────────────────────────────────────────
+PRODUCT: BENECEL K200M [ASH-QB00001]
+HDS Source: HDS - BENECEL.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: CERAPHYL 230 S/P [ASH-QB00004]
+HDS Source: HDS - CERAPHYL 230.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: CERAPHYL 70 [ASH-QB00005]
+HDS Source: HDS - CERAPHYL 230.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: CERAPHYL SLK S/P [ASH-QB00007]
+HDS Source: HDS - CERAPHYL SLK A.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: -  PELIGRO
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: CONDITIONIZE 37E [ASH-QB00009]
+HDS Source: HDS - CONDITIONEZE 37E A.pdf
+  Signal Word:
+    OLD: 1-800-274-5263
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H226, H303, H304, H319
+    (Added: H226, H303, H304, H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: COSMEDIA GUAR N HANCE 3196 [ASH-QB00010]
+HDS Source: HDS - N-HANCE 3196 1.pdf
+  Signal Word:
+    OLD: ATENCION No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: ESCALOL 577 [ASH-QB00014]
+HDS Source: HDS - ESCALOL 577 A.pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H315, H319
+    (Added: H315, H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: GP4G S/P [ASH-QB00021]
+HDS Source: HDS - GP4G.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: LUBRAJEL 0IL S/P [ASH-QB00022]
+HDS Source: HDS - LUBRAJEL CG.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: LUMINI SYSTEM [ASH-QB00024]
+HDS Source: HDS - LUMINI SYSTEM.pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H226, H227, H302, H318, H319
+    (Added: H226, H227, H302, H318, H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: N-DURHANCE A1000 [ASH-QB00026]
+HDS Source: HDS - AMIDET N.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H315, H412
+    (Added: H315, H412)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H315, H412
+    (Added: H315, H412)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: N-HANCE SP100 [ASH-QB00028]
+HDS Source: HDS - N-HANCE 3196 1.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H319
+    (Added: H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -  No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -  No Aplicable
+    NEW: H319
+    (Added: H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: NATRIANCE BRIGHTENER S/P [ASH-QB00029]
+HDS Source: HDS - NATRIANCE BRIGHTENER.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: NATRIANCE SELF HYDRATE [ASH-QB00030]
+HDS Source: HDS - NATRIANCE SELF-HYDRATE.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: NATROSOL HHR250 [ASH-QB00032]
+HDS Source: HDS - NATROSOL 250HHR 1.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: OPACIFICANTE A-430 [ASH-QB00033]
+HDS Source: HDS - OPACIFICANTE A  1.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: P.V.P.K 30 [ASH-QB00036]
+HDS Source: HDS - PVP K-30.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H319, H360
+    (Added: H319, H360)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H319, H360
+    (Added: H319, H360)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H319, H360
+    (Added: H319, H360)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: PROTECTAGEN S/P [ASH-QB00038]
+HDS Source: HDS - PROTECTAGEN A.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: RAPITIX A-100 S/P [ASH-QB00041]
+HDS Source: HDS - RAPITHIX A-100 A.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: SOREZ H5205 [ASH-QB00044]
+HDS Source: HDS - SOREZ HS 205.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H319
+    (Added: H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H319
+    (Added: H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: N-HANCE CCG 45 [ASH-QB00056]
+HDS Source: HDS - N-HANCE 3196 1.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: LUBRAJEL NP [ASH-QB00067]
+HDS Source: HDS - LUBRAJEL CG.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: CERAPHYL ODS [ASH-QB00069]
+HDS Source: CERAPHYL ODS.docx
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H315, H412
+    (Added: H315, H412)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: CERAPHYL 847 [ASH-QB00072]
+HDS Source: HDS - CERAPHYL 230.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: LUBRAJEL DV [ASH-QB00080]
+HDS Source: HDS - LUBRAJEL CG.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: MAJESTIC BLUE 935 [IFF-QB00057]
+HDS Source: HDS - MAJESTIC BLUE 935.PDF
+  H-Statements:
+    OLD: H227, H303, H 315, H317, H319, H361, H411,
+    NEW: H227, H303, H315, H317, H319, H351, H361, H411
+    (Added: H351)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: RAINY WASH 530 [IFF-QB00160]
+HDS Source: HDS - RAINY WASH 530.pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H227, H315, H317, H361
+    (Added: H227, H315, H317, H361)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: SPORTIVO 971 [IFF-QB00194]
+HDS Source: HDS - SPORTIVO 971.PDF
+  H-Statements:
+    OLD: H227, H315, H317, H319, H361
+    NEW: H227, H315, H317, H319, H361, H373
+    (Added: H373)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: ATENCION
+  H-Statements:
+    OLD: -
+    NEW: H227, H315, H317, H319, H361, H373
+    (Added: H227, H315, H317, H319, H361, H373)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: BERRY BLOSSOM S/P [IFF-QB00222]
+HDS Source: BERRY PUNCH 867.pdf
+  Signal Word:
+    OLD: -
+    NEW: ATENCION
+  H-Statements:
+    OLD: -
+    NEW: H317, H319
+    (Added: H317, H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: BERRY PUNCH 867 FV [IFF-QB00223]
+HDS Source: BERRY PUNCH 867.pdf
+  Signal Word:
+    OLD: -
+    NEW: ATENCION
+  H-Statements:
+    OLD: -
+    NEW: H317, H319
+    (Added: H317, H319)
+
+────────────────────────────────────────────────────────────
+PRODUCT: BLUE MOON [IFF-QB00227]
+HDS Source: HDS - BLUE MOON.pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H315, H317, H319, H410, H411
+    (Added: H315, H317, H319, H410, H411)
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: JUNGLE FRESH [IFF-QB00249]
+HDS Source: HDS - JUNGLE FRESH .pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H227, H315, H317, H319,  H361
+    NEW: H227, H315, H317, H319, H351, H361, H411
+    (Added: H351, H411)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H227, H315, H317, H319, H361
+    NEW: H227, H315, H317, H319, H351, H361, H411
+    (Added: H351, H411)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H227, H315, H317, H319, H351, H361, H411
+    (Added: H227, H315, H317, H319, H351, H361, H411)
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: LAVENDER MISTICA [IFF-QB00251]
+HDS Source: HDS - LAVENDER FRESH.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H227, H315, H317, H319, H336
+    NEW: H227, H303, H315, H317, H319, H336, H411
+    (Added: H303, H411)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H227, H303, H315, H317, H319, H411
+    (Added: H227, H303, H315, H317, H319, H411)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: MINT MINT M BRM11 [IFF-QB00256]
+HDS Source: HDS - MINT FRESH M 811.pdf
+  H-Statements:
+    OLD: H227, P261, P264, P272, P273, P280
+    NEW: H204, H227, H315, H317, H410
+    (Added: H204, H315, H317, H410)
+  Pictogram: Peligro para la salud:
+    OLD: X
+    NEW: (empty)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Bomba explotando:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: SOFT LILY [IFF-QB00273]
+HDS Source: HDS - SOFT LILY.pdf
+  Signal Word:
+    OLD: -   -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -   -
+    NEW: H227, H304, H315, H317, H318, H400, H411
+    (Added: H227, H304, H315, H317, H318, H400, H411)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: SPORTIVO MEN 2023 [IFF-QB00275]
+HDS Source: HDS - SPORTIVO 971.PDF
+  H-Statements:
+    OLD: 
+    NEW: H227, H315, H317, H319, H361, H373
+    (Added: H227, H315, H317, H319, H361, H373)
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: VIOLET FLOWER [IFF-QB00287]
+HDS Source: HDS - VIOLET FLOWER.pdf
+  Signal Word:
+    OLD: -   -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -   -
+    NEW: H227, H303, H315, H317, H319, H361, H410, H411
+    (Added: H227, H303, H315, H317, H319, H361, H410, H411)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: BETADET HR2 [KAO-QB00025]
+HDS Source: HDS - BETADET HR2.pdf
+  H-Statements:
+    OLD: Provoca lesiones oculares graves.
+    NEW: H318
+    (Added: H318)
+
+────────────────────────────────────────────────────────────
+PRODUCT: DANOX 511-B [KAO-QB00029]
+HDS Source: HDS - DANOX 511-B.pdf
+  H-Statements:
+    OLD: Nocivo en caso de ingestión. Provoca quemaduras graves en la piel y lesiones ocu...
+    NEW: H302, H314, H318, H372
+    (Added: H302, H314, H318, H372)
+
+────────────────────────────────────────────────────────────
+PRODUCT: KAOSOFCARE  GP1 [KAO-QB00057]
+HDS Source: HDS - KAO SOFCARE GP-1.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: ATENCION
+
+────────────────────────────────────────────────────────────
+PRODUCT: KAOSOFT HW TAMBOR [KAO-QB00059]
+HDS Source: HDS - KAOSOFT HW.pdf
+  Signal Word:
+    OLD: PELIGRO  -
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: POIZ 535 [KAO-QB00060]
+HDS Source: HDS - POIZ 535.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: Sin palabra de advertencia. PELIGRO ATENCION
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: POIZ 88 [KAO-QB00061]
+HDS Source: HDS - POIZ 535.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: TETRANYL BC-80T [KAO-QB00078]
+HDS Source: HDS - TETRANYL BC-80T.pdf
+  H-Statements:
+    OLD: H226, H302 + H312, H314
+    NEW: H226, H302, H312, H314, H318
+    (Added: H318)
+  H-Statements:
+    OLD: Líquidos y vapores inflamables. Nocivo en caso de ingestión o en contacto con la...
+    NEW: H226, H302, H312, H314, H318
+    (Added: H226, H302, H312, H314, H318)
+
+────────────────────────────────────────────────────────────
+PRODUCT: GLUCAM P20 [LUB-QB00037]
+HDS Source: HDS - GLUCAM P20.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: GLUCAMATE LT [LUB-QB00038]
+HDS Source: HDS - GLUCAMATE LT.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: SCHERCEMOL 318 S/P [LUB-QB00058]
+HDS Source: HDS - SCHERCEMOL 1818.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable PELIGRO
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: SCHERCEMOL IDO [LUB-QB00060]
+HDS Source: HDS - SCHERCEMOL IDO.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: SCHERCEMOL NGDO [LUB-QB00061]
+HDS Source: HDS - SCHERCEMOL NGDO.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: SILSENSE BIO5 S/P [LUB-QB00066]
+HDS Source: HDS - SILSENSE COPOLYOL.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ABRILLANTADOR OPTICO LIQUIDO [VAR-QB00002]
+HDS Source: HDS - ABRILLANTADOR OPTICO EN POLVO.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H319
+    NEW: H319, H320, H335, H350, H371
+    (Added: H320, H335, H350, H371)
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ACEITE DE CASTOR HIDROGENADO S/P [VAR-QB00003]
+HDS Source: HDS - ACEITE DE CASTOR HIDROGENADO.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H319
+    (Added: H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ACEITE DE COCO RBD S/P [VAR-QB00004]
+HDS Source: HDS - ACEITE DE COCO.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H315
+    (Added: H315)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H315
+    (Added: H315)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ACEITE MINERAL QB 85 [VAR-QB00006]
+HDS Source: HDS - ACEITE MINERAL.pdf
+  Signal Word:
+    OLD: Sin palabra de advertencia.
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H402
+    (Added: H402)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ACIDO CITRICO [VAR-QB00008]
+HDS Source: HDS - Acido CITRICO ALI.docx
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H319: Provoca irritación ocular grave.
+    NEW: H302, H315, H318, H319, H335
+    (Added: H302, H315, H318, H335)
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ACIDO OLEICO QB [VAR-QB00010]
+HDS Source: HDS - AZUL ACIDO 9.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H302, H313, H315, H318, H335
+    (Added: H302, H313, H315, H318, H335)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: SIN PALABRA
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H302, H313, H315, H318, H335
+    (Added: H302, H313, H315, H318, H335)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ALCANFOR [VAR-QB00013]
+HDS Source: HDS - ALCANFOR.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H228, H302, H315, H319, H335
+    NEW: H228, H302, H315, H319, H332, H335, H371, H402
+    (Added: H332, H371, H402)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: ALCOHOL CETILICO S/P [VAR-QB00014]
+HDS Source: HDS - ALCOHOL CETILICO.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H315, H319
+    (Added: H315, H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ALCOHOL TRIDECILICO 6 MOLES S/P [VAR-QB00020]
+HDS Source: HDS - ALCOHOL TRIDECILICO 6M.pdf
+  H-Statements:
+    OLD: H302, H313, H315, H318, H402
+    NEW: H302, H313, H315, H318, H401, H402, H412
+    (Added: H401, H412)
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ANTIESPUMANTE [VAR-QB00023]
+HDS Source: HDS - ANTIESPUMANTE.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: C.M.C. [VAR-QB00032]
+HDS Source: HDS - SUAVIAZUL M 75.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: Puede provocar irritación cutánea Puede formar concentraciones de polvo combusti...
+    NEW: H227, H303, H315, H317, H319, H361, H411
+    (Added: H227, H303, H315, H317, H319, H361, H411)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Peligro para la salud:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: COLOR AMARILLO ACIDO 73 (LIMPIADORES) FOSFORECENTE [VAR-QB00044]
+HDS Source: HDS - AMARILLO ÁCIDO 73 POLVO .pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H313, H319, H335, H401
+    (Added: H313, H319, H335, H401)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: COLOR AZUL AL ACEITE (ACEITE MOPS) [VAR-QB00050]
+HDS Source: HDS - AZUL AL ACEITE.pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H290, H313, H314, H335, H401, H411
+    (Added: H290, H313, H314, H335, H401, H411)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: DETERCL  30-12 [VAR-QB00073]
+HDS Source: HDS - DETERCL 30-12.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: D-LIMONENO [VAR-QB00075]
+HDS Source: HDS - D-LIMONENO.pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H226, H315, H317, H400
+    (Added: H226, H315, H317, H400)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: EDTA TETRASODICO [VAR-QB00076]
+HDS Source: HDS - EDTA TETRASODICO.pdf
+  H-Statements:
+    OLD: H315, H319, H332, H351, H373
+    NEW: H290, H302, H303, H314, H315, H318, H319, H332, H351, H373, H402
+    (Added: H290, H302, H303, H314, H318, H402)
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H303- Puede ser nocivo en caso de ingestión. H315- Provoca irritación cutánea. H...
+    NEW: H290, H302, H303, H314, H315, H318, H319, H332, H351, H373, H402
+    (Added: H290, H302, H314, H318, H402)
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: EMULSION 37 ULTRA S/P [VAR-QB00079]
+HDS Source: emulsion 8037.docx
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: ESPESANTE D150 [VAR-QB00081]
+HDS Source: HDS - Espesante D150.docx
+  Signal Word:
+    OLD: No aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No aplicable
+    NEW: H320
+    (Added: H320)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H320
+    (Added: H320)
+
+────────────────────────────────────────────────────────────
+PRODUCT: ESTANATO DE SODIO [VAR-QB00082]
+HDS Source: HDS - ESTANATO DE SODIO.pdf
+  H-Statements:
+    OLD: H290, H314, H335, H412
+    NEW: H125, H145, H290, H300, H314, H318, H319, H335, H412
+    (Added: H125, H145, H300, H318, H319)
+  Pictogram: Calavera:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+  H-Statements:
+    OLD: -
+    NEW: H125, H145, H290, H300, H314, H318, H319, H335, H412
+    (Added: H125, H145, H290, H300, H314, H318, H319, H335, H412)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Calavera:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: FISION HAIR MOISTURE [VAR-QB00091]
+HDS Source: HDS - FISION HAIR MOISTURE.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: GLICEPOL 160 [VAR-QB00099]
+HDS Source: HDS - GLICEPOL 160 .pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: ATENCION
+
+────────────────────────────────────────────────────────────
+PRODUCT: GLICERINA USP [VAR-QB00100]
+HDS Source: HDS - GLICERINA USP.pdf
+  Signal Word:
+    OLD: Atención
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: GLUCOPON 625 S/P [VAR-QB00103]
+HDS Source: HDS - GLUCOPON 425.pdf
+  H-Statements:
+    OLD: H318, H315, H401
+    NEW: H315, H318, H401, H402
+    (Added: H402)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+  Signal Word:
+    OLD: PELIGRO ATENCION
+    NEW: PELIGRO
+  Pictogram: Peligro para la salud:
+    OLD: X
+    NEW: (empty)
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: KERATINA K100 [VAR-QB00107]
+HDS Source: HDS - KERATINA K100.pdf
+  Signal Word:
+    OLD: -
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: LESS 70% S/P [VAR-QB00108]
+HDS Source: HDS - LESS 70%.pdf
+  H-Statements:
+    OLD: Provoca lesiones oculares graves. Provoca irritación cutánea.
+    NEW: H315, H319
+    (Added: H315, H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: X
+    NEW: (empty)
+
+────────────────────────────────────────────────────────────
+PRODUCT: LESS QB [VAR-QB00109]
+HDS Source: HDS - LESS 28%.pdf
+  H-Statements:
+    OLD: Provoca lesiones oculares graves. Provoca irritación cutánea.
+    NEW: H315, H319
+    (Added: H315, H319)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: X
+    NEW: (empty)
+
+────────────────────────────────────────────────────────────
+PRODUCT: MENTHOL [VAR-QB00113]
+HDS Source: HDS - MENTHOL.pdf
+  H-Statements:
+    OLD: H315 Provoca irritación cutánea. H318 Provoca lesiones oculares graves. H335 pue...
+    NEW: H315, H318, H319, H335
+    (Added: H319)
+
+────────────────────────────────────────────────────────────
+PRODUCT: OCTOPIROX S/P [VAR-QB00125]
+HDS Source: HDS - OCTOPIROX.pdf
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: PHANTENOL D [VAR-QB00127]
+HDS Source: HDS - PROMULGEN D.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: (empty)
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: SALICILATO DE METILO [VAR-QB00134]
+HDS Source: HDS - SALICILATO DE METILO.pdf
+  Signal Word:
+    OLD: ATENCION
+    NEW: PELIGRO
+  H-Statements:
+    OLD: H227, H316, H317,H411
+    NEW: H227, H302, H316, H317, H411
+    (Added: H302)
+  Pictogram: Llama:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: TERPENOS DE NARANJA [VAR-QB00141]
+HDS Source: HDS - TERPENOS DE NARANJA.pdf
+  H-Statements:
+    OLD: H226: Líquidos y vapores inflamables. H304: Puede ser mortal en caso de ingestió...
+    NEW: H226, H303, H304, H315, H317, H319, H400, H410
+    (Added: H303, H319, H400)
+
+────────────────────────────────────────────────────────────
+PRODUCT: TRANSCUTOL CG [VAR-QB00142]
+HDS Source: HDS - TRANSCUTOL CG.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: TRICLOSAN [VAR-QB00144]
+HDS Source: HDS - TRICLOSAN.docx
+  Signal Word:
+    OLD: PELIGRO  -   -
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: ACIDO POLIFOSFORICO 117% S/P [VAR-QB00157]
+HDS Source: HDS - ACIDO POLIFOSFORICO.pdf
+  H-Statements:
+    OLD: H301, H314, H335
+    NEW: H290, H301, H314, H315, H318, H335
+    (Added: H290, H315, H318)
+  Pictogram: Peligro para la salud:
+    OLD: X
+    NEW: (empty)
+  Pictogram: Calavera:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: ACIDO POLIFOSFORICO 115% S/P [VAR-QB00158]
+HDS Source: HDS - ACIDO POLIFOSFORICO.pdf
+  H-Statements:
+    OLD: H301, H314, H335
+    NEW: H290, H301, H314, H315, H318, H335
+    (Added: H290, H315, H318)
+  Pictogram: Peligro para la salud:
+    OLD: X
+    NEW: (empty)
+  Pictogram: Calavera:
+    OLD: (empty)
+    NEW: X
+
+────────────────────────────────────────────────────────────
+PRODUCT: PLANCHA FACIL MOD.1 [VAR-QB00177]
+HDS Source: HDS - PLANCHA FACIL.pdf
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+
+────────────────────────────────────────────────────────────
+PRODUCT: C.M.C. 10,000 [VAR-QB00180]
+HDS Source: HDS - ALCOHOL LÁURICO 10 M.docx
+  Signal Word:
+    OLD: No Aplicable
+    NEW: PELIGRO
+  H-Statements:
+    OLD: No Aplicable
+    NEW: H315, H318, H401
+    (Added: H315, H318, H401)
+  Pictogram: Exclamación:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Corrosión:
+    OLD: (empty)
+    NEW: X
+  Pictogram: Ambiente:
+    OLD: (empty)
+    NEW: X
+
+
+================================================================================
+  END OF UPDATE
+================================================================================

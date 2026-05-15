@@ -1,0 +1,44 @@
+{
+  "project": {
+    "name": "SGA GHS Label System",
+    "description": "Python warehouse application for GHS chemical safety labels with SAP Business One integration.",
+    "version": "1.01",
+    "current_date": "2026-04-01"
+  },
+  "architecture": {
+    "frontend": "Tkinter (ghs_label_gui.py)",
+    "database": {
+      "engine": "Microsoft SQL Server 2022",
+      "database_name": "SGA_Database",
+      "server_ip": "192.168.2.237",
+      "fallback": "Local CSV/JSON cache (unified_db/)"
+    },
+    "erp_integration": "SAP HANA via hdbcli"
+  },
+  "roadmap": {
+    "current_phase": "Phase 1: Security & Configuration Management",
+    "status": "In Progress (Implementing .env and config.py)",
+    "phases": [
+      "Phase 1: Security & Configuration Management (Secrets, .env, Encryption)",
+      "Phase 2: Architecture Refactoring (SQLAlchemy ORM, Local Fallback)",
+      "Phase 3: Codebase Modularization (MVC pattern, pytest)",
+      "Phase 4: User Experience & Asynchronous Processing (Threading)",
+      "Phase 5: DevOps, Release Management & Monitoring (Auto-updater, Logs)"
+    ]
+  },
+  "key_files": {
+    "ghs_label_gui.py": "Main monolithic GUI application (Tkinter)",
+    "smart_label.py": "GHS data resolution and database operations",
+    "sap_connector.py": "SAP HANA connectivity and queries",
+    "run_full_sql_migration_optimized.py": "SQL Server schema enforcement and data ingestion script",
+    "db_backup.py": "Automated SQL Server backup script",
+    "PRODUCTION_ROADMAP.md": "Enterprise roadmap for scaling",
+    "SQL_IMPLEMENTATION_PLAN.md": "Details of the SQL integration and fallback architecture."
+  },
+  "notes_for_ai": [
+    "ALWAYS check .env for credentials instead of hardcoding them.",
+    "Ensure 'TrustServerCertificate=no' in production for SQL connections.",
+    "When modifying the database layer, ensure the dual-mode offline fallback (CSV) is maintained.",
+    "GUI updates must not freeze the main thread; use threading/async where applicable."
+  ]
+}

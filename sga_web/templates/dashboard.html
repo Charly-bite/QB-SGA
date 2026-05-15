@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Principal{% endblock %}
+{% block page_title %}Panel Principal{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <!-- Products Count -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-500">Productos</p>
+                <p class="text-3xl font-bold text-slate-800">{{ stats.total_products }}</p>
+            </div>
+            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Orders -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-500">Pedidos Pendientes</p>
+                <p class="text-3xl font-bold text-amber-600">{{ stats.pending_orders }}</p>
+            </div>
+            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ready Orders -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-500">Listos para Envío</p>
+                <p class="text-3xl font-bold text-green-600">{{ stats.ready_orders }}</p>
+            </div>
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Database Status -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm text-slate-500">Base de Datos</p>
+                <p
+                    class="text-lg font-semibold {% if stats.db_connected %}text-blue-600{% else %}text-red-600{% endif %}">
+                    {% if stats.db_connected %}Conectado{% else %}Desconectado{% endif %}
+                </p>
+                {% if stats.db_mode %}
+                <p class="text-xs text-slate-400 mt-1">{{ stats.db_mode }}</p>
+                {% endif %}
+            </div>
+            <div
+                class="w-12 h-12 {% if stats.db_connected %}bg-blue-100{% else %}bg-red-100{% endif %} rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 {% if stats.db_connected %}text-blue-600{% else %}text-red-600{% endif %}"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAP Status -->
+    <div class="bg-white rounded-xl shadow-sm p-6" x-data="{
+            connecting: false,
+            connected: {{ 'true' if stats.sap_connected else 'false' }},
+            statusText: '{{ 'Conectado' if stats.sap_connected else 'Desconectado' }}',
+            async connect() {
+                if (this.connecting) return;
+                
+                this.connecting = true;
+                this.statusText = 'Conectando...';
+                
+                try {
+                    const response = await fetch('/api/sap/connect', { 
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'}
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.connected = true;
+                        this.statusText = 'Conectado';
+                    } else {
+                        this.connected = false;
+                        this.statusText = 'Desconectado';
+                        console.error(data.message);
+                    }
+                } catch (e) {
+                    this.connected = false;
+                    this.statusText = 'Error';
+                    console.error(e);
+                } finally {
+                    this.connecting = false;
+                }
+            },
+            init() {
+                // Auto-connect on load if disconnected
+                if (!this.connected) {
+                    setTimeout(() => this.connect(), 1000);
+                }
+                
+                // Auto-reconnect every 60 seconds if disconnected
+                setInterval(() => {
+                    if (!this.connected && !this.connecting) {
+                        console.log('Auto-reconnecting SAP...');
+                        this.connect();
+                    }
+                }, 60000);
+            }
+         }">
+        <div class="flex items-center justify-between cursor-pointer" @click="connect()" title="Clic para reconectar">
+            <div>
+                <p class="text-sm text-slate-500">Conexión SAP</p>
+                <p class="text-xl font-semibold transition-colors duration-300"
+                    :class="connected ? 'text-green-600' : (connecting ? 'text-amber-600' : (statusText === 'Error' ? 'text-red-600' : 'text-slate-600'))"
+                    x-text="statusText">
+                    {{ 'Conectado' if stats.sap_connected else 'Desconectado' }}
+                </p>
+            </div>
+            <div class="w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300"
+                :class="connected ? 'bg-green-100' : (connecting ? 'bg-amber-100' : 'bg-slate-100')">
+
+                <!-- Normal Icon -->
+                <svg x-show="!connecting" class="w-6 h-6 transition-colors duration-300"
+                    :class="connected ? 'text-green-600' : 'text-slate-600'" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                </svg>
+
+                <!-- Spinner -->
+                <svg x-show="connecting" style="display: none;" class="w-6 h-6 text-amber-600 animate-spin" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-slate-800 mb-4">Acciones Rápidas</h3>
+        <div class="space-y-3">
+            <a href="{{ url_for('labels.index') }}"
+                class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+                <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                <span class="font-medium text-slate-700">Imprimir Etiquetas</span>
+            </a>
+
+            <a href="{{ url_for('products.index') }}"
+                class="flex items-center p-3 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors">
+                <svg class="w-5 h-5 text-emerald-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span class="font-medium text-slate-700">Buscar Producto</span>
+            </a>
+
+            <a href="{{ url_for('orders.index') }}"
+                class="flex items-center p-3 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors">
+                <svg class="w-5 h-5 text-amber-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span class="font-medium text-slate-700">Ver Pedidos</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity (Admin Only) -->
+    {% if current_user.is_admin() %}
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-slate-800">Actividad Reciente</h3>
+            <div class="flex items-center space-x-2">
+                <label for="history_date" class="text-xs text-slate-500 font-medium">Ver fecha:</label>
+                <input type="date" id="history_date" name="history_date" value="{{ selected_date }}"
+                    class="text-xs border-slate-200 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-2 py-1"
+                    onchange="window.location.href='?date=' + this.value">
+            </div>
+        </div>
+
+        {% if recent_history %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="text-left text-xs font-semibold text-slate-500 border-b-2 border-slate-200">
+                        <th class="pb-3 px-2">Fecha y Hora</th>
+                        <th class="pb-3 px-2">Usuario</th>
+                        <th class="pb-3 px-2">Evento</th>
+                        <th class="pb-3 px-2">Detalles</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm">
+                    {% for entry in recent_history %}
+                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                        <td class="py-3 px-2 text-slate-600">
+                            <div class="flex flex-col">
+                                <span class="font-medium">{{ entry.timestamp[:10] if entry.timestamp else '-' }}</span>
+                                <span class="text-xs text-slate-400">{{ entry.timestamp[11:16] if entry.timestamp and
+                                    entry.timestamp|length > 16 else '' }}</span>
+                            </div>
+                        </td>
+                        <td class="py-3 px-2">
+                            <span class="font-medium text-slate-700">{{ entry.user or '-' }}</span>
+                        </td>
+                        <td class="py-3 px-2">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+                                {% if entry.type in ['PRINT_JOB', 'LABEL_GENERATION'] %}bg-blue-100 text-blue-700
+                                {% elif entry.type in ['PRODUCT_ADD', 'SAP_IMPORT'] %}bg-green-100 text-green-700
+                                {% elif entry.type == 'PRODUCT_EDIT' %}bg-amber-100 text-amber-700
+                                {% elif entry.type == 'ORDER_UPDATE' %}bg-purple-100 text-purple-700
+                                {% elif entry.type == 'LOGIN' %}bg-indigo-100 text-indigo-700
+                                {% elif entry.type == 'LOGOUT' %}bg-slate-100 text-slate-700
+                                {% else %}bg-slate-100 text-slate-700{% endif %}">
+                                {{ entry.type_display if entry.type_display else entry.type }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-2 text-slate-600">
+                            <span class="text-sm" title="{{ entry.details_display if entry.details_display else '' }}">
+                                {{ entry.details_display if entry.details_display else '-' }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p class="text-slate-500">No hay actividad reciente</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
