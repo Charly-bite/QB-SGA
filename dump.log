@@ -1,6 +1,0 @@
-[INFO] FLASK_ENV is development. Short-circuiting to local config.
-2026-05-11 11:05:09,898 [INFO] database_client: Loaded client configuration
-2026-05-11 11:05:09,899 [INFO] database_client: ============================================================
-2026-05-11 11:05:09,899 [INFO] database_client: Iniciando conexion a base de datos...
-2026-05-11 11:05:09,906 [INFO] database_client: Intentando conexion a SQL Server...
-2026-05-11 11:05:11,491 [INFO] database_client: Conectado exitosamente a SQL Server
