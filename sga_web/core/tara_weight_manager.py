@@ -1537,9 +1537,16 @@ class TaraWeightManager:
                     df_history = pd.DataFrame(history_records)
 
                     # Explicitly convert 'nan', 'NaT' strings to actual None for proper SQL NULL handling
-                    for col in ["old_date", "new_date", "old_reinsp_date", "new_reinsp_date"]:
+                    for col in [
+                        "old_date",
+                        "new_date",
+                        "old_reinsp_date",
+                        "new_reinsp_date",
+                    ]:
                         if col in df_history.columns:
-                            df_history[col] = df_history[col].replace(["nan", "NaT", "None", ""], None)
+                            df_history[col] = df_history[col].replace(
+                                ["nan", "NaT", "None", ""], None
+                            )
 
                     # Convert event_date strictly to datetime because empty strings break SQL Server
                     df_history["event_date"] = pd.to_datetime(
@@ -1549,9 +1556,7 @@ class TaraWeightManager:
                     # TRUNCATE + INSERT mode
                     with self.sql_engine.connect() as conn:
                         with conn.begin():
-                            conn.execute(
-                                text(
-                                    """
+                            conn.execute(text("""
                                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='product_lote_history' and xtype='U')
                                 CREATE TABLE product_lote_history (
                                     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -1567,9 +1572,7 @@ class TaraWeightManager:
                                     merma_kg FLOAT,
                                     notes NVARCHAR(MAX)
                                 )
-                            """
-                                )
-                            )
+                            """))
                             conn.execute(text("DELETE FROM product_lote_history"))
 
                     # Insert data bypassing index

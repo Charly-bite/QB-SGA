@@ -9,23 +9,27 @@ This script:
 4. Recovers lote_history from the production classifications into product_lote_history
 5. Imports the production history.json lote events into system_audit_logs
 """
+
 import json
 import os
 import sys
 
-sys.path.insert(0, 'sga_web')
-sys.path.insert(0, 'sga_web/core')
-os.chdir('sga_web')
+sys.path.insert(0, "sga_web")
+sys.path.insert(0, "sga_web/core")
+os.chdir("sga_web")
 
 from dotenv import load_dotenv
-load_dotenv(os.path.join('..', '.env'))
+
+load_dotenv(os.path.join("..", ".env"))
 
 from database_client import DatabaseClient
 import pandas as pd
 from sqlalchemy import text
 
-PROD_CLASS_PATH = r'C:\Users\QB_DESARROLLO\Desktop\SGAv1.01\unified_db\product_classifications.json'
-PROD_HISTORY_PATH = r'C:\Users\QB_DESARROLLO\Desktop\SGAv1.01\sga_web\history.json'
+PROD_CLASS_PATH = (
+    r"C:\Users\QB_DESARROLLO\Desktop\SGAv1.01\unified_db\product_classifications.json"
+)
+PROD_HISTORY_PATH = r"C:\Users\QB_DESARROLLO\Desktop\SGAv1.01\sga_web\history.json"
 
 client = DatabaseClient()
 if not client.connect():
@@ -42,31 +46,36 @@ print("BATCH DATA RECOVERY FROM PRODUCTION")
 print("=" * 60)
 
 # ── 1. Load production classifications ──
-with open(PROD_CLASS_PATH, 'r', encoding='utf-8') as f:
+with open(PROD_CLASS_PATH, "r", encoding="utf-8") as f:
     prod_class = json.load(f)
 
-prod_with_lote = {pid: d for pid, d in prod_class.items() 
-                  if str(d.get('lote', '') or '').strip()}
+prod_with_lote = {
+    pid: d for pid, d in prod_class.items() if str(d.get("lote", "") or "").strip()
+}
 print(f"\n[1] Production has {len(prod_with_lote)} products with lote data")
 
 # ── 2. Update product_classifications SQL with latest lote values ──
 updated = 0
 with engine.connect() as conn:
     for pid, d in prod_with_lote.items():
-        lote = str(d.get('lote', '')).strip()
-        lote_date = str(d.get('lote_date', '') or '').strip()[:10]
-        lote_reinsp = str(d.get('lote_reinspection_date', '') or '').strip()[:10]
-        lotes_info = d.get('lotes_info', {})
-        lote_history = d.get('lote_history', [])
-        
+        lote = str(d.get("lote", "")).strip()
+        lote_date = str(d.get("lote_date", "") or "").strip()[:10]
+        lote_reinsp = str(d.get("lote_reinspection_date", "") or "").strip()[:10]
+        lotes_info = d.get("lotes_info", {})
+        lote_history = d.get("lote_history", [])
+
         # Normalize bad values
         for val_name in [lote_date, lote_reinsp]:
-            if val_name and val_name.lower() in ('nan', 'none', 'nat'):
-                val_name = ''
-        
-        lotes_info_json = json.dumps(lotes_info) if isinstance(lotes_info, dict) else None
-        lote_history_json = json.dumps(lote_history) if isinstance(lote_history, list) else None
-        
+            if val_name and val_name.lower() in ("nan", "none", "nat"):
+                val_name = ""
+
+        lotes_info_json = (
+            json.dumps(lotes_info) if isinstance(lotes_info, dict) else None
+        )
+        lote_history_json = (
+            json.dumps(lote_history) if isinstance(lote_history, list) else None
+        )
+
         try:
             result = conn.execute(
                 text("""
@@ -79,19 +88,27 @@ with engine.connect() as conn:
                     WHERE product_id = :pid
                 """),
                 {
-                    'lote': lote if lote else None,
-                    'lote_date': lote_date if lote_date and lote_date.lower() not in ('nan', 'none') else None,
-                    'lote_reinsp': lote_reinsp if lote_reinsp and lote_reinsp.lower() not in ('nan', 'none') else None,
-                    'lotes_info': lotes_info_json,
-                    'lote_history': lote_history_json,
-                    'pid': pid,
-                }
+                    "lote": lote if lote else None,
+                    "lote_date": (
+                        lote_date
+                        if lote_date and lote_date.lower() not in ("nan", "none")
+                        else None
+                    ),
+                    "lote_reinsp": (
+                        lote_reinsp
+                        if lote_reinsp and lote_reinsp.lower() not in ("nan", "none")
+                        else None
+                    ),
+                    "lotes_info": lotes_info_json,
+                    "lote_history": lote_history_json,
+                    "pid": pid,
+                },
             )
             if result.rowcount > 0:
                 updated += 1
         except Exception as e:
             pass  # Product may not exist in classifications
-    
+
     conn.commit()
 
 print(f"[2] Updated {updated} products in product_classifications SQL table")
@@ -99,34 +116,36 @@ print(f"[2] Updated {updated} products in product_classifications SQL table")
 # ── 3. Insert/update product_batches from production lotes_info ──
 batch_records = []
 for pid, d in prod_class.items():
-    lotes_info = d.get('lotes_info', {})
+    lotes_info = d.get("lotes_info", {})
     if not isinstance(lotes_info, dict):
         continue
-    
+
     # Also include the primary lote if not in lotes_info
-    primary_lote = str(d.get('lote', '') or '').strip()
+    primary_lote = str(d.get("lote", "") or "").strip()
     if primary_lote and primary_lote not in lotes_info:
         lotes_info[primary_lote] = {
-            'fecha_elaboracion': d.get('lote_date', ''),
-            'fecha_inspeccion': d.get('lote_reinspection_date', ''),
+            "fecha_elaboracion": d.get("lote_date", ""),
+            "fecha_inspeccion": d.get("lote_reinspection_date", ""),
         }
-    
+
     for lote, info in lotes_info.items():
         if not str(lote).strip() or not isinstance(info, dict):
             continue
-        f_elab = str(info.get('fecha_elaboracion', '') or '')[:10]
-        f_reinsp = str(info.get('fecha_inspeccion', '') or '')[:10]
-        if f_elab.lower() in ('nan', 'none', 'nat', ''):
+        f_elab = str(info.get("fecha_elaboracion", "") or "")[:10]
+        f_reinsp = str(info.get("fecha_inspeccion", "") or "")[:10]
+        if f_elab.lower() in ("nan", "none", "nat", ""):
             f_elab = None
-        if f_reinsp.lower() in ('nan', 'none', 'nat', ''):
+        if f_reinsp.lower() in ("nan", "none", "nat", ""):
             f_reinsp = None
-        
-        batch_records.append({
-            'product_id': str(pid)[:50],
-            'lote': str(lote)[:255],
-            'fecha_elaboracion': f_elab,
-            'fecha_reinspeccion': f_reinsp,
-        })
+
+        batch_records.append(
+            {
+                "product_id": str(pid)[:50],
+                "lote": str(lote)[:255],
+                "fecha_elaboracion": f_elab,
+                "fecha_reinspeccion": f_reinsp,
+            }
+        )
 
 batch_inserted = 0
 with engine.connect() as conn:
@@ -147,7 +166,7 @@ with engine.connect() as conn:
                             INSERT (product_id, lote, fecha_elaboracion, fecha_reinspeccion)
                             VALUES (source.product_id, source.lote, source.fecha_elaboracion, source.fecha_reinspeccion);
                     """),
-                    rec
+                    rec,
                 )
                 batch_inserted += 1
             except Exception as e:
@@ -159,57 +178,70 @@ print(f"[3] Upserted {batch_inserted} records into product_batches SQL table")
 import re
 from datetime import datetime as _dt
 
-_DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
 
 def safe_date(val):
     if val is None:
         return None
     s = str(val).strip()[:10]
-    if s.lower() in ('nan', 'none', 'nat', '', 'null'):
+    if s.lower() in ("nan", "none", "nat", "", "null"):
         return None
     if not _DATE_RE.match(s):
         return None
     return s
 
+
 def safe_datetime(val):
     if val is None:
         return None
     s = str(val).strip()[:19]
-    if s.lower() in ('nan', 'none', 'nat', '', 'null'):
+    if s.lower() in ("nan", "none", "nat", "", "null"):
         return None
     if len(s) < 10:
         return None
     try:
-        return _dt.strptime(s.replace('T', ' ')[:19], '%Y-%m-%d %H:%M:%S')
+        return _dt.strptime(s.replace("T", " ")[:19], "%Y-%m-%d %H:%M:%S")
     except ValueError:
         try:
-            return _dt.strptime(s[:10], '%Y-%m-%d')
+            return _dt.strptime(s[:10], "%Y-%m-%d")
         except ValueError:
             return None
 
+
 history_records = []
 for pid, d in prod_class.items():
-    lh = d.get('lote_history', [])
+    lh = d.get("lote_history", [])
     if not isinstance(lh, list):
         continue
     for entry in lh:
         if not isinstance(entry, dict):
             continue
-        ts = str(entry.get('date', entry.get('timestamp', '')))
-        
-        history_records.append({
-            'product_id': str(pid)[:50],
-            'old_lote': str(entry.get('old_lote', '') or '')[:255],
-            'new_lote': str(entry.get('new_lote', '') or '')[:255],
-            'old_date': safe_date(entry.get('old_date') or entry.get('old_elab_date')),
-            'new_date': safe_date(entry.get('new_date') or entry.get('new_elab_date')),
-            'old_reinsp_date': safe_date(entry.get('old_reinsp_date')),
-            'new_reinsp_date': safe_date(entry.get('new_reinsp_date')),
-            'event_date': safe_datetime(ts),
-            'user_name': str(entry.get('user', '') or '')[:50],
-            'merma_kg': float(entry['merma_kg']) if entry.get('merma_kg') is not None else None,
-            'notes': str(entry.get('notes', '') or '')[:4000],
-        })
+        ts = str(entry.get("date", entry.get("timestamp", "")))
+
+        history_records.append(
+            {
+                "product_id": str(pid)[:50],
+                "old_lote": str(entry.get("old_lote", "") or "")[:255],
+                "new_lote": str(entry.get("new_lote", "") or "")[:255],
+                "old_date": safe_date(
+                    entry.get("old_date") or entry.get("old_elab_date")
+                ),
+                "new_date": safe_date(
+                    entry.get("new_date") or entry.get("new_elab_date")
+                ),
+                "old_reinsp_date": safe_date(entry.get("old_reinsp_date")),
+                "new_reinsp_date": safe_date(entry.get("new_reinsp_date")),
+                "event_date": safe_datetime(ts),
+                "user_name": str(entry.get("user", "") or "")[:50],
+                "merma_kg": (
+                    float(entry["merma_kg"])
+                    if entry.get("merma_kg") is not None
+                    else None
+                ),
+                "notes": str(entry.get("notes", "") or "")[:4000],
+            }
+        )
 
 hist_inserted = 0
 if history_records:
@@ -235,21 +267,28 @@ if history_records:
             """))
             # Clear and reinsert
             conn.execute(text("DELETE FROM product_lote_history"))
-        
+
         # Insert in batches
         df_hist = pd.DataFrame(history_records)
-        df_hist.to_sql('product_lote_history', con=engine, if_exists='append', index=False)
+        df_hist.to_sql(
+            "product_lote_history", con=engine, if_exists="append", index=False
+        )
         hist_inserted = len(history_records)
 
-print(f"[4] Inserted {hist_inserted} lote history records into product_lote_history SQL table")
+print(
+    f"[4] Inserted {hist_inserted} lote history records into product_lote_history SQL table"
+)
 
 # ── 5. Import production history.json lote events ──
-with open(PROD_HISTORY_PATH, 'r', encoding='utf-8', errors='replace') as f:
+with open(PROD_HISTORY_PATH, "r", encoding="utf-8", errors="replace") as f:
     prod_history = json.load(f)
 
-lote_events = [e for e in prod_history 
-               if e.get('event_type', '') in ('MERMA_UPDATE', 'product_edit')
-               and ('lote' in str(e.get('details', {})).lower())]
+lote_events = [
+    e
+    for e in prod_history
+    if e.get("event_type", "") in ("MERMA_UPDATE", "product_edit")
+    and ("lote" in str(e.get("details", {})).lower())
+]
 
 print(f"[5] Found {len(lote_events)} lote-related events in production history.json")
 

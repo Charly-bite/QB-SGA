@@ -2,10 +2,10 @@ import os
 import sys
 import logging
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'sga_web'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "sga_web"))
 from sga_web.app import create_app
 
-app = create_app('development')
+app = create_app("development")
 with app.app_context():
     tara_mgr = app.tara_manager
     sap = app.sap_connector
@@ -13,10 +13,12 @@ with app.app_context():
     tara_mgr._load_classifications()
     classifications = tara_mgr._product_classifications
 
-    def _primary_lote_value(l: str): return (l or "").split(",")[-1].strip()
+    def _primary_lote_value(l: str):
+        return (l or "").split(",")[-1].strip()
 
     missing_ids = [
-        pid for pid, data in classifications.items()
+        pid
+        for pid, data in classifications.items()
         if not _primary_lote_value(data.get("lote", ""))
     ]
 
@@ -27,13 +29,14 @@ with app.app_context():
 
     touched = 0
     for pid, batch in batch_data.items():
-        if not batch or not batch.get("batch_number"): continue
-        
+        if not batch or not batch.get("batch_number"):
+            continue
+
         class_data = classifications.get(pid, {})
         lote = _primary_lote_value(batch.get("batch_number", ""))
         lote_date = batch.get("manufacturing_date")
         reinsp = batch.get("expiry_date")
-        
+
         class_data["lote"] = lote
         class_data["lote_date"] = lote_date
         class_data["lote_reinspection_date"] = reinsp

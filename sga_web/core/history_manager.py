@@ -17,9 +17,9 @@ class HistoryManager:
             )
             # Search multiple candidate locations for the history file
             candidates = [
-                os.path.join(base, "data", "history.json"),    # Standard path
-                os.path.join(base, "sga_web", "history.json"), # Legacy path
-                os.path.join(base, "history.json"),            # Project root
+                os.path.join(base, "data", "history.json"),  # Standard path
+                os.path.join(base, "sga_web", "history.json"),  # Legacy path
+                os.path.join(base, "history.json"),  # Project root
             ]
             history_file = next(
                 (c for c in candidates if os.path.exists(c)),
@@ -53,8 +53,7 @@ class HistoryManager:
 
             with self.sql_engine.begin() as conn:
                 # Use raw SQL to create table if missing
-                conn.exec_driver_sql(
-                    """
+                conn.exec_driver_sql("""
                     IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='history_logs' and xtype='U')
                     CREATE TABLE history_logs (
                         id INT IDENTITY(1,1) PRIMARY KEY,
@@ -63,8 +62,7 @@ class HistoryManager:
                         username VARCHAR(50),
                         details NVARCHAR(MAX)
                     )
-                """
-                )
+                """)
         except Exception as e:
             print(f"⚠️ Could not ensure history_logs table exists: {e}")
 

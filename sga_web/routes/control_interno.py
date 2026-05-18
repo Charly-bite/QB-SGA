@@ -272,8 +272,12 @@ def api_products():
                     # Only update if there is a real difference
                     if (
                         current_lote != target_lote
-                        or _normalize_iso_date(class_data.get("lote_date", "")) != target_date
-                        or _normalize_iso_date(class_data.get("lote_reinspection_date", "")) != target_reinsp
+                        or _normalize_iso_date(class_data.get("lote_date", ""))
+                        != target_date
+                        or _normalize_iso_date(
+                            class_data.get("lote_reinspection_date", "")
+                        )
+                        != target_reinsp
                     ):
                         class_data["lote"] = target_lote
                         if target_date:
@@ -296,7 +300,6 @@ def api_products():
         except Exception as exc:
             logger.warning(f"Lote override recovery failed (non-fatal): {exc}")
         _lote_recovery_done = True
-
 
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 50, type=int)

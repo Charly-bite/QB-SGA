@@ -4,7 +4,7 @@ root_dir = os.path.dirname(os.path.abspath(__file__))
 if root_dir not in sys.path:
     sys.path.insert(0, root_dir)
 
-sys.path.insert(0, os.path.join(root_dir, 'sga_web'))
+sys.path.insert(0, os.path.join(root_dir, "sga_web"))
 
 from sga_web.app import app
 import tara_weight_manager as twm
@@ -24,7 +24,7 @@ with app.app_context():
             history_list.append(enriched_entry)
 
     print(f"Total entries before filter: {len(history_list)}")
-    
+
     # Filter by month if provided (YYYY-MM)
     filter_month = "2026-05"
     if filter_month and len(filter_month) == 7:

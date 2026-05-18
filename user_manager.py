@@ -6,6 +6,7 @@ Handles authentication, permissions, and user administration
 Auth Source: SQL Server (single source of truth)
 JSON backup: Written on every save as disaster-recovery export only — never read for auth.
 """
+
 import json
 import os
 import hashlib
@@ -15,7 +16,6 @@ import threading
 from datetime import datetime
 from typing import Optional, Dict, List, Any
 from enum import Enum
-
 
 logger = logging.getLogger(__name__)
 
@@ -68,9 +68,7 @@ class UserManager:
         try:
             with self.sql_engine.begin() as conn:
                 # Ensure table exists (idempotent)
-                conn.execute(
-                    text(
-                        """
+                conn.execute(text("""
                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='SGA_Users' AND xtype='U')
                 BEGIN
                     CREATE TABLE SGA_Users (
@@ -86,9 +84,7 @@ class UserManager:
                         must_change_password BIT DEFAULT 0
                     )
                 END
-                """
-                    )
-                )
+                """))
 
                 # Check if any admin exists
                 row = conn.execute(
@@ -99,16 +95,14 @@ class UserManager:
                     # Seed a default admin
                     pwd_hash = self._hash_password("admin123")
                     conn.execute(
-                        text(
-                            """
+                        text("""
                         INSERT INTO SGA_Users
                             (username, password_hash, role, full_name, email, warehouse,
                              created_at, is_active, must_change_password)
                         VALUES
                             (:u, :p, 'admin', 'Administrator', '', '',
                              :now, 1, 1)
-                    """
-                        ),
+                    """),
                         {
                             "u": "admin",
                             "p": pwd_hash,
@@ -227,24 +221,20 @@ class UserManager:
 
                     if username.lower() not in db_usernames:
                         conn.execute(
-                            text(
-                                """
+                            text("""
                         INSERT INTO SGA_Users (username, password_hash, role, full_name, email, warehouse, created_at, last_login, is_active, must_change_password)
                         VALUES (:username, :pwd, :role, :full_name, :email, :warehouse, :created_at, :last_login, :is_active, :must_change)
-                        """
-                            ),
+                        """),
                             params,
                         )
                     else:
                         conn.execute(
-                            text(
-                                """
+                            text("""
                         UPDATE SGA_Users
                         SET password_hash=:pwd, role=:role, full_name=:full_name, email=:email,
                             warehouse=:warehouse, last_login=:last_login, is_active=:is_active, must_change_password=:must_change
                         WHERE username = :username
-                        """
-                            ),
+                        """),
                             params,
                         )
         except Exception as e:

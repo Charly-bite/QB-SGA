@@ -1712,6 +1712,7 @@ class GHSLabelGenerator:
         use_m_y_format = product.get("use_m_y_format", False)
 
         if use_m_y_format:
+
             def to_m_y(d_str):
                 d_str = str(d_str).strip()
                 if not d_str or d_str == "N/A":

@@ -4,6 +4,7 @@ Standalone SAP to Local DB Sync
 Performs a safe merge of SAP Master Data (OITM) into unified_db/products_master.csv.
 Called automatically by watchdog.py for background updates, and can be run manually.
 """
+
 import os
 import sys
 import logging
@@ -13,7 +14,8 @@ from dotenv import load_dotenv
 
 import sys
 import os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'sga_web', 'core'))
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "sga_web", "core"))
 from sap_connector import SAPHanaConnector
 
 # Config logging

@@ -138,7 +138,9 @@ def update_status(order_id):
 
     # Validate status
     try:
-        logging.info(f"update_status: order={order_id}, raw='{new_status}', normalized='{normalized}'")
+        logging.info(
+            f"update_status: order={order_id}, raw='{new_status}', normalized='{normalized}'"
+        )
         status_enum = OrderStatus(normalized)
     except ValueError:
         # Fallback: try case-insensitive match against enum values
