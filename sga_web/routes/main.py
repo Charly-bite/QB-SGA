@@ -50,6 +50,9 @@ def dashboard():
 
     db_connection_text = db_mode_labels.get(db_source, "Local (Fallback)")
 
+    # Fetch history early so we can use it for stats
+    all_history = current_app.history_mgr.get_history()
+
     printed_labels_count = sum(
         (
             h.get("details", {}).get("count", 0)
@@ -97,7 +100,6 @@ def dashboard():
     from datetime import datetime
 
     selected_date = request.args.get("date", datetime.now().strftime("%Y-%m-%d"))
-    all_history = current_app.history_mgr.get_history()
     history = [
         h for h in all_history if h.get("timestamp", "").startswith(selected_date)
     ]

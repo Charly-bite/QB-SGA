@@ -178,6 +178,7 @@ class TestingConfig(Config):
 
     DEBUG = True
     TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
 # Configuration mapping
