@@ -168,19 +168,62 @@ class HistoryManager:
         except Exception:
             return []
 
-    def get_history(self):
+    def get_history(self, event_type=None, limit=None):
         """
-        Retrieve all history entries. Attempts from SQL first, then JSON.
+        Retrieve history entries. Attempts from SQL first, then JSON.
+        
+        Args:
+            event_type: Optional filter for specific event types (e.g. 'product_edit')
+            limit: Max entries to return (defaults to self.max_entries)
+        
+        Results are cached for 60 seconds to avoid repeated DB hits.
         """
+        if limit is None:
+            limit = self.max_entries
+
+        # Check TTL cache (60 second window)
+        cache_key = f"{event_type or 'all'}:{limit}"
+        import time as _time
+        now = _time.time()
+        if hasattr(self, '_history_cache') and cache_key in self._history_cache:
+            cached_data, cached_at = self._history_cache[cache_key]
+            if now - cached_at < 60:
+                return cached_data
+
+        result = self._fetch_history(event_type, limit)
+
+        # Store in cache
+        if not hasattr(self, '_history_cache'):
+            self._history_cache = {}
+        self._history_cache[cache_key] = (result, now)
+        return result
+
+    def _fetch_history(self, event_type=None, limit=500):
+        """Internal: fetch history from SQL or JSON."""
         if self.sql_engine:
             try:
                 import pandas as pd
+                from sqlalchemy import text
 
-                df = pd.read_sql_table("history_logs", con=self.sql_engine)
+                # Build targeted SQL query instead of loading the full table
+                where_clause = ""
+                params = {}
+                if event_type:
+                    where_clause = "WHERE event_type = :evt"
+                    params["evt"] = event_type
+
+                # Use string formatting for TOP n since SQL Server can have issues 
+                # parameterizing TOP without parenthesis. limit is always an int.
+                query = text(f"""
+                    SELECT TOP {int(limit)} id, timestamp, event_type, username, details
+                    FROM history_logs
+                    {where_clause}
+                    ORDER BY id DESC
+                """)
+
+                df = pd.read_sql(query, con=self.sql_engine, params=params)
                 # Parse back to history format
                 history = []
-                # SQL records are ordered by id, but we typically sort by timestamp.
-                df = df.sort_values(by="timestamp")
                 for _, row in df.iterrows():
                     details = {}
                     try:
@@ -195,7 +238,9 @@ class HistoryManager:
                             "details": details,
                         }
                     )
-                return history[-self.max_entries :]  # return top N
+                # Reverse so oldest is first (matches original behavior)
+                history.reverse()
+                return history
             except Exception as e:
                 print(f"⚠️ Error reading history from SQL: {e}")
 

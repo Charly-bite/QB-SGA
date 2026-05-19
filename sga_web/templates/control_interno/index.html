@@ -222,18 +222,19 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100 transition-opacity duration-300" :class="(loading || isTyping) ? 'opacity-50 pointer-events-none' : ''">
                         <template x-if="(loading || isTyping) && products.length === 0">
-                            <tr>
-                                <td colspan="9" class="px-6 py-12 text-center text-slate-400">
-                                    <svg class="animate-spin h-6 w-6 mx-auto mb-2 text-blue-500" fill="none"
-                                        viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                                    </svg>
-                                    Buscando...
-                                </td>
-                            </tr>
+                            <template x-for="i in 5" :key="'skel-'+i">
+                                <tr class="animate-pulse">
+                                    <td class="pl-6 pr-2 py-4"><div class="h-4 w-4 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-20 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-48 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-24 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-28 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-32 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-40 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-16 bg-slate-200 rounded"></div></td>
+                                    <td class="px-4 py-4"><div class="h-4 w-8 bg-slate-200 rounded"></div></td>
+                                </tr>
+                            </template>
                         </template>
                         <template x-if="!(loading || isTyping) && products.length === 0">
                             <tr>
@@ -969,6 +970,10 @@
             init() {
                 this.loadContainers();
                 this.loadProductTypes();
+
+                // Warm-up ping: trigger server-side init in background
+                // so the first real search is instant even if server just booted.
+                fetch('/control/api/summary').catch(() => {});
 
                 // Watchers for filters
                 this.$watch('searchQuery', () => {

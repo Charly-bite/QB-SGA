@@ -1355,57 +1355,71 @@ class TaraWeightManager:
                 except Exception as e:
                     logger.debug(f"product_lotes table not available (non-fatal): {e}")
 
-                # NEW: Also load lote history from product_lote_history table to rebuild if missing/truncated
+                # OPTIMIZED: Use ROW_NUMBER() to only fetch the latest 20 entries per product
+                # instead of loading all 224K+ rows. Uses groupby + set dedup instead of iterrows + O(n²) any().
                 try:
                     df_history = pd.read_sql(
-                        "SELECT * FROM product_lote_history ORDER BY product_id, event_date DESC",
+                        """
+                        SELECT * FROM (
+                            SELECT *, ROW_NUMBER() OVER (
+                                PARTITION BY product_id ORDER BY event_date DESC
+                            ) as rn
+                            FROM product_lote_history
+                        ) t WHERE rn <= 20
+                        ORDER BY product_id, event_date DESC
+                        """,
                         con=self.sql_engine,
                     )
                     if not df_history.empty:
                         hist_count = 0
-                        for _, hist_row in df_history.iterrows():
-                            pid = str(hist_row["product_id"])
-                            if pid in self._product_classifications:
-                                entry = self._product_classifications[pid]
-                                if "lote_history" not in entry or not isinstance(
-                                    entry["lote_history"], list
-                                ):
-                                    entry["lote_history"] = []
 
-                                # Convert SQL row to history entry format
-                                def _safe_str(val):
-                                    if pd.isna(val):
-                                        return ""
-                                    s = str(val).strip()
-                                    if s.lower() in ("nan", "none", "nat", "<na>"):
-                                        return ""
-                                    return s
+                        def _safe_str(val):
+                            if pd.isna(val):
+                                return ""
+                            s = str(val).strip()
+                            if s.lower() in ("nan", "none", "nat", "<na>"):
+                                return ""
+                            return s
 
+                        # Batch process by product_id using groupby instead of iterrows
+                        for pid, group in df_history.groupby("product_id"):
+                            pid = str(pid)
+                            if pid not in self._product_classifications:
+                                continue
+
+                            entry = self._product_classifications[pid]
+                            if "lote_history" not in entry or not isinstance(
+                                entry["lote_history"], list
+                            ):
+                                entry["lote_history"] = []
+
+                            # Build a set of existing timestamps for O(1) dedup
+                            existing_ts = set()
+                            for x in entry["lote_history"]:
+                                ts_val = x.get("timestamp", "")
+                                if ts_val:
+                                    existing_ts.add(ts_val)
+                                date_val = x.get("date", "")
+                                if date_val:
+                                    existing_ts.add(date_val)
+
+                            for _, hist_row in group.iterrows():
                                 h_entry = {
                                     "old_lote": _safe_str(hist_row.get("old_lote")),
                                     "new_lote": _safe_str(hist_row.get("new_lote")),
-                                    "old_date": _safe_str(hist_row.get("old_date"))[
-                                        :10
-                                    ],
-                                    "new_date": _safe_str(hist_row.get("new_date"))[
-                                        :10
-                                    ],
+                                    "old_date": _safe_str(hist_row.get("old_date"))[:10],
+                                    "new_date": _safe_str(hist_row.get("new_date"))[:10],
                                     "user": _safe_str(hist_row.get("user_name"))
                                     or "Sistema",
-                                    "timestamp": _safe_str(hist_row.get("event_date"))[
-                                        :19
-                                    ],
+                                    "timestamp": _safe_str(hist_row.get("event_date"))[:19],
                                     "source": "sql_recovery",
                                     "notes": _safe_str(hist_row.get("notes")),
                                 }
 
-                                # Check if already in history (prevent duplicates)
                                 ts = h_entry["timestamp"]
-                                if not any(
-                                    x.get("timestamp") == ts or x.get("date") == ts
-                                    for x in entry["lote_history"]
-                                ):
+                                if ts not in existing_ts:
                                     entry["lote_history"].append(h_entry)
+                                    existing_ts.add(ts)
                                     hist_count += 1
 
                         if hist_count > 0:
