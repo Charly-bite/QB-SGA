@@ -19,24 +19,27 @@ def test_dashboard_redirects_to_login(client):
     assert response.status_code == 302
     assert "/login" in response.location
 
+
 def test_dashboard_loads_authenticated(client):
     """Test that the dashboard loads successfully for an authenticated user without crashing."""
-    client.application.config['LOGIN_DISABLED'] = True
-    
+    client.application.config["LOGIN_DISABLED"] = True
+
     class MockUser:
         is_authenticated = True
         username = "admin"
         full_name = "Admin User"
         role = "admin"
         is_active = True
+
         def is_admin(self):
             return True
+
         def get_id(self):
             return "1"
-            
+
     # Override the anonymous_user factory to return our mock admin user
     client.application.login_manager.anonymous_user = MockUser
-    
+
     response = client.get("/dashboard")
     assert response.status_code == 200
     assert b"Actividad" in response.data or b"Panel Principal" in response.data

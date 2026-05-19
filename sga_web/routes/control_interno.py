@@ -28,7 +28,7 @@ _lote_recovery_done = False
 
 def run_startup_lote_recovery(app):
     """Run the one-time lote recovery during app startup instead of first request.
-    
+
     This shifts ~10s of work from the first user search to server boot time.
     """
     global _lote_recovery_done
@@ -56,11 +56,8 @@ def run_startup_lote_recovery(app):
             target_reinsp = override.get("lote_reinspection_date", "")
             if (
                 current_lote != target_lote
-                or _normalize_iso_date(class_data.get("lote_date", ""))
-                != target_date
-                or _normalize_iso_date(
-                    class_data.get("lote_reinspection_date", "")
-                )
+                or _normalize_iso_date(class_data.get("lote_date", "")) != target_date
+                or _normalize_iso_date(class_data.get("lote_reinspection_date", ""))
                 != target_reinsp
             ):
                 class_data["lote"] = target_lote
@@ -79,7 +76,9 @@ def run_startup_lote_recovery(app):
                 needs_persist = True
         if needs_persist:
             tara_mgr._save_classifications()
-            logger.info("\ud83d\udd04 Recovered stale lote fields from history overrides (startup)")
+            logger.info(
+                "\ud83d\udd04 Recovered stale lote fields from history overrides (startup)"
+            )
     except Exception as exc:
         logger.warning(f"Lote override recovery failed at startup (non-fatal): {exc}")
 

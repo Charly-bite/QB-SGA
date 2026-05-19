@@ -1407,11 +1407,17 @@ class TaraWeightManager:
                                 h_entry = {
                                     "old_lote": _safe_str(hist_row.get("old_lote")),
                                     "new_lote": _safe_str(hist_row.get("new_lote")),
-                                    "old_date": _safe_str(hist_row.get("old_date"))[:10],
-                                    "new_date": _safe_str(hist_row.get("new_date"))[:10],
+                                    "old_date": _safe_str(hist_row.get("old_date"))[
+                                        :10
+                                    ],
+                                    "new_date": _safe_str(hist_row.get("new_date"))[
+                                        :10
+                                    ],
                                     "user": _safe_str(hist_row.get("user_name"))
                                     or "Sistema",
-                                    "timestamp": _safe_str(hist_row.get("event_date"))[:19],
+                                    "timestamp": _safe_str(hist_row.get("event_date"))[
+                                        :19
+                                    ],
                                     "source": "sql_recovery",
                                     "notes": _safe_str(hist_row.get("notes")),
                                 }

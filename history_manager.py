@@ -171,11 +171,11 @@ class HistoryManager:
     def get_history(self, event_type=None, limit=None):
         """
         Retrieve history entries. Attempts from SQL first, then JSON.
-        
+
         Args:
             event_type: Optional filter for specific event types (e.g. 'product_edit')
             limit: Max entries to return (defaults to self.max_entries)
-        
+
         Results are cached for 60 seconds to avoid repeated DB hits.
         """
         if limit is None:
@@ -184,8 +184,9 @@ class HistoryManager:
         # Check TTL cache (60 second window)
         cache_key = f"{event_type or 'all'}:{limit}"
         import time as _time
+
         now = _time.time()
-        if hasattr(self, '_history_cache') and cache_key in self._history_cache:
+        if hasattr(self, "_history_cache") and cache_key in self._history_cache:
             cached_data, cached_at = self._history_cache[cache_key]
             if now - cached_at < 60:
                 return cached_data
@@ -193,7 +194,7 @@ class HistoryManager:
         result = self._fetch_history(event_type, limit)
 
         # Store in cache
-        if not hasattr(self, '_history_cache'):
+        if not hasattr(self, "_history_cache"):
             self._history_cache = {}
         self._history_cache[cache_key] = (result, now)
         return result
@@ -212,7 +213,7 @@ class HistoryManager:
                     where_clause = "WHERE event_type = :evt"
                     params["evt"] = event_type
 
-                # Use string formatting for TOP n since SQL Server can have issues 
+                # Use string formatting for TOP n since SQL Server can have issues
                 # parameterizing TOP without parenthesis. limit is always an int.
                 query = text(f"""
                     SELECT TOP {int(limit)} id, timestamp, event_type, username, details

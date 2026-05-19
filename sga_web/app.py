@@ -208,12 +208,12 @@ def create_app(config_name="default"):
     # so the first user search is instant instead of waiting ~13s.
     try:
         import time as _boot_time
+
         _t0 = _boot_time.time()
-        app.tara_manager.initialize_classifications(
-            smart_label_manager=app.smart_label
-        )
+        app.tara_manager.initialize_classifications(smart_label_manager=app.smart_label)
         # Run the one-time lote recovery that was previously inline in api_products()
         from routes.control_interno import run_startup_lote_recovery
+
         run_startup_lote_recovery(app)
         _elapsed = _boot_time.time() - _t0
         print(f"✅ Control Interno ready ({_elapsed:.1f}s startup)")
