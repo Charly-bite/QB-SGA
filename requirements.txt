@@ -6,6 +6,7 @@ numpy>=1.24.0          # Data processing arrays
 xlsxwriter>=3.0.0      # Excel export
 PyMuPDF>=1.23.0        # PDF image extraction (import as fitz)
 requests>=2.28.0       # HTTP utilities
+hdbcli>=2.18.0         # SAP HANA connector
 
 # GUI & Image utilities
 Pillow
