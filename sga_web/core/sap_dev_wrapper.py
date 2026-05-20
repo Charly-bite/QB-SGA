@@ -16,7 +16,7 @@ import time
 import threading
 import logging
 import functools
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict
 
 logger = logging.getLogger(__name__)
 

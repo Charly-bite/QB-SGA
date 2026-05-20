@@ -7,13 +7,10 @@ from reportlab.platypus import (
     Image,
     Table,
     TableStyle,
-    Frame,
 )
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.pdfgen import canvas
 from smart_label import SmartLabelManager
-import os
 
 
 def create_sticker_preview(product_code, output_filename="sticker_preview.pdf"):

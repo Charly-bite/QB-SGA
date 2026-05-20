@@ -249,8 +249,8 @@ def create_app(config_name="default"):
                 app.sap_connector = None
 
     # User loader with in-memory cache (avoids reading users.json on every request)
-    _user_cache = {}  # {user_id: (User, timestamp)}
-    _USER_CACHE_TTL = 60  # seconds
+    # _user_cache = {}  # {user_id: (User, timestamp)}
+    # _USER_CACHE_TTL = 60  # seconds
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -382,7 +382,7 @@ def _find_poppler_path(app):
     # app.root_path = .../sga_web → one level up = project root
     project_root = os.path.dirname(app.root_path)
     # Also check PARENT_DIR as fallback
-    search_dirs = [project_root, os.path.dirname(project_root)]
+    _search_dirs = [project_root, os.path.dirname(project_root)]
     try:
         poppler_dirs = [d for d in os.listdir(project_root) if "poppler" in d.lower()]
         for d in poppler_dirs:

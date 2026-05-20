@@ -8,7 +8,7 @@ import base64
 import tempfile
 import logging
 import traceback
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 from flask import (
     Blueprint,
     render_template,
@@ -16,9 +16,6 @@ from flask import (
     jsonify,
     send_file,
     current_app,
-    flash,
-    redirect,
-    url_for,
     session,
 )
 from flask_login import login_required, current_user
@@ -42,7 +39,6 @@ def _save_error_payload(smart_label, default_message):
     return {"error": default_message}
 
 
-import pandas as pd
 from order_status_manager import OrderStatus
 
 
@@ -419,7 +415,6 @@ def add_to_queue():
     # Auto-calculate reinspection date if not provided (batch_date + 1 year)
     if not reinspection_date and batch_date:
         try:
-            from datetime import timedelta
 
             bd = datetime.strptime(batch_date, "%Y-%m-%d")
             try:
@@ -559,14 +554,9 @@ def preview_label(item_id):
 @login_required
 def generate_labels():
     """Generate labels for selected items"""
-    import time
-    from generate_ghs_label import GHSLabelGenerator
-    import zipfile
-
     if not current_user.can_print_labels():
         return jsonify({"error": "Sin permisos para generar etiquetas"}), 403
 
-    start_time = time.perf_counter()
     data = request.get_json()
     item_ids = data.get("item_ids", [])
     template_id = data.get("template_id")
@@ -1092,7 +1082,6 @@ def load_from_sap():
         }
 
         # Validate against NaN serialization breaking frontend JSON parser
-        import math
         import pandas as pd
 
         def sanitize_nans(obj):
@@ -1186,6 +1175,9 @@ def print_order_labels(order_id):
     """
     Generate labels for an entire order and update status to 'Preparando'.
     """
+    import time
+
+    start_time = time.perf_counter()
     try:
         # 1. Get order details
         order_mgr = current_app.order_status_mgr
@@ -1297,7 +1289,6 @@ def print_order_labels(order_id):
             details={
                 "duration_seconds": round(generation_time, 3),
                 "total_copies": len(generated_files),
-                "template_id": template_id,
                 "order_id": order_id,
             },
         )

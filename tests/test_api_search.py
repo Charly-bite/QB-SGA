@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_ghs_search_api(client):
     """
     Test the product search bar endpoint used for GHS Labels

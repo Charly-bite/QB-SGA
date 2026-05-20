@@ -8,8 +8,7 @@ import os
 import json
 import time
 import logging
-from typing import Any, Dict, List, Optional
-from pathlib import Path
+from typing import Any, Dict, Optional
 from contextlib import contextmanager
 import pandas as pd
 
@@ -192,7 +191,7 @@ class SharedFileManager:
                     import shutil
 
                     shutil.copy2(full_path, backup_path)
-                except:
+                except Exception:
                     pass
 
             with self.lock_file(full_path, exclusive=True) as f:
@@ -294,7 +293,7 @@ class SharedFileManager:
                     import shutil
 
                     shutil.copy2(full_path, backup_path)
-                except:
+                except Exception:
                     pass
 
             # Write with lock (need to use file handle)
@@ -341,7 +340,7 @@ def get_shared_path_config() -> Dict[str, str]:
                 with open(config_file, "r") as f:
                     config = json.load(f)
                     shared_base = config.get("shared_base_path")
-            except:
+            except Exception:
                 pass
 
     # Fallback to local
@@ -365,7 +364,6 @@ def get_shared_path_config() -> Dict[str, str]:
 # ============================================================================
 
 if __name__ == "__main__":
-    import sys
 
     logging.basicConfig(level=logging.DEBUG)
 

@@ -27,15 +27,15 @@ def remove_future_batches():
                 if fecha_elab[:10] > today:
                     lotes_to_remove.append(lote)
 
-        for l in lotes_to_remove:
+        for lote in lotes_to_remove:
             print(
-                f"Eliminando lote {l} para el producto {prod_id} (Fecha: {lotes_info[l].get('fecha_elaboracion')})"
+                f"Eliminando lote {lote} para el producto {prod_id} (Fecha: {lotes_info[lote].get('fecha_elaboracion')})"
             )
-            del lotes_info[l]
+            del lotes_info[lote]
             count += 1
 
             # Reset main active batch if it was the one removed
-            if product.get("lote") == l:
+            if product.get("lote") == lote:
                 product["lote"] = ""
                 product["lote_date"] = ""
                 product["lote_reinspection_date"] = ""

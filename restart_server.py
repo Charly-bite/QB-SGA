@@ -1,4 +1,6 @@
-import os, signal, wmi
+import os
+import signal
+import wmi
 
 c = wmi.WMI()
 for process in c.Win32_Process():

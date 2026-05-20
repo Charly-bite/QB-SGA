@@ -1,4 +1,3 @@
-import pytest
 from sga_web.routes.control_interno import _primary_lote_value, _normalize_iso_date
 
 

@@ -1,7 +1,3 @@
-import pytest
-from flask import session
-
-
 def test_login_success(client):
     """
     Test that a valid user can login successfully and establish a session.

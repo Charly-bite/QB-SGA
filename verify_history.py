@@ -1,6 +1,8 @@
 """Verify history counts by month from SQL database directly."""
 
-import os, sys, json
+import os
+import sys
+import json
 from collections import Counter
 from sqlalchemy import text
 
@@ -29,7 +31,7 @@ for row in rows:
             for h in hist:
                 h["product_id"] = pid
                 history_list.append(h)
-        except:
+        except Exception:
             pass
 
 months = Counter()
@@ -52,7 +54,7 @@ may = [
     if str(h.get("date") or h.get("timestamp") or "").startswith("2026-05")
 ]
 may.sort(key=lambda x: str(x.get("date") or x.get("timestamp") or ""), reverse=True)
-print(f"\nFirst 5 May entries:")
+print("\nFirst 5 May entries:")
 for h in may[:5]:
     d = h.get("date") or h.get("timestamp")
     pid = h.get("product_id")
@@ -66,7 +68,7 @@ apr = [
     if str(h.get("date") or h.get("timestamp") or "").startswith("2026-04")
 ]
 apr.sort(key=lambda x: str(x.get("date") or x.get("timestamp") or ""), reverse=True)
-print(f"\nFirst 5 April entries:")
+print("\nFirst 5 April entries:")
 for h in apr[:5]:
     d = h.get("date") or h.get("timestamp")
     pid = h.get("product_id")

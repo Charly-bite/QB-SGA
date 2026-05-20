@@ -624,7 +624,7 @@ def test_connection():
 
 
 if __name__ == "__main__":
-    import sys
+    # import sys  # already imported at top
 
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         test_connection()

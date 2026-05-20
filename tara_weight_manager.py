@@ -397,7 +397,7 @@ def load_clasificacion_excel(excel_path: Optional[str] = None) -> Dict[str, str]
 
     """
 
-    global CLASIFICACION_EXCEL_PRODUCTS
+    # global CLASIFICACION_EXCEL_PRODUCTS  # removed: never assigned in scope
 
     if excel_path is None:
 
@@ -1815,7 +1815,7 @@ class TaraWeightManager:
                         f_elab = str(info.get("fecha_elaboracion") or "")[:10]
                         f_insp = str(info.get("fecha_inspeccion") or "")[:10]
 
-                        import re
+                        # import re  # already imported at module level
 
                         date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
                         batch_records.append(

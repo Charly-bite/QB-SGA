@@ -186,7 +186,7 @@ def build_executable():
         exe_path = os.path.join(BASE_DIR, "dist", "SGA_GHS_Labels.exe")
         if os.path.exists(exe_path):
             size_mb = os.path.getsize(exe_path) / (1024 * 1024)
-            print(f"\n✅ Build successful!")
+            print("\n✅ Build successful!")
             print(f"   📦 {exe_path}")
             print(f"   📏 Size: {size_mb:.1f} MB")
             return True

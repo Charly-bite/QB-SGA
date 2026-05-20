@@ -35,7 +35,6 @@ class HistoryManager:
         if not self.sql_engine:
             return
         try:
-            import sqlalchemy
 
             with self.sql_engine.begin() as conn:
                 # Use raw SQL to create table if missing
@@ -229,7 +228,7 @@ class HistoryManager:
                     details = {}
                     try:
                         details = json.loads(row["details"])
-                    except:
+                    except Exception:
                         pass
                     history.append(
                         {

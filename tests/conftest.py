@@ -8,7 +8,6 @@ sys.path.insert(
 
 import pytest
 from sga_web.app import create_app
-from sga_web.config import TestingConfig
 
 
 @pytest.fixture

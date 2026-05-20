@@ -2,7 +2,6 @@
 Authentication routes for SGA Web
 """
 
-import logging
 from flask import (
     Blueprint,
     render_template,

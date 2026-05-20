@@ -39,7 +39,7 @@ if __name__ == "__main__":
     print(f"  Environment: {env_name}")
     print(f"  Listening:   http://{host}:{port}")
     print(f"  Health:      http://{host}:{port}/health")
-    print(f"  Threads:     6")
+    print("  Threads:     6")
     print("=" * 60)
     print("  Presiona CTRL+C para detener el servidor.")
     print("=" * 60)

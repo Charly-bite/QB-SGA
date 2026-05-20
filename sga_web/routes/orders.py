@@ -408,7 +408,7 @@ def sync_sap_status():
         logging.info(f"SAP returned status for {len(sap_statuses)} orders")
 
         updated_count = 0
-        now_iso = datetime.datetime.now().isoformat()
+        _now_iso = datetime.datetime.now().isoformat()
 
         for order_id, order in list(order_mgr.orders.items()):
             try:

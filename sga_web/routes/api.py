@@ -4,7 +4,7 @@ For AJAX calls and external integrations
 """
 
 from flask import Blueprint, request, jsonify, current_app
-from flask_login import login_required, current_user
+from flask_login import login_required
 
 api_bp = Blueprint("api", __name__)
 

@@ -1,7 +1,6 @@
 from smart_label import SmartLabelManager
 from generate_ghs_label import GHSLabelGenerator
 from settings_manager import SettingsManager
-import sys
 
 
 def simulate_workflow(scanned_code):

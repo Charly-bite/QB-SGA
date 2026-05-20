@@ -1,6 +1,5 @@
 import os
 import sys
-import logging
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "sga_web"))
 from sga_web.app import create_app
@@ -13,8 +12,8 @@ with app.app_context():
     tara_mgr._load_classifications()
     classifications = tara_mgr._product_classifications
 
-    def _primary_lote_value(l: str):
-        return (l or "").split(",")[-1].strip()
+    def _primary_lote_value(lote_str: str):
+        return (lote_str or "").split(",")[-1].strip()
 
     missing_ids = [
         pid

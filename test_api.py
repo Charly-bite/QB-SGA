@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
 if root_dir not in sys.path:
@@ -7,7 +8,6 @@ if root_dir not in sys.path:
 sys.path.insert(0, os.path.join(root_dir, "sga_web"))
 
 from sga_web.app import app
-import tara_weight_manager as twm
 
 with app.app_context():
     tara_mgr = app.tara_manager

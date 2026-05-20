@@ -397,7 +397,7 @@ def load_clasificacion_excel(excel_path: Optional[str] = None) -> Dict[str, str]
 
     """
 
-    global CLASIFICACION_EXCEL_PRODUCTS
+    # global CLASIFICACION_EXCEL_PRODUCTS  # removed: never assigned in scope
 
     if excel_path is None:
 
@@ -1468,7 +1468,7 @@ class TaraWeightManager:
                         index=False,
                     )
 
-                    logger.info(f"✅ Saved classifications to SQL")
+                    logger.info("✅ Saved classifications to SQL")
 
             except Exception as e:
 

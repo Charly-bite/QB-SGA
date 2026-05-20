@@ -58,8 +58,8 @@ def detect_printer_dpi():
 
             # Limpiar DC
             hdc.DeleteDC()
-        except Exception as e:
-            print(f"  - No se pudo consultar la resolución de esta impresora.")
+        except Exception:
+            print("  - No se pudo consultar la resolución de esta impresora.")
 
         print("-" * 50)
 

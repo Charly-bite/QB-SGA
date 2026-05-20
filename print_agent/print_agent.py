@@ -28,10 +28,7 @@ import base64
 import io
 import json
 import logging
-import os
 import sys
-import tempfile
-import time
 from datetime import datetime
 from pathlib import Path
 
@@ -284,7 +281,6 @@ def tspl_print_image(
         dict with job details
     """
     import socket
-    import struct
 
     # ── Convert to grayscale ─────────────────────────────────────
     if img.mode == "RGBA":
@@ -691,7 +687,7 @@ def home():
 
     if method == "tcp":
         tcp_ps = list_tcp_printers(config)
-        active = get_active_tcp_printer(config)
+        _active = get_active_tcp_printer(config)
         rows = ""
         for p in tcp_ps:
             status_color = "#10b981" if p["online"] else "#ef4444"

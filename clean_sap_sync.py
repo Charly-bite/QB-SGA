@@ -1,4 +1,6 @@
-import os, sys, json
+import os
+import sys
+import json
 from sqlalchemy import text
 
 root_dir = os.path.dirname(os.path.abspath(__file__))

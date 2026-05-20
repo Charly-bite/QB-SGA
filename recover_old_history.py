@@ -14,7 +14,10 @@ SQL Schema for product_lote_history:
   old_reinsp_date, new_reinsp_date, event_date, user_name, merma_kg, notes
 """
 
-import os, sys, json, re
+import os
+import sys
+import json
+import re
 from datetime import datetime
 from sqlalchemy import text
 
@@ -130,7 +133,7 @@ def main():
                 pid = row[0]
                 try:
                     all_current[pid] = json.loads(row[1]) if row[1] else []
-                except:
+                except Exception:
                     all_current[pid] = []
 
             # --- Pre-load ALL existing SQL table fingerprints in bulk ---
@@ -215,10 +218,10 @@ def main():
 
                     try:
                         event_date = datetime.strptime(ts[:19], "%Y-%m-%d %H:%M:%S")
-                    except:
+                    except Exception:
                         try:
                             event_date = datetime.strptime(ts[:10], "%Y-%m-%d")
-                        except:
+                        except Exception:
                             continue
 
                     # Deduplicate using pre-loaded fingerprints
@@ -251,13 +254,13 @@ def main():
                     merged_sql += 1
 
     print(f"\n{'='*60}")
-    print(f"RECOVERY COMPLETE")
+    print("RECOVERY COMPLETE")
     print(f"{'='*60}")
     print(f"  Products checked: {len(old_history_map)}")
     print(f"  Products already up-to-date: {skipped}")
     print(f"  New entries merged into JSON column: {merged_json}")
     print(f"  New entries inserted into SQL table: {merged_sql}")
-    print(f"\n>>> RESTART THE SERVER to see the changes <<<")
+    print("\n>>> RESTART THE SERVER to see the changes <<<")
 
 
 if __name__ == "__main__":

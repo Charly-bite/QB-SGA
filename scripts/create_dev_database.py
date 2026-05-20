@@ -142,7 +142,7 @@ def main():
     file_size_mb = os.path.getsize(SQLITE_PATH) / (1024 * 1024)
 
     print(f"\n{'=' * 60}")
-    print(f"  [DONE] Development database snapshot created!")
+    print("  [DONE] Development database snapshot created!")
     print(f"  Tables: {len(tables)}")
     print(f"  Total rows: {total_rows}")
     print(f"  File size: {file_size_mb:.1f} MB")

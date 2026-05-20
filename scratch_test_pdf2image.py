@@ -8,7 +8,7 @@ test_pdf = "test_label.pdf"  # assuming this exists based on list_dir
 try:
     images = convert_from_path(test_pdf, dpi=300, poppler_path=poppler_path)
     print("Success, images:", len(images))
-except Exception as e:
+except Exception:
     import traceback
 
     traceback.print_exc()

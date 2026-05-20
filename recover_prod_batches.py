@@ -106,7 +106,7 @@ with engine.connect() as conn:
             )
             if result.rowcount > 0:
                 updated += 1
-        except Exception as e:
+        except Exception:
             pass  # Product may not exist in classifications
 
     conn.commit()
@@ -169,7 +169,7 @@ with engine.connect() as conn:
                     rec,
                 )
                 batch_inserted += 1
-            except Exception as e:
+            except Exception:
                 pass
 
 print(f"[3] Upserted {batch_inserted} records into product_batches SQL table")

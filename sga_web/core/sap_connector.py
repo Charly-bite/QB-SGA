@@ -236,7 +236,7 @@ class SAPHanaConnector:
                     f"SELECT COUNT(*) FROM {self._get_table_name('materials')}"
                 )
                 material_count = cursor.fetchone()[0]
-            except:
+            except Exception:
                 pass
 
             cursor.close()
@@ -581,7 +581,7 @@ class SAPHanaConnector:
                 order_datetime = f"{order_date} {hours:02d}:{minutes:02d}:00"
             else:
                 order_datetime = f"{order_date}"
-        except:
+        except Exception:
             order_datetime = f"{order_date}"
 
         # Get Invoice number (Factura) if it exists
@@ -1289,40 +1289,6 @@ class SAPHanaConnector:
         except Exception as e:
             logger.error(f"[ERROR] Error syncing products from SAP: {e}")
             raise
-        """
-        Get stock levels for a material across all plants/storage locations.
-        
-        Args:
-            material_number: SAP Material Number
-            
-        Returns:
-            DataFrame with stock per location
-        """
-        if not self.connected:
-            try:
-                self.connect()
-            except Exception:
-                # If connection fails, let the caller handle the specific error or raise ConnectionError
-                raise ConnectionError(
-                    "Not connected to SAP HANA and auto-connection failed"
-                )
-
-        query = f"""
-            SELECT 
-                s.MATNR as material_number,
-                s.WERKS as plant,
-                s.LGORT as storage_location,
-                s.LABST as unrestricted_stock,
-                s.INSME as quality_inspection,
-                s.SPEME as blocked_stock,
-                s.MEINS as unit
-            FROM {self._get_table_name('stock')} s
-            WHERE s.MATNR = ?
-        """
-
-        return pd.read_sql(
-            query, getattr(self._local, "connection", None), params=[material_number]
-        )
 
     # =========================================================================
     # CUSTOM QUERIES FOR GHS/SGA INTEGRATION

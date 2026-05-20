@@ -30,9 +30,8 @@ import json
 import glob
 import re
 import pandas as pd
-import numpy as np
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional
 import logging
 
 # Configure logging

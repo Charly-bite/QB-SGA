@@ -18,8 +18,6 @@ Usage:
 import json
 import csv
 import re
-import os
-import sys
 import time
 import logging
 import argparse
@@ -100,7 +98,7 @@ H_TO_PICTOGRAM = {
     "H226": "GHS02",
     "H227": "GHS02",
     "H228": "GHS02",
-    "H241": "GHS02",
+    # "H241": "GHS02",  # duplicate removed
     "H242": "GHS02",
     "H250": "GHS02",
     "H251": "GHS02",
@@ -1039,7 +1037,7 @@ def run_full_lookup(dry_run=False):
     populator = DatabasePopulator(dry_run=dry_run)
     stats = populator.populate(results)
 
-    print(f"\n  📊 Population results:")
+    print("\n  📊 Population results:")
     print(f"     Products updated:    {stats['products_updated']}")
     print(f"     H entries added:     {stats['h_entries_added']}")
     print(f"     P entries added:     {stats['p_entries_added']}")

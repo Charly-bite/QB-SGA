@@ -1,6 +1,4 @@
 import json
-import pyodbc
-from datetime import datetime
 
 import os
 import sys
@@ -94,7 +92,7 @@ for e in lote_events:
             # Simple check if it looks like a datetime
             if len(ts) < 10:
                 continue
-        except:
+        except Exception:
             continue
 
         # Check if already exists in product_lote_history table
@@ -140,7 +138,7 @@ for e in lote_events:
                         notes,
                     ),
                 )
-        except Exception as ex:
+        except Exception:
             pass  # Probably already exists
 
         try:
@@ -155,7 +153,7 @@ for e in lote_events:
 
                 try:
                     hist = json.loads(row[0])
-                except:
+                except Exception:
                     hist = []
             else:
                 hist = []

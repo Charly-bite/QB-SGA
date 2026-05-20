@@ -8,10 +8,8 @@ import os
 import sys
 import json
 import subprocess
-import time
 import logging
 from typing import Dict, Tuple, Optional
-from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -113,11 +111,11 @@ class NetworkShareManager:
                 ["mountpoint", "-q", path], capture_output=True, timeout=2
             )
             return result.returncode == 0
-        except:
+        except Exception:
             # Fallback method
             try:
                 return os.path.ismount(path)
-            except:
+            except Exception:
                 return False
 
     def _get_mount_type(self, path: str) -> Optional[str]:
@@ -131,7 +129,7 @@ class NetworkShareManager:
             )
             if result.returncode == 0:
                 return result.stdout.strip()
-        except:
+        except Exception:
             pass
 
         # Fallback: check mount command
@@ -145,7 +143,7 @@ class NetworkShareManager:
                         return "cifs"
                     elif "nfs" in line.lower():
                         return "nfs"
-        except:
+        except Exception:
             pass
 
         return None
@@ -155,7 +153,7 @@ class NetworkShareManager:
         try:
             os.listdir(path)
             return True
-        except:
+        except Exception:
             return False
 
     def _test_write_access(self, path: str) -> bool:
@@ -166,7 +164,7 @@ class NetworkShareManager:
                 f.write("test")
             os.remove(test_file)
             return True
-        except:
+        except Exception:
             return False
 
     def _test_server_reachable(self) -> bool:
@@ -187,7 +185,7 @@ class NetworkShareManager:
                 timeout=3,
             )
             return result.returncode == 0
-        except:
+        except Exception:
             return False
 
     def print_diagnostics(self):
@@ -198,12 +196,12 @@ class NetworkShareManager:
 
         status = self.check_status()
 
-        print(f"\n📁 Mount Configuration:")
+        print("\n📁 Mount Configuration:")
         print(f"   Config File: {self.config_file}")
         print(f"   Mount Point: {status['mount_path']}")
         print(f"   Server Path: {self.server_path or 'Not configured'}")
 
-        print(f"\n🔍 Status Checks:")
+        print("\n🔍 Status Checks:")
         print(f"   ✓ Config Valid: {'YES' if status['config_valid'] else 'NO'}")
         print(
             f"   ✓ Mount Point Exists: {'YES' if status['mount_point_exists'] else 'NO'}"
@@ -220,7 +218,7 @@ class NetworkShareManager:
                 f"   ✓ Server Reachable: {'YES' if status['server_reachable'] else 'NO'}"
             )
 
-        print(f"\n💡 Recommendations:")
+        print("\n💡 Recommendations:")
         if not status["config_valid"]:
             print("   → Update shared_config.json with server details")
         elif not status["mount_point_exists"]:

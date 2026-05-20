@@ -4,7 +4,6 @@ SGA - Sistema de Gestión de Almacén
 Command Line Interface
 """
 
-import sys
 import getpass
 import argparse
 from datetime import datetime
@@ -222,7 +221,7 @@ Examples:
             print(f"Output: {OUTPUT_DIR}")
         else:
             sga.display_queue()
-            print(f"\nRun with --auto-print to generate labels")
+            print("\nRun with --auto-print to generate labels")
 
     finally:
         sga.disconnect()

@@ -17,7 +17,6 @@ from datetime import datetime
 from typing import Optional
 from flask import send_file, Blueprint, render_template, request, jsonify, current_app
 from flask_login import login_required, current_user
-from user_manager import UserRole
 
 control_bp = Blueprint("control", __name__)
 logger = logging.getLogger(__name__)
@@ -285,7 +284,7 @@ def index():
     tara_mgr = current_app.tara_manager
 
     # Initialize classifications if not done yet
-    total = tara_mgr.initialize_classifications(
+    _total = tara_mgr.initialize_classifications(
         smart_label_manager=current_app.smart_label
     )
     summary = tara_mgr.get_classification_summary()

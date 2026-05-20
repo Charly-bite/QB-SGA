@@ -9,7 +9,7 @@ if sys.platform == "win32":
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from app import create_app
-from flask import request, session
+from flask import session
 
 
 def test():
@@ -46,7 +46,7 @@ def test():
             print("Response:", response)
             if hasattr(response, "get_data"):
                 print("Data:", response.get_data(as_text=True))
-        except Exception as e:
+        except Exception:
             import traceback
 
             traceback.print_exc()

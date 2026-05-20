@@ -1,4 +1,3 @@
-import os
 import pyodbc
 import datetime
 import logging
@@ -43,7 +42,7 @@ def backup_database():
         # We will use the default SQL Server backup directory using a dynamic query if possible, or a standard path.
 
         # Let's get the default backup directory
-        cursor.execute("""
+        cursor.execute(r"""
             DECLARE @BackupDir NVARCHAR(4000);
             EXEC master.dbo.xp_instance_regread 
                 N'HKEY_LOCAL_MACHINE', 

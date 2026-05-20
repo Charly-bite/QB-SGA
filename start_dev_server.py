@@ -6,9 +6,6 @@ Connects to database on 192.168.2.237 via SMB share
 
 import os
 import sys
-import subprocess
-import time
-import json
 
 
 def check_dependencies():
@@ -32,7 +29,7 @@ def check_dependencies():
 
     if missing:
         print(f"❌ Missing packages: {', '.join(missing)}")
-        print(f"   Installing: pip install -r sga_web/requirements.txt")
+        print("   Installing: pip install -r sga_web/requirements.txt")
         return False
 
     print("✅ All dependencies installed")
@@ -74,14 +71,14 @@ def start_web_server():
 
         app = create_app()
 
-        print(f"✅ Application created")
+        print("✅ Application created")
         print(f"📝 Environment: {app.config.get('ENV', 'development')}")
         print()
         print("=" * 60)
         print("🎉 Web Server Starting")
         print("=" * 60)
-        print(f"Address: http://192.168.2.172:5004")
-        print(f"Local:   http://localhost:5004")
+        print("Address: http://192.168.2.172:5004")
+        print("Local:   http://localhost:5004")
         print()
         print("Press CTRL+C to stop the server")
         print("=" * 60)
@@ -112,8 +109,8 @@ def main():
     print("\n" + "=" * 60)
     print("SGA Development Web Server Startup")
     print("=" * 60)
-    print(f"Machine: 192.168.2.172")
-    print(f"Database: 192.168.2.237/SGA_Database (SMB)")
+    print("Machine: 192.168.2.172")
+    print("Database: 192.168.2.237/SGA_Database (SMB)")
     print()
 
     # Check dependencies

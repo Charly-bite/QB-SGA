@@ -1,4 +1,5 @@
-import json, glob
+import json
+import glob
 
 for f in glob.glob("label_templates/*.json"):
     try:
@@ -9,5 +10,5 @@ for f in glob.glob("label_templates/*.json"):
                 or el.get("custom_text") == "PESO NETO:"
             ):
                 print(f"FOUND IT: {el}")
-    except:
+    except Exception:
         pass

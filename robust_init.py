@@ -1,5 +1,3 @@
-import re
-
 with open("sga_web/templates/templates/designer.html", "r", encoding="utf-8") as f:
     text = f.read()
 

@@ -170,7 +170,7 @@ class SMBWatchdog:
                     timeout=30,
                 )
                 if result.returncode == 0:
-                    logger.info(f"  ✅ Share SMB reconectado exitosamente.")
+                    logger.info("  ✅ Share SMB reconectado exitosamente.")
                     return True
                 logger.warning(
                     f"  net use fallo rc={result.returncode}: "

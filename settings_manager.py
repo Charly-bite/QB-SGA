@@ -3,7 +3,6 @@ import os
 import copy
 import pandas as pd
 from typing import Dict, Any, Optional, Tuple
-from resource_path import get_base_dir, get_app_dir
 
 
 class SettingsManager:
@@ -38,7 +37,7 @@ class SettingsManager:
             client = DatabaseClient()
             if client.connect():
                 self.sql_engine = client.get_sql_engine()
-        except Exception as e:
+        except Exception:
             pass
 
         # Load from SQL if available to override files

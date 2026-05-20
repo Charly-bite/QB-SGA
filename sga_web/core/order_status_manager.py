@@ -100,7 +100,7 @@ class OrderStatusManager:
                     o_id = str(row["order_id"])
                     try:
                         self.orders[o_id] = json.loads(row["data"])
-                    except:
+                    except Exception:
                         pass
                 loaded_from_sql = True
             except Exception as e:
@@ -512,7 +512,7 @@ if __name__ == "__main__":
     manager.update_status(
         "10168", OrderStatus.IN_PROGRESS.value, "admin", "Iniciando preparación"
     )
-    print(f"✓ Updated status")
+    print("✓ Updated status")
 
     # Test get
     order = manager.get_order("10168")

@@ -495,8 +495,8 @@ def run_update(dry_run=True):
 
         hds_h = extract_h_statements(text)
         hds_signal = extract_signal_word(text)
-        hds_p = extract_p_statements(text)
-        hds_cas = extract_cas_number(text)
+        _hds_p = extract_p_statements(text)
+        _hds_cas = extract_cas_number(text)
 
         # Compare against each DB row for this codigo
         for ridx in db_lookup[codigo]:
@@ -696,9 +696,9 @@ def run_update(dry_run=True):
         print(f"  → Database updated: {DATABASE_CSV}")
         print(f"  → {len(changes)} changes applied across {len(by_product)} products")
     else:
-        print(f"\n  This is a DRY RUN. No changes were made.")
-        print(f"  Review the preview file, then run with --apply to apply changes:")
-        print(f"  python scripts/update_hds.py --apply")
+        print("\n  This is a DRY RUN. No changes were made.")
+        print("  Review the preview file, then run with --apply to apply changes:")
+        print("  python scripts/update_hds.py --apply")
 
     print(f"\n{'=' * 70}")
     print(f"  {mode} COMPLETE")

@@ -17,7 +17,6 @@ Workflow:
 import csv
 import os
 import re
-import sys
 import unicodedata
 from pathlib import Path
 from datetime import datetime
@@ -246,7 +245,7 @@ def load_database(filepath):
         except (UnicodeDecodeError, UnicodeError):
             continue
     else:
-        print(f"ERROR: Could not read database file with any encoding")
+        print("ERROR: Could not read database file with any encoding")
         return db
 
     # The CSV has multiline fields, so we need careful parsing
@@ -664,10 +663,10 @@ def run_audit():
     print("\n[5/5] Generating audit report...")
     generate_report(results, stats)
     print(f"\n{'=' * 70}")
-    print(f"  AUDIT COMPLETE")
+    print("  AUDIT COMPLETE")
     print(f"  Report saved to: {OUTPUT_REPORT}")
     print(f"{'=' * 70}")
-    print(f"\n  Summary:")
+    print("\n  Summary:")
     print(f"    Total REVISADO products:    {stats['total']}")
     print(f"    Successfully audited:       {stats['audited']}")
     print(f"    Products with issues:       {stats['with_issues']}")
@@ -712,7 +711,7 @@ def generate_report(results, stats):
                 f.write(f"  Fecha:    {r['fecha']}\n")
 
                 for issue in r["issues"]:
-                    severity_icon = "⚠️" if issue["severity"] == "HIGH" else "ℹ️"
+                    _severity_icon = "⚠️" if issue["severity"] == "HIGH" else "ℹ️"
                     f.write(f"  [{issue['severity']}] {issue['field']}:\n")
                     f.write(f"    → {issue['detail']}\n")
 

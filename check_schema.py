@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 from sqlalchemy import text
 
 root_dir = os.path.dirname(os.path.abspath(__file__))

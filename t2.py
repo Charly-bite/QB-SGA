@@ -1,4 +1,5 @@
-import requests, re
+import requests
+import re
 
 s = requests.Session()
 r = s.get("http://127.0.0.2:5001/login")

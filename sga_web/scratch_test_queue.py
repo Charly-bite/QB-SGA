@@ -26,7 +26,7 @@ def test():
 
             db_tara, db_batch, db_date, db_vencimiento = get_batch_and_tare(code, 1)
             print("Batch and Tare:", db_tara, db_batch, db_date, db_vencimiento)
-        except Exception as e:
+        except Exception:
             traceback.print_exc()
 
 

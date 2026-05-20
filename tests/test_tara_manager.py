@@ -1,4 +1,3 @@
-import pytest
 from unittest.mock import MagicMock
 from tara_weight_manager import TaraWeightManager
 

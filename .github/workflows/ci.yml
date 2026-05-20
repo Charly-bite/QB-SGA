@@ -22,7 +22,7 @@ jobs:
     - name: Run Black
       run: black --check .
     - name: Run Flake8
-      run: flake8 . --max-line-length=120 --ignore=E501,W503,E402,F401
+      run: flake8
 
   test:
     runs-on: ubuntu-latest

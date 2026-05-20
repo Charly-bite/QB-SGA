@@ -128,7 +128,7 @@ class SGAVisorApp:
                 elif len(parts) == 2:
                     return parts[1], ""
             return "Unknown", ""
-        except:
+        except Exception:
             return "Unknown", ""
 
     def refresh_procs(self):
@@ -195,7 +195,7 @@ class SGAVisorApp:
             else:
                 self.wd_status.set("Estado del Watchdog: DETENIDO")
                 self.status_label.config(fg="red")
-        except:
+        except Exception:
             self.wd_status.set("Estado del Watchdog: DETENIDO")
             self.status_label.config(fg="red")
 
