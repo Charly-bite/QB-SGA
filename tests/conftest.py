@@ -2,9 +2,7 @@ import sys
 import os
 
 # Add project root to sys.path so 'from sga_web.xxx' imports work
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest  # noqa: E402
 from sga_web.app import create_app  # noqa: E402
