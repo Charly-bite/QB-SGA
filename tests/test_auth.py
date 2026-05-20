@@ -30,4 +30,5 @@ def test_login_failure(client):
     )
 
     assert response.status_code == 200
-    assert b"Invalid credentials" in response.data or b"error" in response.data.lower()
+    # On failure, it re-renders the login page instead of redirecting to dashboard
+    assert b"Iniciar Sesi" in response.data

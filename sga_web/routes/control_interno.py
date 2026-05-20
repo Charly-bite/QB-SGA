@@ -212,6 +212,7 @@ def _primary_lote_value(lote_value: str) -> str:
     raw = str(lote_value or "").strip()
     if not raw:
         return ""
+    raw = raw.replace("|", ",")
     return raw.split(",")[-1].strip()
 
 
@@ -228,7 +229,7 @@ def _normalize_iso_date(date_value: str) -> str:
         except ValueError:
             pass
 
-    return candidate
+    return raw
 
 
 def _default_reinspection_date(elab_date: str) -> str:
