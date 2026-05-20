@@ -44,6 +44,7 @@ jobs:
         SGA_ENV: testing
         FLASK_ENV: testing
         SQL_PASSWORD: ci_test_password
+        PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/sga_web
 
   security:
     runs-on: ubuntu-latest

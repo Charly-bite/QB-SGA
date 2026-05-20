@@ -1,13 +1,13 @@
 import sys
 import os
 
-# Insert sga_web into the path so its internal imports work
+# Add project root to sys.path so 'from sga_web.xxx' imports work
 sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "sga_web"))
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
 
-import pytest
-from sga_web.app import create_app
+import pytest  # noqa: E402
+from sga_web.app import create_app  # noqa: E402
 
 
 @pytest.fixture
