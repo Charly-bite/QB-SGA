@@ -51,7 +51,7 @@ if sys.platform == 'win32' and 'pytest' not in sys.modules:
 
 # Load environment variables from .env file
 from dotenv import load_dotenv
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env'))
 
 # Add parent directory to path for importing existing modules
 PARENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -139,23 +139,51 @@ def create_app(config_name='default'):
         _flash('Por favor inicie sesión para acceder.', 'warning')
         return redirect(url_for('auth.login', next=request.url))
 
-    # Initialize managers
+    # Initialize managers (with timing diagnostics)
+    import time as _t
+    _t0 = _t.time()
+    print(f"[TIMING] Starting manager initialization...")
+
+    print(f"[TIMING] UserManager...", flush=True)
     app.user_manager = UserManager(app.config['USERS_FILE'])
+    print(f"[TIMING] UserManager done in {_t.time()-_t0:.1f}s", flush=True)
+
+    _t1 = _t.time()
+    print(f"[TIMING] SmartLabelManager...", flush=True)
     app.smart_label = SmartLabelManager()
+    print(f"[TIMING] SmartLabelManager done in {_t.time()-_t1:.1f}s", flush=True)
+
+    _t2 = _t.time()
+    print(f"[TIMING] HistoryManager...", flush=True)
     app.history_mgr = HistoryManager()
+    print(f"[TIMING] HistoryManager done in {_t.time()-_t2:.1f}s", flush=True)
+
+    _t3 = _t.time()
+    print(f"[TIMING] OrderStatusManager...", flush=True)
     app.order_status_mgr = OrderStatusManager()
+    print(f"[TIMING] OrderStatusManager done in {_t.time()-_t3:.1f}s", flush=True)
+
+    _t4 = _t.time()
+    print(f"[TIMING] TemplateManager...", flush=True)
     app.template_manager = TemplateManager()
+    print(f"[TIMING] TemplateManager done in {_t.time()-_t4:.1f}s", flush=True)
 
     # Cache GHSLabelGenerator at startup (avoids re-reading CSVs per request)
+    _t5 = _t.time()
+    print(f"[TIMING] GHSLabelGenerator...", flush=True)
     app.label_generator = GHSLabelGenerator(app.config['UNIFIED_DB_PATH'], manager=app.smart_label)
-    print("✅ GHSLabelGenerator cached at startup")
+    print(f"[TIMING] GHSLabelGenerator done in {_t.time()-_t5:.1f}s", flush=True)
 
     # Initialize Tara Weight Manager
+    _t6 = _t.time()
+    print(f"[TIMING] TaraWeightManager...", flush=True)
     tara_csv = os.path.join(PARENT_DIR, 'original_data', 'Sample DataBase Tectronic QBR.csv')
     app.tara_manager = get_tara_manager(tara_csv)
-    print("✅ TaraWeightManager initialized")
+    print(f"[TIMING] TaraWeightManager done in {_t.time()-_t6:.1f}s", flush=True)
 
     # Auto-import CLASIFICACION.xlsx rules (product types + per-product NETO→TARA overrides)
+    _t7 = _t.time()
+    print(f"[TIMING] CLASIFICACION.xlsx import...", flush=True)
     excel_path = os.path.join(PARENT_DIR, 'original_data', 'CLASIFICACION.xlsx')
     if os.path.exists(excel_path):
         try:
@@ -166,6 +194,8 @@ def create_app(config_name='default'):
             print(f"⚠️ CLASIFICACION.xlsx import warning: {_e}")
     else:
         print("⚠️ CLASIFICACION.xlsx not found — skipping auto-import")
+    print(f"[TIMING] CLASIFICACION done in {_t.time()-_t7:.1f}s", flush=True)
+    print(f"[TIMING] TOTAL manager init: {_t.time()-_t0:.1f}s", flush=True)
 
     # Initialize SAP connector (optional)
     app.sap_connector = None

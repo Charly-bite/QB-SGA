@@ -55,24 +55,27 @@ class UserManager:
     def _get_sql_engine(self):
         """Return the SQL engine, retrying connection if it was unavailable at init.
 
-        This handles the case where db_client_config.json was missing at startup
-        but has since been restored — avoids needing a full server restart.
+        This handles the case where the SQL Server was temporarily unreachable 
+        at startup — avoids needing a full server restart.
         """
         if self.sql_engine is not None:
             return self.sql_engine
 
-        # Lazy retry: re-import and reconnect
+        # Lazy retry: reconnect using the shared singleton
         try:
-            from database_client import DatabaseClient
+            from database_client import get_shared_client
 
-            client = DatabaseClient()
-            if client.connect() and client.is_connected():
+            client = get_shared_client()
+            # If the shared client doesn't have a SQL engine yet, try reconnecting
+            if not client.get_sql_engine():
+                client.connect()
+            
+            if client.is_connected() and client.get_sql_engine():
                 self.sql_engine = client.get_sql_engine()
                 self._db_client = client
-                if self.sql_engine is not None:
-                    logger.info("SQL engine reconnected successfully (lazy retry)")
-                    self._ensure_defaults()
-                    return self.sql_engine
+                logger.info("SQL engine reconnected successfully (lazy retry)")
+                self._ensure_defaults()
+                return self.sql_engine
         except Exception as e:
             logger.debug(f"SQL engine lazy retry failed: {e}")
 

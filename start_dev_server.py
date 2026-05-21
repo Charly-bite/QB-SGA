@@ -64,10 +64,12 @@ def start_web_server():
     # Use Flask's development server
     # For production, use: gunicorn app:app
     try:
+        import sys
+        sys.path.insert(0, os.getcwd())
         import flask
-        from app import create_app
-        
-        app = create_app()
+        # Import the pre-created app instance (app.py line 377 creates it at module level)
+        # Do NOT call create_app() again — it doubles initialization time
+        from app import app
         
         print(f"✅ Application created")
         print(f"📝 Environment: {app.config.get('ENV', 'development')}")
@@ -75,8 +77,8 @@ def start_web_server():
         print("="*60)
         print("🎉 Web Server Starting")
         print("="*60)
-        print(f"Address: http://192.168.2.172:5004")
-        print(f"Local:   http://localhost:5004")
+        print(f"Address: http://192.168.2.218:5000")
+        print(f"Local:   http://localhost:5000")
         print()
         print("Press CTRL+C to stop the server")
         print("="*60)
@@ -84,8 +86,8 @@ def start_web_server():
         
         # Run with debug=True for development
         app.run(
-            host='192.168.2.172',
-            port=5004,
+            host='192.168.2.218',
+            port=5000,
             debug=False,  # Set to True for auto-reload on code changes
             use_reloader=False  # Disable reloader to avoid double initialization
         )
@@ -105,7 +107,7 @@ def main():
     print("\n" + "="*60)
     print("SGA Development Web Server Startup")
     print("="*60)
-    print(f"Machine: 192.168.2.172")
+    print(f"Machine: 192.168.2.218")
     print(f"Database: 192.168.2.237/SGA_Database (SMB)")
     print()
     
@@ -113,10 +115,12 @@ def main():
     if not check_dependencies():
         return False
     
-    # Check database
-    if not check_database():
-        print("\n⚠️  Database not available")
-        print("    The application will start but may use local fallback")
+    # Skip standalone database check — create_app() handles its own connection
+    # via get_shared_client(). Running check_database() here creates a throwaway
+    # DatabaseClient that wastes ~10s and can leave stale connections.
+    # if not check_database():
+    #     print("\n⚠️  Database not available")
+    #     print("    The application will start but may use local fallback")
     
     # Start server
     try:

@@ -529,6 +529,8 @@ class TaraWeightManager:
             {}
         )  # product_code -> classification
 
+        self._is_initialized = False
+
         self._csv_path = csv_path
 
         self.sql_engine = None
@@ -1192,6 +1194,13 @@ class TaraWeightManager:
 
                     # Unpack json strings
 
+                    def _sanitize_nans(obj):
+                        import math
+                        if isinstance(obj, float) and math.isnan(obj): return ""
+                        if isinstance(obj, dict): return {k: _sanitize_nans(val) for k, val in obj.items()}
+                        if isinstance(obj, list): return [_sanitize_nans(val) for val in obj]
+                        return obj
+
                     for k, v in props.items():
 
                         if isinstance(v, str) and (
@@ -1200,7 +1209,7 @@ class TaraWeightManager:
 
                             try:
 
-                                props[k] = json.loads(v)
+                                props[k] = _sanitize_nans(json.loads(v))
 
                             except json.JSONDecodeError:
 
@@ -1235,7 +1244,7 @@ class TaraWeightManager:
                 # Also load batch data from product_batches table and merge into classifications
                 try:
                     df_batches = pd.read_sql(
-                        "SELECT * FROM product_batches", con=self.sql_engine
+                        "SELECT product_id, lote, fecha_elaboracion, fecha_reinspeccion FROM product_batches", con=self.sql_engine
                     )
                     
                     if not df_batches.empty:
@@ -1336,15 +1345,21 @@ class TaraWeightManager:
                                     entry["lote_history"] = []
                                 
                                 # Convert SQL row to history entry format
+                                def _safe_str(val):
+                                    if pd.isna(val): return ""
+                                    s = str(val).strip()
+                                    if s.lower() in ("nan", "none", "nat", "<na>"): return ""
+                                    return s
+
                                 h_entry = {
-                                    "old_lote": hist_row.get("old_lote"),
-                                    "new_lote": hist_row.get("new_lote"),
-                                    "old_date": str(hist_row.get("old_date") or "")[:10] if hist_row.get("old_date") else "",
-                                    "new_date": str(hist_row.get("new_date") or "")[:10] if hist_row.get("new_date") else "",
-                                    "user": hist_row.get("user_name", "Sistema"),
-                                    "timestamp": str(hist_row.get("event_date") or "")[:19] if hist_row.get("event_date") else "",
+                                    "old_lote": _safe_str(hist_row.get("old_lote")),
+                                    "new_lote": _safe_str(hist_row.get("new_lote")),
+                                    "old_date": _safe_str(hist_row.get("old_date"))[:10],
+                                    "new_date": _safe_str(hist_row.get("new_date"))[:10],
+                                    "user": _safe_str(hist_row.get("user_name")) or "Sistema",
+                                    "timestamp": _safe_str(hist_row.get("event_date"))[:19],
                                     "source": "sql_recovery",
-                                    "notes": hist_row.get("notes", "")
+                                    "notes": _safe_str(hist_row.get("notes"))
                                 }
                                 
                                 # Check if already in history (prevent duplicates)
@@ -1498,13 +1513,28 @@ class TaraWeightManager:
             # When all dates are invalid/empty, preserve the current lote value
             # (which was just set by the user's edit).
             if best_lote and best_info and has_valid_date:
-                class_data["lote"] = str(best_lote)
-                class_data["lote_date"] = best_info.get(
-                    "fecha_elaboracion", class_data.get("lote_date", "")
-                )
-                class_data["lote_reinspection_date"] = best_info.get(
-                    "fecha_inspeccion", class_data.get("lote_reinspection_date", "")
-                )
+                current_lote = str(class_data.get("lote", "")).strip()
+                should_override = True
+                
+                # If the current lote is already in lotes_info and has the SAME date as best_dt,
+                # preserve it! This prevents reverting user edits that changed the lote name but kept the same date.
+                if current_lote in lotes_info:
+                    c_elab = str(lotes_info[current_lote].get("fecha_elaboracion", "")).strip()[:10]
+                    try:
+                        c_dt = datetime.datetime.strptime(c_elab, "%Y-%m-%d")
+                        if c_dt >= best_dt:
+                            should_override = False
+                    except ValueError:
+                        pass
+                
+                if should_override:
+                    class_data["lote"] = str(best_lote)
+                    class_data["lote_date"] = best_info.get(
+                        "fecha_elaboracion", class_data.get("lote_date", "")
+                    )
+                    class_data["lote_reinspection_date"] = best_info.get(
+                        "fecha_inspeccion", class_data.get("lote_reinspection_date", "")
+                    )
 
     def _save_classifications(self):
         """Save product classifications to SQL and JSON file."""
@@ -2261,7 +2291,7 @@ class TaraWeightManager:
 
         return changes
 
-    def initialize_classifications(self, smart_label_manager=None):
+    def initialize_classifications(self, smart_label_manager=None, force=False):
         """
 
         Initialize the classification database from all known products.
@@ -2269,6 +2299,8 @@ class TaraWeightManager:
         Merges data from: products_master CSV, original_data CSV, and existing classifications.
 
         """
+        if self._is_initialized and not force:
+            return len(self._product_classifications)
 
         self._load_classifications()
 
@@ -2413,6 +2445,8 @@ class TaraWeightManager:
         # Auto-classify products that haven't been classified yet
 
         self.auto_classify_all()
+
+        self._is_initialized = True
 
         return len(self._product_classifications)
 
@@ -2730,23 +2764,15 @@ class TaraWeightManager:
                     # ── Product type import ────────────────────────────────
 
                     if pid in self._product_classifications:
-
                         entry = self._product_classifications[pid]
-
                         if entry.get("type_source") == "manual":
-
                             skipped_manual += 1
-
                         else:
-
-                            entry["product_type"] = product_type
-
-                            entry["type_source"] = "excel"
-
-                            imported += 1
-
+                            if entry.get("product_type") != product_type or entry.get("type_source") != "excel":
+                                entry["product_type"] = product_type
+                                entry["type_source"] = "excel"
+                                imported += 1
                     else:
-
                         self._product_classifications[pid] = {
                             "product_id": pid,
                             "chemical_name": (
@@ -2762,37 +2788,23 @@ class TaraWeightManager:
                             "notes": "",
                             "tara_overrides": {},
                         }
-
                         imported += 1
-
                         new_products += 1
 
                     # ── Tara override import (NETO->TARA from Excel row) ───
-
                     if col_neto and col_tara:
-
                         try:
-
-                            neto_val = float(
-                                str(row.get(col_neto, "")).replace(",", ".")
-                            )
-
-                            tara_val = float(
-                                str(row.get(col_tara, "")).replace(",", ".")
-                            )
+                            neto_val = float(str(row.get(col_neto, "")).replace(",", "."))
+                            tara_val = float(str(row.get(col_tara, "")).replace(",", "."))
 
                             if neto_val > 0 and tara_val > 0:
-
                                 entry = self._product_classifications[pid]
-
                                 overrides = entry.setdefault("tara_overrides", {})
-
                                 key = str(neto_val)
-
-                                overrides[key] = tara_val
-
-                                tara_overrides_added += 1
-
+                                
+                                if key not in overrides or overrides[key] != tara_val:
+                                    overrides[key] = tara_val
+                                    tara_overrides_added += 1
                         except (ValueError, TypeError):
 
                             pass  # Row without valid NETO/TARA data — skip silently
