@@ -1,0 +1,14 @@
+[run]
+source = sga_web
+omit =
+    sga_web/run_development.py
+    sga_web/run_production.py
+    sga_web/scratch_test.py
+    sga_web/scratch_test_queue.py
+    sga_web/scratch_test_queue2.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__
+    pass
