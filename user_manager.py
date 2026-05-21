@@ -59,8 +59,9 @@ class UserManager:
         """Ensure the SGA_Users table has at least one admin account."""
         if self.sql_engine is None:
             logger.error(
-                "SQL engine is not available — user authentication will not work!"
+                "SQL engine is not available — falling back to JSON user store"
             )
+            self._ensure_json_defaults()
             return
 
         from sqlalchemy import text
@@ -116,15 +117,55 @@ class UserManager:
         except Exception as e:
             logger.error(f"Error in _ensure_defaults: {e}")
 
+    def _ensure_json_defaults(self):
+        """Seed a JSON user store with a default admin when SQL is unavailable."""
+        try:
+            if os.path.exists(self.users_file):
+                with open(self.users_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                users = data.get("users", [])
+                # Check if admin has a valid hash (not a placeholder)
+                for user in users:
+                    if user["username"] == "admin" and "$" in user.get(
+                        "password_hash", ""
+                    ):
+                        return  # Already seeded with a proper hash
+
+            # Create / reseed the default admin
+            pwd_hash = self._hash_password("admin123")
+            data = {
+                "users": [
+                    {
+                        "username": "admin",
+                        "password_hash": pwd_hash,
+                        "role": "admin",
+                        "full_name": "Administrator",
+                        "email": "",
+                        "warehouse": "",
+                        "created_at": datetime.now().isoformat(),
+                        "last_login": None,
+                        "is_active": True,
+                        "must_change_password": False,
+                    }
+                ]
+            }
+            os.makedirs(os.path.dirname(os.path.abspath(self.users_file)), exist_ok=True)
+            with open(self.users_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
+            print("⚠️  Default admin account created in JSON (dev mode)")
+            print("   Username: admin")
+            print("   Password: admin123")
+        except Exception as e:
+            logger.error(f"Error creating JSON defaults: {e}")
+
     # ------------------------------------------------------------------
     # Data Access — SQL is the single source of truth
     # ------------------------------------------------------------------
 
     def _load_data(self) -> Dict[str, Any]:
-        """Load users from SQL database."""
+        """Load users from SQL database, falling back to JSON in dev mode."""
         if self.sql_engine is None:
-            logger.error("SQL engine unavailable — cannot load users")
-            return {"users": []}
+            return self._load_json_fallback()
 
         from sqlalchemy import text
 
@@ -167,6 +208,16 @@ class UserManager:
         except Exception as e:
             logger.error(f"SQL User Load Error: {e}")
             return {"users": []}
+
+    def _load_json_fallback(self) -> Dict[str, Any]:
+        """Load users from JSON file when SQL is unavailable (dev mode)."""
+        try:
+            if os.path.exists(self.users_file):
+                with open(self.users_file, "r", encoding="utf-8") as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.error(f"JSON fallback load error: {e}")
+        return {"users": []}
 
     def _save_data(self, data: Dict[str, Any]):
         """Save users to SQL database. Also exports a JSON backup."""
