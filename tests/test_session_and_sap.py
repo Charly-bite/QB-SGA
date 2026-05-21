@@ -59,6 +59,39 @@ def test_ajax_request_returns_json_401(client):
     assert data["error"] == "session_expired"
 
 
+# ── Session persistence ───────────────────────────────────────────────────
+
+
+def test_session_persists_after_login(client, app):
+    """After logging in, refreshing a page should NOT require re-login."""
+    _ADMIN = {
+        "username": "admin",
+        "full_name": "Admin",
+        "role": "admin",
+        "is_active": True,
+        "must_change_password": False,
+    }
+    with patch.object(app.user_manager, "get_user", return_value=_ADMIN):
+        with patch.object(
+            app.user_manager, "authenticate", return_value=True
+        ), patch.object(
+            app.user_manager, "get_current_user", return_value=_ADMIN
+        ):
+            client.post("/login", data={"username": "admin", "password": "pass"})
+
+        # First request - should be authenticated
+        resp1 = client.get("/dashboard")
+        assert resp1.status_code == 200
+
+        # Second request (simulates page refresh) - should STILL be authenticated
+        resp2 = client.get("/dashboard")
+        assert resp2.status_code == 200
+
+        # Third request to a different page - still authenticated
+        resp3 = client.get("/products/")
+        assert resp3.status_code == 200
+
+
 # ── SAP connection status ──────────────────────────────────────────────────
 
 

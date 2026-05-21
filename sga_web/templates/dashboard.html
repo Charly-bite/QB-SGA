@@ -96,18 +96,23 @@
     <!-- SAP Status -->
     <div class="bg-white rounded-xl shadow-sm p-6" x-data="{
             connecting: false,
+            sapAvailable: {{ 'true' if sap_available else 'false' }},
             connected: {{ 'true' if stats.sap_connected else 'false' }},
             statusText: '{{ 'Conectado' if stats.sap_connected else 'Desconectado' }}',
             async connect() {
-                if (this.connecting) return;
+                if (this.connecting || !this.sapAvailable) return;
                 
                 this.connecting = true;
                 this.statusText = 'Conectando...';
                 
                 try {
+                    const csrfToken = document.querySelector('meta[name=csrf-token]')?.content || '';
                     const response = await fetch('/api/sap/connect', { 
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'}
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        }
                     });
                     const data = await response.json();
                     
@@ -117,7 +122,7 @@
                     } else {
                         this.connected = false;
                         this.statusText = 'Desconectado';
-                        console.error(data.message);
+                        console.warn('SAP:', data.message);
                     }
                 } catch (e) {
                     this.connected = false;
@@ -128,18 +133,20 @@
                 }
             },
             init() {
-                // Auto-connect on load if disconnected
-                if (!this.connected) {
+                // Only auto-connect when SAP driver is available
+                if (this.sapAvailable && !this.connected) {
                     setTimeout(() => this.connect(), 1000);
                 }
                 
-                // Auto-reconnect every 60 seconds if disconnected
-                setInterval(() => {
-                    if (!this.connected && !this.connecting) {
-                        console.log('Auto-reconnecting SAP...');
-                        this.connect();
-                    }
-                }, 60000);
+                // Auto-reconnect every 60 seconds if SAP is available but disconnected
+                if (this.sapAvailable) {
+                    setInterval(() => {
+                        if (!this.connected && !this.connecting) {
+                            console.log('Auto-reconnecting SAP...');
+                            this.connect();
+                        }
+                    }, 60000);
+                }
             }
          }">
         <div class="flex items-center justify-between cursor-pointer" @click="connect()" title="Clic para reconectar">

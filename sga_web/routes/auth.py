@@ -9,6 +9,7 @@ from flask import (
     url_for,
     flash,
     request,
+    session,
     current_app,
 )
 from flask_login import login_user, logout_user, login_required, current_user
@@ -58,6 +59,7 @@ def login():
                 return render_template("auth/login.html")
 
             login_user(user, remember=remember)
+            session.permanent = True  # Use PERMANENT_SESSION_LIFETIME
 
             # Check if must change password
             if user.must_change_password:
