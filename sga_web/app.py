@@ -144,15 +144,8 @@ def create_app(config_name="default"):
             request.accept_mimetypes.accept_json
             and not request.accept_mimetypes.accept_html
         ) or request.headers.get("X-Requested-With") == "XMLHttpRequest"
-        api_paths = (
-            "/api/",
-            "/products/",
-            "/labels/",
-            "/orders/",
-            "/templates/",
-            "/control/",
-        )
-        is_api_path = any(request.path.startswith(p) for p in api_paths)
+        # Only treat explicit /api/ sub-paths as API calls, not page URLs
+        is_api_path = "/api/" in request.path
         if is_ajax or is_api_path:
             return (
                 jsonify(
