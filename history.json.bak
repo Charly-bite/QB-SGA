@@ -73,14 +73,5 @@
         "details": {
             "product_code": "NEW001"
         }
-    },
-    {
-        "timestamp": "2026-05-21 12:36:44",
-        "event_type": "product_delete",
-        "user": "admin",
-        "details": {
-            "product_code": "TEST001",
-            "product_name": "Test Product"
-        }
     }
 ]
