@@ -37,12 +37,13 @@ class UserManager:
         self._lock = threading.RLock()
         self.users_file = users_file  # JSON backup path (write-only export)
         self.sql_engine = None
+        self._db_client = None
         try:
             from database_client import get_shared_client
 
-            client = get_shared_client()
-            if client.is_connected():
-                self.sql_engine = client.get_sql_engine()
+            self._db_client = get_shared_client()
+            if self._db_client.is_connected():
+                self.sql_engine = self._db_client.get_sql_engine()
         except ImportError:
             pass
         except Exception as e:
@@ -51,13 +52,40 @@ class UserManager:
         self._ensure_defaults()
         self._current_user = None
 
+    def _get_sql_engine(self):
+        """Return the SQL engine, retrying connection if it was unavailable at init.
+
+        This handles the case where db_client_config.json was missing at startup
+        but has since been restored — avoids needing a full server restart.
+        """
+        if self.sql_engine is not None:
+            return self.sql_engine
+
+        # Lazy retry: re-import and reconnect
+        try:
+            from database_client import DatabaseClient
+
+            client = DatabaseClient()
+            if client.connect() and client.is_connected():
+                self.sql_engine = client.get_sql_engine()
+                self._db_client = client
+                if self.sql_engine is not None:
+                    logger.info("SQL engine reconnected successfully (lazy retry)")
+                    self._ensure_defaults()
+                    return self.sql_engine
+        except Exception as e:
+            logger.debug(f"SQL engine lazy retry failed: {e}")
+
+        return None
+
     # ------------------------------------------------------------------
     # Initialization
     # ------------------------------------------------------------------
 
     def _ensure_defaults(self):
         """Ensure the SGA_Users table has at least one admin account."""
-        if self.sql_engine is None:
+        engine = self._get_sql_engine()
+        if engine is None:
             logger.error(
                 "SQL engine is not available — user authentication will not work!"
             )
@@ -66,7 +94,7 @@ class UserManager:
         from sqlalchemy import text
 
         try:
-            with self.sql_engine.begin() as conn:
+            with engine.begin() as conn:
                 # Ensure table exists (idempotent)
                 conn.execute(
                     text(
@@ -128,14 +156,15 @@ class UserManager:
 
     def _load_data(self) -> Dict[str, Any]:
         """Load users from SQL database."""
-        if self.sql_engine is None:
+        engine = self._get_sql_engine()
+        if engine is None:
             logger.error("SQL engine unavailable — cannot load users")
             return {"users": []}
 
         from sqlalchemy import text
 
         try:
-            with self.sql_engine.connect() as conn:
+            with engine.connect() as conn:
                 result = conn.execute(text("SELECT * FROM SGA_Users"))
                 users_list = []
                 for row in result:
@@ -180,7 +209,8 @@ class UserManager:
         self._export_json_backup(data)
 
         # 2. Write to SQL (authoritative)
-        if self.sql_engine is None:
+        engine = self._get_sql_engine()
+        if engine is None:
             logger.error("SQL engine unavailable — cannot save users")
             return
 
@@ -191,7 +221,7 @@ class UserManager:
             if not users_data:
                 return
 
-            with self.sql_engine.begin() as conn:
+            with engine.begin() as conn:
                 db_users = conn.execute(
                     text("SELECT username FROM SGA_Users")
                 ).fetchall()
@@ -338,12 +368,13 @@ class UserManager:
 
     def _update_last_login(self, username: str):
         """Update last_login timestamp directly in SQL (avoids full save cycle)."""
-        if self.sql_engine is None:
+        engine = self._get_sql_engine()
+        if engine is None:
             return
         from sqlalchemy import text
 
         try:
-            with self.sql_engine.begin() as conn:
+            with engine.begin() as conn:
                 conn.execute(
                     text("UPDATE SGA_Users SET last_login = :now WHERE username = :u"),
                     {"now": datetime.now().isoformat(), "u": username},
@@ -555,13 +586,14 @@ class UserManager:
             return False, "Cannot delete your own account"
 
         # Delete directly from SQL
-        if self.sql_engine is None:
+        engine = self._get_sql_engine()
+        if engine is None:
             return False, "SQL engine unavailable"
 
         from sqlalchemy import text
 
         try:
-            with self.sql_engine.begin() as conn:
+            with engine.begin() as conn:
                 result = conn.execute(
                     text("DELETE FROM SGA_Users WHERE LOWER(username) = :u"),
                     {"u": username.lower()},
