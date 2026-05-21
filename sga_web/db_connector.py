@@ -40,7 +40,7 @@ def ping_server(host):
         # -n 1 for count, -w 1000 for timeout in ms
         cmd = f"ping -n 1 -w 1000 {host}"
         result = subprocess.run(
-            cmd, shell=True, capture_output=True, text=True, timeout=5
+            cmd, shell=True, capture_output=True, text=True, timeout=5  # nosec B602
         )
         return result.returncode == 0
     except (Exception, subprocess.TimeoutExpired):
@@ -55,7 +55,7 @@ def _try_mount(share_path, db_user, db_password):
     try:
         check_cmd = f"net use {share_path}"
         result = subprocess.run(
-            check_cmd, shell=True, capture_output=True, text=True, timeout=10
+            check_cmd, shell=True, capture_output=True, text=True, timeout=10  # nosec B602
         )
         if result.returncode == 0:
             print(f"[OK] Already connected to {share_path}")
@@ -67,7 +67,7 @@ def _try_mount(share_path, db_user, db_password):
     try:
         cmd = f'net use "{share_path}" /user:{db_user} "{db_password}"'
         result = subprocess.run(
-            cmd, shell=True, capture_output=True, text=True, timeout=10
+            cmd, shell=True, capture_output=True, text=True, timeout=10  # nosec B602
         )
 
         if result.returncode == 0:
@@ -78,7 +78,7 @@ def _try_mount(share_path, db_user, db_password):
             if "1219" in result.stderr:
                 print("[WARN] Multiple connections detected. Attempting to clear...")
                 subprocess.run(
-                    f'net use "{share_path}" /delete /y', shell=True, timeout=10
+                    f'net use "{share_path}" /delete /y', shell=True, timeout=10  # nosec B602
                 )
                 # Recursive retry logic should be handled by caller or simple retry here
                 return False

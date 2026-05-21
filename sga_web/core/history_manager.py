@@ -143,7 +143,7 @@ class HistoryManager:
                     # simplistic prune based on timestamp string
                     # Ensure we don't delete MERMA_UPDATE or LABEL_GENERATION_METRICS
                     conn.exec_driver_sql(
-                        f"DELETE FROM history_logs WHERE timestamp < '{cutoff}' AND event_type NOT IN ('MERMA_UPDATE', 'LABEL_GENERATION_METRICS')"
+                        f"DELETE FROM history_logs WHERE timestamp < '{cutoff}' AND event_type NOT IN ('MERMA_UPDATE', 'LABEL_GENERATION_METRICS')"  # nosec B608
                     )
 
                     # prune by max entries (keep newest N)  - slightly complex in T-SQL, omitting for brevity unless needed

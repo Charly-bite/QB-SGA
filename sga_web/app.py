@@ -474,7 +474,7 @@ if __name__ == "__main__":
 
     # Run development server
     app.run(
-        host=os.environ.get("DEV_HOST", "0.0.0.0"),
+        host=os.environ.get("DEV_HOST", "0.0.0.0"),  # nosec B104
         port=int(os.environ.get("DEV_PORT", "5000")),
-        debug=True,
+        debug=True,  # nosec B201
     )

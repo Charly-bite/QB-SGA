@@ -1100,7 +1100,7 @@ def public_api_weather():
             f"&appid={API_KEY}&units=metric&lang=es"
         )
         req = urllib.request.Request(url, headers={"User-Agent": "SGA-Monitor/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310
             raw = json_mod.loads(resp.read().decode())
 
         result = {

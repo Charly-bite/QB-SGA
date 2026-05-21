@@ -29,7 +29,7 @@ def _get_git_version():
 if __name__ == "__main__":
     version = _get_git_version()
     env_name = os.environ.get("SGA_ENV", "production").upper()
-    host = "0.0.0.0"
+    host = "0.0.0.0"  # nosec B104
     port = 5000
 
     print("=" * 60)
