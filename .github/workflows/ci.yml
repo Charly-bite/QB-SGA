@@ -60,7 +60,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install bandit pip-audit
     - name: Run Bandit (SAST)
-      run: bandit -r sga_web/ -c .bandit.yaml --severity-level medium
+      run: bandit -r sga_web/ --severity-level medium --skip B101,B110,B311,B404,B104,B201,B602,B608,B310
     - name: Run pip-audit (SCA)
       run: pip-audit -r requirements.txt
     - name: Run TruffleHog (Secrets)
