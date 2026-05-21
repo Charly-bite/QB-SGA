@@ -276,7 +276,7 @@ class SAPHanaConnector:
                     "Not connected to SAP HANA and auto-connection failed"
                 )
 
-        query = f"""  # nosec B608
+        query = f"""\
             SELECT 
                 m.MATNR as material_number,
                 m.MTART as material_type,
@@ -320,7 +320,7 @@ class SAPHanaConnector:
                     "Not connected to SAP HANA and auto-connection failed"
                 )
 
-        query = f"""  # nosec B608
+        query = f"""\
             SELECT 
                 m.MATNR as material_number,
                 m.MTART as material_type,
@@ -376,7 +376,7 @@ class SAPHanaConnector:
                     "Not connected to SAP HANA and auto-connection failed"
                 )
 
-        query = f"""  # nosec B608
+        query = f"""\
             SELECT 
                 m.MATNR as material_number,
                 t.MAKTX as description,
@@ -421,7 +421,7 @@ class SAPHanaConnector:
                     "Not connected to SAP HANA and auto-connection failed"
                 )
 
-        query = f"""  # nosec B608
+        query = f"""\
             SELECT 
                 "DocNum" as order_number,
                 "CardCode" as customer_code,
@@ -469,7 +469,7 @@ class SAPHanaConnector:
         if only_open:
             where_clause += ' AND T0."DocStatus" = \'O\' AND (T0."CANCELED" = \'N\' OR T0."CANCELED" IS NULL)'
 
-        query = f"""  # nosec B608
+        query = f"""\
             SELECT 
                 T0."DocNum" AS order_number,
                 T0."DocEntry" AS doc_entry
@@ -524,7 +524,7 @@ class SAPHanaConnector:
                 )
 
         # Get header
-        header_query = f"""  # nosec B608
+        header_query = f"""\
             SELECT 
                 T0."DocNum" AS order_number,
                 T0."CardCode" AS customer_code,
@@ -586,7 +586,7 @@ class SAPHanaConnector:
 
         # Get Invoice number (Factura) if it exists
         # Invoices can be linked directly to Sales Orders (BaseType=17) or via Delivery Notes (BaseType=15)
-        invoice_query = f"""  # nosec B608
+        invoice_query = f"""\
             SELECT DISTINCT T0."DocNum"
             FROM {self._get_table_name('invoices')} T0
             INNER JOIN {self._get_table_name('invoice_lines')} T1 ON T0."DocEntry" = T1."DocEntry"
@@ -631,7 +631,7 @@ class SAPHanaConnector:
         }
 
         # Get line items — includes UDF columns (P1-02: Order Line UDFs)
-        items_query = f"""  # nosec B608
+        items_query = f"""\
             SELECT 
                 T1."LineNum"        AS line_number,
                 T1."ItemCode"       AS item_code,
@@ -711,7 +711,7 @@ class SAPHanaConnector:
             chunk = order_numbers[i : i + chunk_size]
             placeholders = ",".join(["?" for _ in chunk])
 
-            query = f"""  # nosec B608
+            query = f"""\
                 SELECT 
                     T0."DocNum",
                     T0."DocStatus",
@@ -788,7 +788,7 @@ class SAPHanaConnector:
 
         try:
             if batch_number:
-                query = f"""  # nosec B608
+                query = f"""\
                     SELECT
                         "DistNumber" AS batch_number,
                         "MnfDate" AS manufacturing_date,
@@ -801,7 +801,7 @@ class SAPHanaConnector:
                 cursor.execute(query, [item_code, batch_number])
             else:
                 # Get the most recent batch for this item
-                query = f"""  # nosec B608
+                query = f"""\
                     SELECT
                         "DistNumber" AS batch_number,
                         "MnfDate" AS manufacturing_date,
@@ -883,7 +883,7 @@ class SAPHanaConnector:
             oitm = self._get_table_name("items")
             obtn = self._get_table_name("batches")
 
-            base_query = f"""  # nosec B608
+            base_query = f"""\
                 SELECT "ItemCode", "DistNumber", "MnfDate", "ExpDate"
                 FROM (
                     SELECT
@@ -987,7 +987,7 @@ class SAPHanaConnector:
                 )
 
         try:
-            query = f"""  # nosec B608
+            query = f"""\
                 SELECT "BWeight1" AS gross_weight,
                        "BWeight2" AS tare_weight
                 FROM {self._get_table_name('items')}
@@ -1035,7 +1035,7 @@ class SAPHanaConnector:
                 )
 
         try:
-            query = f"""  # nosec B608
+            query = f"""\
                 SELECT
                     "U_Word"        AS signal_word,
                     "U_Peligro"     AS h_statements,
@@ -1121,7 +1121,7 @@ class SAPHanaConnector:
                 where += ' AND T0."WhsCode" = ?'
                 params.append(warehouse)
 
-            query = f"""  # nosec B608
+            query = f"""\
                 SELECT
                     T0."ItemCode"    AS item_code,
                     T0."BatchNum"    AS batch_number,
@@ -1219,7 +1219,7 @@ class SAPHanaConnector:
                 date_filter += ' AND T0."UpdateDate" >= ?'
                 params.append(updated_since)
 
-            query = f"""  # nosec B608
+            query = f"""\
                 SELECT
                     T0."ItemCode"       AS item_code,
                     T0."ItemName"       AS item_name,
@@ -1313,7 +1313,7 @@ class SAPHanaConnector:
                     "Not connected to SAP HANA and auto-connection failed"
                 )
 
-        base_query = f"""  # nosec B608
+        base_query = f"""\
             SELECT 
                 m.MATNR as sap_matnr,
                 t.MAKTX as chemical_name,
