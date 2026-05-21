@@ -1,7 +1,9 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from database_client import DatabaseClient
-from sga_web.core.sap_connector import SAPHanaConnector
+
+hdbcli = pytest.importorskip("hdbcli", reason="hdbcli not installed (SAP HANA driver)")
+from sga_web.core.sap_connector import SAPHanaConnector  # noqa: E402
 
 
 def test_database_client_ping_server():
