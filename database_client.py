@@ -124,15 +124,16 @@ class DatabaseClient:
                     else:
                         driver = "{SQL Server}"
 
-                sql_conn_str = f"mssql+pyodbc:///?odbc_connect={__import__('urllib').parse.quote_plus(get_sql_connection_string(driver))}"
+                raw_conn_str = get_sql_connection_string(driver)
+                sql_conn_str = f"mssql+pyodbc:///?odbc_connect={__import__('urllib').parse.quote_plus(raw_conn_str)}"
 
                 logger.info("Intentando conexion a SQL Server...")
                 self.sql_engine = create_engine(
                     sql_conn_str,
                     fast_executemany=False,
                     use_setinputsizes=False,
-                    pool_size=10,
-                    max_overflow=20,
+                    pool_size=5,
+                    max_overflow=10,
                     pool_pre_ping=True,
                     pool_recycle=3600,
                 )
