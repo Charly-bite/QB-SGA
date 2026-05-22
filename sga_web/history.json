@@ -1,0 +1,13 @@
+[
+    {
+        "timestamp": "2026-05-21 14:07:16",
+        "event_type": "PRINT_JOB_HTML",
+        "user": "admin",
+        "details": {
+            "count": 1,
+            "items": [
+                "IFF-QB00001"
+            ]
+        }
+    }
+]

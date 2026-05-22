@@ -1342,10 +1342,14 @@ class TaraWeightManager:
                 if insp.lower() in ("nan", "none", "nat"):
                     insp = ""
 
-                lotes_info[lote_val] = {
-                    "fecha_elaboracion": elab,
-                    "fecha_inspeccion": insp,
-                }
+                # Only add lote info if this lote doesn't already have data
+                # in lotes_info. User edits saved in product_classifications
+                # take priority over migration data from product_lotes.
+                if lote_val not in lotes_info:
+                    lotes_info[lote_val] = {
+                        "fecha_elaboracion": elab,
+                        "fecha_inspeccion": insp,
+                    }
 
             class_data["lotes_info"] = lotes_info
 
