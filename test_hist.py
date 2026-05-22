@@ -1,6 +1,7 @@
 import sys
-sys.path.insert(0, 'sga_web')
-sys.path.insert(0, 'sga_web/core')
+
+sys.path.insert(0, "sga_web")
+sys.path.insert(0, "sga_web/core")
 from tara_weight_manager import TaraWeightManager
 
 mgr = TaraWeightManager()

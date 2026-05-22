@@ -7,12 +7,13 @@ Structured logging for every HTTP request. Provides:
 - Client IP address
 - Structured format for easy parsing and monitoring
 """
+
 import time
 import logging
 from flask import request, g
 from flask_login import current_user
 
-logger = logging.getLogger('sga.requests')
+logger = logging.getLogger("sga.requests")
 
 
 def init_request_logger(app):
@@ -30,14 +31,20 @@ def init_request_logger(app):
     @app.after_request
     def _log_request(response):
         # Skip logging for static files and health checks
-        if request.path.startswith('/static/') or request.path == '/favicon.ico':
+        if request.path.startswith("/static/") or request.path == "/favicon.ico":
             return response
 
-        duration_ms = round((time.time() - getattr(g, 'request_start_time', time.time())) * 1000, 1)
+        duration_ms = round(
+            (time.time() - getattr(g, "request_start_time", time.time())) * 1000, 1
+        )
 
-        user = 'anonymous'
-        if current_user and hasattr(current_user, 'is_authenticated') and current_user.is_authenticated:
-            user = getattr(current_user, 'username', str(current_user.get_id()))
+        user = "anonymous"
+        if (
+            current_user
+            and hasattr(current_user, "is_authenticated")
+            and current_user.is_authenticated
+        ):
+            user = getattr(current_user, "username", str(current_user.get_id()))
 
         # Color-code by status for terminal readability
         status = response.status_code
@@ -49,7 +56,7 @@ def init_request_logger(app):
             log_fn = logger.info
 
         log_fn(
-            '%s %s -> %d (%sms) [user=%s, ip=%s]',
+            "%s %s -> %d (%sms) [user=%s, ip=%s]",
             request.method,
             request.path,
             status,

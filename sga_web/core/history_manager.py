@@ -17,9 +17,9 @@ class HistoryManager:
             )
             # Search multiple candidate locations for the history file
             candidates = [
-                os.path.join(base, "data", "history.json"),    # Standard path
-                os.path.join(base, "sga_web", "history.json"), # Legacy path
-                os.path.join(base, "history.json"),            # Project root
+                os.path.join(base, "data", "history.json"),  # Standard path
+                os.path.join(base, "sga_web", "history.json"),  # Legacy path
+                os.path.join(base, "history.json"),  # Project root
             ]
             history_file = next(
                 (c for c in candidates if os.path.exists(c)),
@@ -49,12 +49,10 @@ class HistoryManager:
         if not self.sql_engine:
             return
         try:
-            import sqlalchemy
 
             with self.sql_engine.begin() as conn:
                 # Use raw SQL to create table if missing
-                conn.exec_driver_sql(
-                    """
+                conn.exec_driver_sql("""
                     IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='history_logs' and xtype='U')
                     CREATE TABLE history_logs (
                         id INT IDENTITY(1,1) PRIMARY KEY,
@@ -63,8 +61,7 @@ class HistoryManager:
                         username VARCHAR(50),
                         details NVARCHAR(MAX)
                     )
-                """
-                )
+                """)
         except Exception as e:
             print(f"⚠️ Could not ensure history_logs table exists: {e}")
 
@@ -146,7 +143,7 @@ class HistoryManager:
                     # simplistic prune based on timestamp string
                     # Ensure we don't delete MERMA_UPDATE or LABEL_GENERATION_METRICS
                     conn.exec_driver_sql(
-                        f"DELETE FROM history_logs WHERE timestamp < '{cutoff}' AND event_type NOT IN ('MERMA_UPDATE', 'LABEL_GENERATION_METRICS')"
+                        f"DELETE FROM history_logs WHERE timestamp < '{cutoff}' AND event_type NOT IN ('MERMA_UPDATE', 'LABEL_GENERATION_METRICS')"  # nosec B608
                     )
 
                     # prune by max entries (keep newest N)  - slightly complex in T-SQL, omitting for brevity unless needed
@@ -211,7 +208,7 @@ class HistoryManager:
                     details = {}
                     try:
                         details = json.loads(row["details"])
-                    except:
+                    except Exception:
                         pass
                     history.append(
                         {

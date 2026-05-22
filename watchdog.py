@@ -33,24 +33,27 @@ from logging.handlers import RotatingFileHandler
 # Paths
 # ──────────────────────────────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LOG_DIR  = os.path.join(BASE_DIR, "logs")
+LOG_DIR = os.path.join(BASE_DIR, "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 
 CONFIG_FILE = os.path.join(BASE_DIR, "db_client_config.json")
-STATS_FILE  = os.path.join(LOG_DIR, "watchdog_stats.json")
-LOG_FILE    = os.path.join(LOG_DIR, "watchdog.log")
+STATS_FILE = os.path.join(LOG_DIR, "watchdog_stats.json")
+LOG_FILE = os.path.join(LOG_DIR, "watchdog.log")
+
 
 # ──────────────────────────────────────────────
 # Logging - console + rotating file (5 MB × 3)
 # ──────────────────────────────────────────────
 def _setup_logging() -> logging.Logger:
-    fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s",
-                            datefmt="%Y-%m-%d %H:%M:%S")
+    fmt = logging.Formatter(
+        "%(asctime)s [%(levelname)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    )
     logger = logging.getLogger("SGA-Watchdog")
     logger.setLevel(logging.DEBUG)
 
-    fh = RotatingFileHandler(LOG_FILE, maxBytes=5 * 1024 * 1024,
-                             backupCount=3, encoding="utf-8")
+    fh = RotatingFileHandler(
+        LOG_FILE, maxBytes=5 * 1024 * 1024, backupCount=3, encoding="utf-8"
+    )
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(fmt)
 
@@ -61,6 +64,7 @@ def _setup_logging() -> logging.Logger:
     logger.addHandler(fh)
     logger.addHandler(ch)
     return logger
+
 
 logger = _setup_logging()
 
@@ -75,17 +79,17 @@ def load_config() -> dict:
     """
     defaults: dict = {
         "server": {
-            "ip_address":  "192.168.2.237",
-            "hostname":    "ServerWebQB",
-            "share_name":  "SGA_Database",
+            "ip_address": "192.168.2.237",
+            "hostname": "ServerWebQB",
+            "share_name": "SGA_Database",
         },
         "watchdog": {
-            "check_interval":        30,   # seconds between health checks
-            "smb_reconnect_retries": 3,    # attempts before giving up on one cycle
-            "web_restart_threshold": 2,    # consecutive fails before restarting web
-            "web_server_host":       "localhost",
-            "web_server_port":       5000,
-            "web_app_script":        "sga_web/app.py",
+            "check_interval": 30,  # seconds between health checks
+            "smb_reconnect_retries": 3,  # attempts before giving up on one cycle
+            "web_restart_threshold": 2,  # consecutive fails before restarting web
+            "web_server_host": "localhost",
+            "web_server_port": 5000,
+            "web_app_script": "sga_web/app.py",
         },
     }
 
@@ -97,7 +101,9 @@ def load_config() -> dict:
             defaults[section].update(file_cfg.get(section, {}))
         logger.info(f"Configuracion cargada desde {CONFIG_FILE}")
     except FileNotFoundError:
-        logger.warning(f"Archivo de configuracion no encontrado ({CONFIG_FILE}), usando valores por defecto.")
+        logger.warning(
+            f"Archivo de configuracion no encontrado ({CONFIG_FILE}), usando valores por defecto."
+        )
     except Exception as e:
         logger.error(f"Error al cargar configuracion: {e}")
 
@@ -112,11 +118,11 @@ class SMBWatchdog:
 
     def __init__(self, cfg: dict):
         s = cfg["server"]
-        self.ip         = s["ip_address"]
-        self.hostname   = s.get("hostname", "")
+        self.ip = s["ip_address"]
+        self.hostname = s.get("hostname", "")
         self.share_name = s["share_name"]
         self.share_path = f"\\\\{self.ip}\\{self.share_name}"
-        self.retries    = cfg["watchdog"].get("smb_reconnect_retries", 3)
+        self.retries = cfg["watchdog"].get("smb_reconnect_retries", 3)
         self.consecutive_failures = 0
 
     # ----------------------------------------------------------
@@ -144,7 +150,8 @@ class SMBWatchdog:
         try:
             subprocess.run(
                 ["net", "use", self.share_path, "/delete", "/yes"],
-                capture_output=True, timeout=15
+                capture_output=True,
+                timeout=15,
             )
         except Exception:
             pass  # Ignore if it was not mounted
@@ -152,17 +159,23 @@ class SMBWatchdog:
         time.sleep(2)
 
         for attempt in range(1, self.retries + 1):
-            logger.info(f"  Intento {attempt}/{self.retries}: net use {self.share_path}")
+            logger.info(
+                f"  Intento {attempt}/{self.retries}: net use {self.share_path}"
+            )
             try:
                 result = subprocess.run(
                     ["net", "use", self.share_path],
-                    capture_output=True, text=True, timeout=30
+                    capture_output=True,
+                    text=True,
+                    timeout=30,
                 )
                 if result.returncode == 0:
-                    logger.info(f"  ✅ Share SMB reconectado exitosamente.")
+                    logger.info("  ✅ Share SMB reconectado exitosamente.")
                     return True
-                logger.warning(f"  net use fallo rc={result.returncode}: "
-                               f"{result.stderr.strip()}")
+                logger.warning(
+                    f"  net use fallo rc={result.returncode}: "
+                    f"{result.stderr.strip()}"
+                )
             except subprocess.TimeoutExpired:
                 logger.warning("  net use timeout.")
             except Exception as e:
@@ -171,7 +184,9 @@ class SMBWatchdog:
             if attempt < self.retries:
                 time.sleep(5)
 
-        logger.error(f"❌ No se pudo reconectar el share SMB tras {self.retries} intentos.")
+        logger.error(
+            f"❌ No se pudo reconectar el share SMB tras {self.retries} intentos."
+        )
         return False
 
 
@@ -183,12 +198,12 @@ class WebServerWatchdog:
 
     def __init__(self, cfg: dict):
         wd = cfg["watchdog"]
-        self.host      = wd.get("web_server_host", "localhost")
-        self.port      = int(wd.get("web_server_port", 5000))
-        rel_script     = wd.get("web_app_script", "sga_web/app.py")
+        self.host = wd.get("web_server_host", "localhost")
+        self.port = int(wd.get("web_server_port", 5000))
+        rel_script = wd.get("web_app_script", "sga_web/app.py")
         self.app_script = os.path.join(BASE_DIR, rel_script)
-        self.web_dir    = os.path.dirname(self.app_script)
-        self.threshold  = int(wd.get("web_restart_threshold", 2))
+        self.web_dir = os.path.dirname(self.app_script)
+        self.threshold = int(wd.get("web_restart_threshold", 2))
 
         self.process: subprocess.Popen | None = None
         self.consecutive_failures = 0
@@ -216,10 +231,14 @@ class WebServerWatchdog:
         logger.info(f"Iniciando servidor web: {self.app_script} ...")
 
         try:
-            flags = subprocess.CREATE_NEW_PROCESS_GROUP if sys.platform == "win32" else 0
+            flags = (
+                subprocess.CREATE_NEW_PROCESS_GROUP if sys.platform == "win32" else 0
+            )
             with open(log_path, "a", encoding="utf-8") as lf:
-                lf.write(f"\n[{datetime.now():%Y-%m-%d %H:%M:%S}] "
-                         f"--- Watchdog restart ---\n")
+                lf.write(
+                    f"\n[{datetime.now():%Y-%m-%d %H:%M:%S}] "
+                    f"--- Watchdog restart ---\n"
+                )
                 self.process = subprocess.Popen(
                     [sys.executable, self.app_script],
                     cwd=self.web_dir,
@@ -232,8 +251,10 @@ class WebServerWatchdog:
             for i in range(10):
                 time.sleep(2)
                 if self.is_up():
-                    logger.info(f"✅ Servidor web iniciado (PID {self.process.pid}) "
-                                f"en {self.host}:{self.port}")
+                    logger.info(
+                        f"✅ Servidor web iniciado (PID {self.process.pid}) "
+                        f"en {self.host}:{self.port}"
+                    )
                     return True
                 logger.debug(f"  Esperando que el servidor inicie... ({i+1}/10)")
 
@@ -270,9 +291,12 @@ class WebServerWatchdog:
                         pid = parts[-1]
                         subprocess.run(
                             ["taskkill", "/PID", pid, "/F"],
-                            capture_output=True, timeout=5
+                            capture_output=True,
+                            timeout=5,
                         )
-                        logger.info(f"Proceso en puerto {self.port} terminado (PID {pid})")
+                        logger.info(
+                            f"Proceso en puerto {self.port} terminado (PID {pid})"
+                        )
         except Exception:
             pass
 
@@ -281,10 +305,17 @@ class WebServerWatchdog:
 # Main watchdog loop
 # ──────────────────────────────────────────────
 class Watchdog:
-    def __init__(self, monitor_smb: bool = True, monitor_web: bool = True,
-                 monitor_sap: bool = True, interval_override: int | None = None):
+    def __init__(
+        self,
+        monitor_smb: bool = True,
+        monitor_web: bool = True,
+        monitor_sap: bool = True,
+        interval_override: int | None = None,
+    ):
         self.cfg = load_config()
-        self.interval   = interval_override or self.cfg["watchdog"].get("check_interval", 30)
+        self.interval = interval_override or self.cfg["watchdog"].get(
+            "check_interval", 30
+        )
         self.monitor_smb = monitor_smb
         self.monitor_web = monitor_web
         self.monitor_sap = monitor_sap
@@ -294,30 +325,31 @@ class Watchdog:
         self.web = WebServerWatchdog(self.cfg) if monitor_web else None
 
         self.stats: dict = {
-            "watchdog_start":       datetime.now().isoformat(),
-            "last_check":           None,
+            "watchdog_start": datetime.now().isoformat(),
+            "last_check": None,
             "sap_sync": {
-                "enabled":          monitor_sap,
-                "last_sync":        None,
-                "status":           "unknown"
+                "enabled": monitor_sap,
+                "last_sync": None,
+                "status": "unknown",
             },
             "smb": {
-                "target":           self.smb.share_path if self.smb else "disabled",
-                "status":           "unknown",
+                "target": self.smb.share_path if self.smb else "disabled",
+                "status": "unknown",
                 "consecutive_fails": 0,
                 "total_disconnects": 0,
-                "total_reconnects":  0,
-                "last_ok":           None,
-                "last_fail":         None,
+                "total_reconnects": 0,
+                "last_ok": None,
+                "last_fail": None,
             },
             "web": {
-                "target":           (f"{self.web.host}:{self.web.port}"
-                                     if self.web else "disabled"),
-                "status":           "unknown",
+                "target": (
+                    f"{self.web.host}:{self.web.port}" if self.web else "disabled"
+                ),
+                "status": "unknown",
                 "consecutive_fails": 0,
-                "total_restarts":    0,
-                "last_ok":           None,
-                "last_fail":         None,
+                "total_restarts": 0,
+                "last_ok": None,
+                "last_fail": None,
             },
         }
 
@@ -349,18 +381,23 @@ class Watchdog:
     def _run_sap_sync_thread(self):
         try:
             import sync_sap_to_db
-            logger.info("Iniciando sincronizacion horaria con SAP (en segundo plano)...")
+
+            logger.info(
+                "Iniciando sincronizacion horaria con SAP (en segundo plano)..."
+            )
             stats = sync_sap_to_db.run_sync()
             logger.info(f"✅ Sincronizacion SAP completada: {stats}")
             self.stats["sap_sync"]["status"] = "ok"
             self.stats["sap_sync"]["last_sync"] = datetime.now().isoformat()
-            
+
             # If products were added or updated, we should notify the web server.
             # Easiest way in this architecture is to briefly restart it so it reloads CSV.
             if self.web and stats.get("added", 0) + stats.get("updated", 0) > 0:
-                logger.info("Nuevos productos sincronizados. Reiniciando servidor web para recargar caché...")
+                logger.info(
+                    "Nuevos productos sincronizados. Reiniciando servidor web para recargar caché..."
+                )
                 self.web.restart()
-                
+
         except Exception as e:
             logger.error(f"❌ Error en sincronizacion SAP: {e}")
             self.stats["sap_sync"]["status"] = "error"
@@ -371,7 +408,9 @@ class Watchdog:
         if now - self.last_sap_sync >= 3600:
             self.last_sap_sync = now
             # Run in a separate thread to prevent blocking web/smb restart checks
-            sync_thread = threading.Thread(target=self._run_sap_sync_thread, daemon=True)
+            sync_thread = threading.Thread(
+                target=self._run_sap_sync_thread, daemon=True
+            )
             sync_thread.start()
 
     # ----------------------------------------------------------
@@ -381,23 +420,25 @@ class Watchdog:
             if self.smb.consecutive_failures > 0:
                 logger.info(f"✅ SMB restaurado: {self.smb.share_path}")
             self.smb.consecutive_failures = 0
-            s["status"]           = "ok"
+            s["status"] = "ok"
             s["consecutive_fails"] = 0
-            s["last_ok"]          = datetime.now().isoformat()
+            s["last_ok"] = datetime.now().isoformat()
             logger.debug(f"SMB OK: {self.smb.share_path}")
         else:
             self.smb.consecutive_failures += 1
             s["consecutive_fails"] = self.smb.consecutive_failures
             s["total_disconnects"] += 1
-            s["status"]             = "down"
-            s["last_fail"]          = datetime.now().isoformat()
+            s["status"] = "down"
+            s["last_fail"] = datetime.now().isoformat()
             logger.warning(
                 f"⚠️  SMB no disponible (fallo #{self.smb.consecutive_failures}): "
                 f"{self.smb.share_path}"
             )
 
             if self.smb.can_ping():
-                logger.info("   Servidor alcanzable en el puerto 445 — reconectando share ...")
+                logger.info(
+                    "   Servidor alcanzable en el puerto 445 — reconectando share ..."
+                )
                 if self.smb.reconnect():
                     s["total_reconnects"] += 1
                     s["status"] = "ok"
@@ -405,24 +446,28 @@ class Watchdog:
                     s["consecutive_fails"] = 0
                     s["last_ok"] = datetime.now().isoformat()
             else:
-                logger.error(f"   Servidor {self.smb.ip} no responde en el puerto 445."
-                             f" La red puede estar caida.")
+                logger.error(
+                    f"   Servidor {self.smb.ip} no responde en el puerto 445."
+                    f" La red puede estar caida."
+                )
 
     def _check_web(self):
         w = self.stats["web"]
         if self.web.is_up():
             if self.web.consecutive_failures > 0:
-                logger.info(f"✅ Servidor web restaurado en {self.web.host}:{self.web.port}")
+                logger.info(
+                    f"✅ Servidor web restaurado en {self.web.host}:{self.web.port}"
+                )
             self.web.consecutive_failures = 0
-            w["status"]           = "ok"
+            w["status"] = "ok"
             w["consecutive_fails"] = 0
-            w["last_ok"]          = datetime.now().isoformat()
+            w["last_ok"] = datetime.now().isoformat()
             logger.debug(f"Web OK: {self.web.host}:{self.web.port}")
         else:
             self.web.consecutive_failures += 1
             w["consecutive_fails"] = self.web.consecutive_failures
-            w["status"]             = "down"
-            w["last_fail"]          = datetime.now().isoformat()
+            w["status"] = "down"
+            w["last_fail"] = datetime.now().isoformat()
             logger.warning(
                 f"⚠️  Servidor web no responde (fallo #{self.web.consecutive_failures}/"
                 f"{self.web.threshold}) en {self.web.host}:{self.web.port}"
@@ -475,20 +520,21 @@ def parse_args():
         description="SGA Server Watchdog — monitorea el share SMB y el servidor web."
     )
     parser.add_argument(
-        "--interval", type=int, default=None,
-        help="Segundos entre comprobaciones (sobreescribe db_client_config.json)."
+        "--interval",
+        type=int,
+        default=None,
+        help="Segundos entre comprobaciones (sobreescribe db_client_config.json).",
     )
     parser.add_argument(
-        "--no-smb", action="store_true",
-        help="Deshabilitar monitoreo del share SMB."
+        "--no-smb", action="store_true", help="Deshabilitar monitoreo del share SMB."
     )
     parser.add_argument(
-        "--no-web", action="store_true",
-        help="Deshabilitar monitoreo del servidor web."
+        "--no-web", action="store_true", help="Deshabilitar monitoreo del servidor web."
     )
     parser.add_argument(
-        "--no-sap", action="store_true",
-        help="Deshabilitar la sincronizacion horaria de productos con SAP."
+        "--no-sap",
+        action="store_true",
+        help="Deshabilitar la sincronizacion horaria de productos con SAP.",
     )
     return parser.parse_args()
 

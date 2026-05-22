@@ -1,6 +1,7 @@
 """
 SGA Web Application Configuration
 """
+
 import os
 import logging
 from datetime import timedelta
@@ -40,18 +41,19 @@ def get_sql_connection_string(driver="{ODBC Driver 17 for SQL Server}"):
 def _generate_secret_key():
     """Generate a persistent secret key if none provided via env."""
     import secrets
-    key_file = os.path.join(BASE_DIR, '.flask_secret_key')
-    env_key = os.environ.get('SECRET_KEY')
+
+    key_file = os.path.join(BASE_DIR, ".flask_secret_key")
+    env_key = os.environ.get("SECRET_KEY")
     if env_key:
         return env_key
     # Try to load from file (persists across restarts)
     if os.path.exists(key_file):
-        with open(key_file, 'r') as f:
+        with open(key_file, "r") as f:
             return f.read().strip()
     # Generate new key and persist
     key = secrets.token_hex(32)
     try:
-        with open(key_file, 'w') as f:
+        with open(key_file, "w") as f:
             f.write(key)
     except Exception:
         pass  # If we can't write, at least use the generated key for this session
@@ -72,20 +74,25 @@ def _resolve_db_path_safe():
     import threading
 
     # Check if the deployment uses SQL as primary engine → skip SMB completely
-    db_client_cfg_path = os.path.join(PARENT_DIR, 'db_client_config.json')
+    db_client_cfg_path = os.path.join(PARENT_DIR, "db_client_config.json")
     try:
         if os.path.exists(db_client_cfg_path):
-            with open(db_client_cfg_path, 'r') as f:
+            with open(db_client_cfg_path, "r") as f:
                 client_cfg = json.load(f)
-            if client_cfg.get('database', {}).get('engine') == 'sql':
-                logging.info("[CONFIG] SQL engine detected — skipping SMB path resolution")
-                return os.path.join(PARENT_DIR, 'unified_db'), 'local_sql_mode'
+            if client_cfg.get("database", {}).get("engine") == "sql":
+                logging.info(
+                    "[CONFIG] SQL engine detected — skipping SMB path resolution"
+                )
+                return os.path.join(PARENT_DIR, "unified_db"), "local_sql_mode"
     except Exception:
         pass
 
     # Legacy CSV mode: resolve via db_connector but guard against SMB timeout
     import db_connector
-    server_cfg = db_connector.load_server_config(os.path.join(BASE_DIR, 'server_config.json'))
+
+    server_cfg = db_connector.load_server_config(
+        os.path.join(BASE_DIR, "server_config.json")
+    )
 
     result = [None, None]
 
@@ -101,59 +108,66 @@ def _resolve_db_path_safe():
 
     if result[0] is not None:
         db_path, db_source = result[0], result[1]
-        if db_source == 'server':
+        if db_source == "server":
             return db_path, db_source
         else:
             return os.path.join(PARENT_DIR, db_path), db_source
 
     # Timeout or failure: safe fallback
-    logging.warning("[CONFIG] DB path resolution timed out — using local unified_db fallback")
-    return os.path.join(PARENT_DIR, 'unified_db'), 'local_timeout_fallback'
+    logging.warning(
+        "[CONFIG] DB path resolution timed out — using local unified_db fallback"
+    )
+    return os.path.join(PARENT_DIR, "unified_db"), "local_timeout_fallback"
 
 
 class Config:
     """Base configuration"""
+
     SECRET_KEY = _generate_secret_key()
-    
+
     # Session configuration
     PERMANENT_SESSION_LIFETIME = timedelta(hours=8)
     SESSION_COOKIE_SECURE = False  # Set True in production with HTTPS
     SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Lax'  # CSRF mitigation
-    WTF_CSRF_TIME_LIMIT = None  # CSRF token lifetime matches session (no separate expiry)
-    
+    SESSION_COOKIE_SAMESITE = "Lax"  # CSRF mitigation
+    WTF_CSRF_TIME_LIMIT = (
+        None  # CSRF token lifetime matches session (no separate expiry)
+    )
+
     # Database path — resolved with timeout guard to prevent SMB hangs
     UNIFIED_DB_PATH, DB_SOURCE = _resolve_db_path_safe()
-        
-    ORIGINAL_DATA_PATH = os.path.join(PARENT_DIR, 'original_data')
-    
+
+    ORIGINAL_DATA_PATH = os.path.join(PARENT_DIR, "original_data")
+
     # Assets
-    ASSETS_PATH = os.path.join(PARENT_DIR, 'assets')
-    PICTOGRAMS_PATH = os.path.join(ASSETS_PATH, 'pictograms')
-    
+    ASSETS_PATH = os.path.join(PARENT_DIR, "assets")
+    PICTOGRAMS_PATH = os.path.join(ASSETS_PATH, "pictograms")
+
     # Generated files
-    GENERATED_LABELS_PATH = os.path.join(BASE_DIR, 'generated_labels')
-    
+    GENERATED_LABELS_PATH = os.path.join(BASE_DIR, "generated_labels")
+
     # User database
-    USERS_FILE = os.path.join(PARENT_DIR, 'users.json')
-    
+    USERS_FILE = os.path.join(PARENT_DIR, "users.json")
+
     # SAP Configuration (optional)
-    SAP_HOST = os.environ.get('SAP_HOST', '20.0.1.9')
-    SAP_PORT = int(os.environ.get('SAP_PORT', 30015))
-    SAP_SCHEMA = os.environ.get('SAP_SCHEMA', 'SBO_QUIMICABOSS')
-    
+    SAP_HOST = os.environ.get("SAP_HOST", "20.0.1.9")
+    SAP_PORT = int(os.environ.get("SAP_PORT", 30015))
+    SAP_SCHEMA = os.environ.get("SAP_SCHEMA", "SBO_QUIMICABOSS")
+
     # Pagination
     ITEMS_PER_PAGE = 25
 
 
 class DevelopmentConfig(Config):
     """Development configuration"""
+
     DEBUG = True
     TESTING = False
 
 
 class ProductionConfig(Config):
     """Production configuration"""
+
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
@@ -161,14 +175,16 @@ class ProductionConfig(Config):
 
 class TestingConfig(Config):
     """Testing configuration"""
+
     DEBUG = True
     TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
 # Configuration mapping
 config = {
-    'development': DevelopmentConfig,
-    'production': ProductionConfig,
-    'testing': TestingConfig,
-    'default': DevelopmentConfig
+    "development": DevelopmentConfig,
+    "production": ProductionConfig,
+    "testing": TestingConfig,
+    "default": DevelopmentConfig,
 }

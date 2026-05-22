@@ -35,13 +35,15 @@ from datetime import datetime
 try:
     from sqlalchemy import create_engine
     from sqlalchemy.engine import Engine
+
     SQL_AVAILABLE = True
 except ImportError:
     SQL_AVAILABLE = False
     from typing import Any
+
     Engine = Any
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -61,15 +63,23 @@ class DatabaseClient:
             config_file: Path to client configuration file
         """
         if config_file is None:
-            base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            base = os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            )
             # Search config/ subdirectory first, then project root
             candidates = [
-                os.path.join(base, 'config', 'db_client_config.json'),
-                os.path.join(base, 'db_client_config.json'),
+                os.path.join(base, "config", "db_client_config.json"),
+                os.path.join(base, "db_client_config.json"),
             ]
-            config_file = next((c for c in candidates if os.path.exists(c)), candidates[0])
+            config_file = next(
+                (c for c in candidates if os.path.exists(c)), candidates[0]
+            )
         self.base_dir = BASE_DIR
-        self.config_file = config_file if os.path.isabs(config_file) else os.path.join(self.base_dir, config_file)
+        self.config_file = (
+            config_file
+            if os.path.isabs(config_file)
+            else os.path.join(self.base_dir, config_file)
+        )
         self.config = {}
         self.connected = False
         self.database_path = None
@@ -88,7 +98,7 @@ class DatabaseClient:
             return
 
         try:
-            with open(self.config_file, 'r', encoding='utf-8') as f:
+            with open(self.config_file, "r", encoding="utf-8") as f:
                 self.config = json.load(f)
             logger.info("Loaded client configuration")
         except Exception as e:
@@ -99,13 +109,8 @@ class DatabaseClient:
         """Configure for local database mode"""
         self.config = {
             "deployment_type": "local",
-            "database": {
-                "primary_path": os.path.join(self.base_dir, "unified_db")
-            },
-            "fallback": {
-                "enabled": True,
-                "local_database_path": "unified_db"
-            }
+            "database": {"primary_path": os.path.join(self.base_dir, "unified_db")},
+            "fallback": {"enabled": True, "local_database_path": "unified_db"},
         }
 
     def connect(self) -> bool:
@@ -123,19 +128,21 @@ class DatabaseClient:
         # Try SQL Connection first if configured
         if db_config.get("engine") == "sql" and SQL_AVAILABLE:
             from config import get_sql_connection_string
+
             try:
                 # We dynamically construct the connection string securely from environment variables
                 import pyodbc
+
                 driver = "{ODBC Driver 17 for SQL Server}"
                 if "ODBC Driver 17 for SQL Server" not in pyodbc.drivers():
                     if "ODBC Driver 18 for SQL Server" in pyodbc.drivers():
                         driver = "{ODBC Driver 18 for SQL Server}"
                     else:
                         driver = "{SQL Server}"
-                
+
                 sql_conn_str = f"mssql+pyodbc:///?odbc_connect={__import__('urllib').parse.quote_plus(get_sql_connection_string(driver))}"
-                
-                logger.info("📡 Intentando conexión a SQL Server...")       
+
+                logger.info("📡 Intentando conexión a SQL Server...")
                 self.sql_engine = create_engine(
                     sql_conn_str,
                     fast_executemany=False,
@@ -143,23 +150,25 @@ class DatabaseClient:
                     pool_size=10,
                     max_overflow=20,
                     pool_pre_ping=True,
-                    pool_recycle=3600
+                    pool_recycle=3600,
                 )
                 # Verify connection
                 with self.sql_engine.connect() as conn:
                     pass
                 self.connected = True
-                self.connection_mode = 'sql'
+                self.connection_mode = "sql"
                 logger.info("✅ Conectado exitosamente a SQL Server")
 
                 # If we don't need CSV fallback, we can return early.
-                    # But it's good to resolve database_path anyway for backward compatibility.
-                fallback_path = db_config.get("primary_path", os.path.join(self.base_dir, "unified_db"))
+                # But it's good to resolve database_path anyway for backward compatibility.
+                fallback_path = db_config.get(
+                    "primary_path", os.path.join(self.base_dir, "unified_db")
+                )
                 if os.path.exists(fallback_path):
                     self.database_path = fallback_path
                 return True
             except Exception as e:
-                logger.error(f"❌ Error conectando a SQL Server: {e}")      
+                logger.error(f"❌ Error conectando a SQL Server: {e}")
                 self.sql_engine = None
                 if not db_config.get("fallback_to_csv", True):
                     return False
@@ -212,7 +221,9 @@ class DatabaseClient:
         delay = retry_config.get("delay_seconds", 5)
 
         for attempt in range(1, max_attempts + 1):
-            logger.info(f"Intento {attempt}/{max_attempts} de conexión al servidor {hostname}...")
+            logger.info(
+                f"Intento {attempt}/{max_attempts} de conexión al servidor {hostname}..."
+            )
 
             # Check server reachability
             if not self._ping_server(ip_address):
@@ -232,7 +243,7 @@ class DatabaseClient:
             if db_path and os.path.exists(db_path):
                 self.database_path = db_path
                 self.connected = True
-                self.connection_mode = 'server'
+                self.connection_mode = "server"
                 self.last_sync = datetime.now()
 
                 # Verify database integrity
@@ -269,7 +280,7 @@ class DatabaseClient:
             return
 
         try:
-            with open(marker_path, 'r', encoding='utf-8') as f:
+            with open(marker_path, "r", encoding="utf-8") as f:
                 marker = json.load(f)
         except Exception as e:
             logger.warning(f"No se pudo leer marcador de sincronizacion local: {e}")
@@ -277,7 +288,9 @@ class DatabaseClient:
 
         changed_files = marker.get("changed_files", [])
         if not changed_files:
-            logger.info("Marcador de sincronizacion encontrado, pero sin archivos pendientes.")
+            logger.info(
+                "Marcador de sincronizacion encontrado, pero sin archivos pendientes."
+            )
             try:
                 os.remove(marker_path)
             except Exception:
@@ -315,7 +328,9 @@ class DatabaseClient:
                 logger.error(f"Error sincronizando {rel_name} a servidor: {e}")
 
         if synced > 0:
-            logger.info(f"✅ Sincronizacion de fallback completada: {synced} archivo(s) enviados al servidor.")
+            logger.info(
+                f"✅ Sincronizacion de fallback completada: {synced} archivo(s) enviados al servidor."
+            )
 
         # Remove marker only when all pending files were successfully synced.
         if attempted == 0 or synced == attempted:
@@ -331,7 +346,9 @@ class DatabaseClient:
         Returns:
             True if successful
         """
-        local_path = self.config.get("fallback", {}).get("local_database_path", "unified_db")
+        local_path = self.config.get("fallback", {}).get(
+            "local_database_path", "unified_db"
+        )
         db_path = os.path.join(self.base_dir, local_path)
 
         if not os.path.exists(db_path):
@@ -341,7 +358,7 @@ class DatabaseClient:
         if self._verify_database(db_path):
             self.database_path = db_path
             self.connected = True
-            self.connection_mode = 'local'
+            self.connection_mode = "local"
             logger.info(f"Base de datos local: {db_path}")
             return True
 
@@ -376,7 +393,9 @@ class DatabaseClient:
             logger.debug(f"Ping error: {e}")
             return False
 
-    def _try_windows_share(self, hostname: str, ip_address: str, share_name: str) -> Optional[str]:
+    def _try_windows_share(
+        self, hostname: str, ip_address: str, share_name: str
+    ) -> Optional[str]:
         """
         Try to access Windows network share
 
@@ -391,7 +410,7 @@ class DatabaseClient:
         # Try both hostname and IP address
         paths_to_try = [
             f"\\\\{ip_address}\\{share_name}",  # Try IP first (more reliable)
-            f"\\\\{hostname}\\{share_name}",     # Then try hostname
+            f"\\\\{hostname}\\{share_name}",  # Then try hostname
         ]
 
         # Optional credentials:
@@ -428,7 +447,14 @@ class DatabaseClient:
                             timeout=10,
                         )
 
-                        cmd = ["net", "use", unc_path, "/persistent:no", f"/user:{user}", pwd]
+                        cmd = [
+                            "net",
+                            "use",
+                            unc_path,
+                            "/persistent:no",
+                            f"/user:{user}",
+                            pwd,
+                        ]
 
                         result = subprocess.run(
                             cmd,
@@ -476,11 +502,17 @@ class DatabaseClient:
 
             # Create mount point if doesn't exist
             if not os.path.exists(mount_point):
-                subprocess.run(['sudo', 'mkdir', '-p', mount_point], check=True)
+                subprocess.run(["sudo", "mkdir", "-p", mount_point], check=True)
 
             # Mount NFS share
-            mount_cmd = ['sudo', 'mount', '-t', 'nfs',
-                         f'{ip_address}:/path/to/unified_db', mount_point]
+            mount_cmd = [
+                "sudo",
+                "mount",
+                "-t",
+                "nfs",
+                f"{ip_address}:/path/to/unified_db",
+                mount_point,
+            ]
             result = subprocess.run(mount_cmd, capture_output=True, timeout=10)
 
             if result.returncode == 0 and os.path.ismount(mount_point):
@@ -501,10 +533,10 @@ class DatabaseClient:
             True if database is valid
         """
         required_files = [
-            'products_master.csv',
-            'h_statements.csv',
-            'p_statements.csv',
-            'manifest.json'
+            "products_master.csv",
+            "h_statements.csv",
+            "p_statements.csv",
+            "manifest.json",
         ]
 
         for file in required_files:
@@ -545,11 +577,11 @@ class DatabaseClient:
             Dictionary with connection information
         """
         return {
-            'connected': self.connected,
-            'mode': self.connection_mode,
-            'database_path': self.database_path,
-            'last_sync': self.last_sync.isoformat() if self.last_sync else None,
-            'config_file': self.config_file
+            "connected": self.connected,
+            "mode": self.connection_mode,
+            "database_path": self.database_path,
+            "last_sync": self.last_sync.isoformat() if self.last_sync else None,
+            "config_file": self.config_file,
         }
 
     def disconnect(self):
@@ -560,7 +592,7 @@ class DatabaseClient:
             self.database_path = None
             self.connection_mode = None
 
-    def get_sql_engine(self) -> Optional['Engine']:
+    def get_sql_engine(self) -> Optional["Engine"]:
         """Returns the SQLAlchemy engine if connected via SQL, else None."""
         return self.sql_engine
 
@@ -579,7 +611,7 @@ def test_connection():
         db_path = client.get_database_path()
         if db_path:
             files = os.listdir(db_path)
-            csv_files = [f for f in files if f.endswith('.csv')]
+            csv_files = [f for f in files if f.endswith(".csv")]
             print(f"   Archivos CSV: {len(csv_files)}")
             for f in csv_files[:5]:
                 print(f"      - {f}")
@@ -592,7 +624,7 @@ def test_connection():
 
 
 if __name__ == "__main__":
-    import sys
+    # import sys  # already imported at top
 
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         test_connection()

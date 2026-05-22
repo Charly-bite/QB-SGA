@@ -11,7 +11,6 @@ import datetime
 from typing import Optional, Dict, List, Any
 from enum import Enum
 
-
 STATUS_LABEL_MIGRATIONS = {
     "Listo para Envío": "Recibido por almacen",
     "Listo para Envio": "Recibido por almacen",
@@ -76,8 +75,7 @@ class OrderStatusManager:
             return
         try:
             with self.sql_engine.begin() as conn:
-                conn.exec_driver_sql(
-                    """
+                conn.exec_driver_sql("""
                     IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='order_status' and xtype='U')
                     CREATE TABLE order_status (
                         order_id VARCHAR(50) PRIMARY KEY,
@@ -85,8 +83,7 @@ class OrderStatusManager:
                         last_updated VARCHAR(50),
                         data NVARCHAR(MAX)
                     )
-                """
-                )
+                """)
         except Exception as e:
             print(f"⚠️ Could not ensure order_status table exists: {e}")
 
@@ -103,7 +100,7 @@ class OrderStatusManager:
                     o_id = str(row["order_id"])
                     try:
                         self.orders[o_id] = json.loads(row["data"])
-                    except:
+                    except Exception:
                         pass
                 loaded_from_sql = True
             except Exception as e:
@@ -515,7 +512,7 @@ if __name__ == "__main__":
     manager.update_status(
         "10168", OrderStatus.IN_PROGRESS.value, "admin", "Iniciando preparación"
     )
-    print(f"✓ Updated status")
+    print("✓ Updated status")
 
     # Test get
     order = manager.get_order("10168")

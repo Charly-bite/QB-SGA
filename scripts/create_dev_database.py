@@ -9,16 +9,22 @@ This approach:
   - Creates a complete local snapshot for dev
   - Zero risk of corrupting production data
 """
+
 import os
 import sys
 import sqlite3
 
 # Ensure PYTHONIOENCODING is set for emoji output
-if sys.stdout.encoding != 'utf-8':
+if sys.stdout.encoding != "utf-8":
     import io
+
     try:
-        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+        sys.stdout = io.TextIOWrapper(
+            sys.stdout.buffer, encoding="utf-8", errors="replace"
+        )
+        sys.stderr = io.TextIOWrapper(
+            sys.stderr.buffer, encoding="utf-8", errors="replace"
+        )
     except Exception:
         pass
 
@@ -100,7 +106,9 @@ def main():
 
             # Create table in SQLite
             col_defs = ", ".join(f'"{c}" TEXT' for c in columns)
-            sqlite_cur.execute(f'CREATE TABLE IF NOT EXISTS "{table_name}" ({col_defs})')
+            sqlite_cur.execute(
+                f'CREATE TABLE IF NOT EXISTS "{table_name}" ({col_defs})'
+            )
 
             # Insert data
             if rows:
@@ -134,7 +142,7 @@ def main():
     file_size_mb = os.path.getsize(SQLITE_PATH) / (1024 * 1024)
 
     print(f"\n{'=' * 60}")
-    print(f"  [DONE] Development database snapshot created!")
+    print("  [DONE] Development database snapshot created!")
     print(f"  Tables: {len(tables)}")
     print(f"  Total rows: {total_rows}")
     print(f"  File size: {file_size_mb:.1f} MB")
@@ -159,5 +167,5 @@ def main():
         print(f"\n[WARN] Could not update config: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

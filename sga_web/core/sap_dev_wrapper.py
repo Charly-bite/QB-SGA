@@ -16,7 +16,7 @@ import time
 import threading
 import logging
 import functools
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class SAPDevThrottle:
     """
     Wraps SAPHanaConnector to throttle SAP HANA access in development.
-    
+
     Usage:
         from sap_dev_wrapper import SAPDevThrottle
         from sap_connector import SAPHanaConnector
@@ -36,9 +36,9 @@ class SAPDevThrottle:
     """
 
     # Configuration
-    MAX_CONCURRENT = 1       # Max simultaneous connections
-    COOLDOWN_SECS = 2.0      # Seconds between queries
-    IDLE_TIMEOUT = 60        # Auto-disconnect after N seconds idle
+    MAX_CONCURRENT = 1  # Max simultaneous connections
+    COOLDOWN_SECS = 2.0  # Seconds between queries
+    IDLE_TIMEOUT = 60  # Auto-disconnect after N seconds idle
 
     def __init__(self, connector):
         """
@@ -67,10 +67,12 @@ class SAPDevThrottle:
         attr = getattr(self._sap, name)
 
         # If it's a callable method, wrap it with throttling
-        if callable(attr) and not name.startswith('_'):
+        if callable(attr) and not name.startswith("_"):
+
             @functools.wraps(attr)
             def throttled_call(*args, **kwargs):
                 return self._throttled_exec(name, attr, *args, **kwargs)
+
             return throttled_call
 
         return attr
@@ -81,7 +83,7 @@ class SAPDevThrottle:
     def _throttled_exec(self, method_name, method, *args, **kwargs):
         """Execute a SAP method with throttling."""
         # Skip throttle for connect/disconnect/simple property checks
-        if method_name in ('connect', 'disconnect', 'test_connection'):
+        if method_name in ("connect", "disconnect", "test_connection"):
             return method(*args, **kwargs)
 
         self._semaphore.acquire()
@@ -91,7 +93,9 @@ class SAPDevThrottle:
                 elapsed = time.time() - self._last_query_time
                 if elapsed < self.COOLDOWN_SECS:
                     wait = self.COOLDOWN_SECS - elapsed
-                    logger.debug(f"[DEV-SAP] Cooldown: waiting {wait:.1f}s before {method_name}")
+                    logger.debug(
+                        f"[DEV-SAP] Cooldown: waiting {wait:.1f}s before {method_name}"
+                    )
                     time.sleep(wait)
 
             # Execute with timing
@@ -136,9 +140,7 @@ class SAPDevThrottle:
         if self._idle_timer:
             self._idle_timer.cancel()
 
-        self._idle_timer = threading.Timer(
-            self.IDLE_TIMEOUT, self._idle_disconnect
-        )
+        self._idle_timer = threading.Timer(self.IDLE_TIMEOUT, self._idle_disconnect)
         self._idle_timer.daemon = True
         self._idle_timer.start()
 
@@ -194,11 +196,11 @@ class SAPDevThrottle:
         parts = []
         for a in args:
             s = repr(a)
-            parts.append(s[:50] + '...' if len(s) > 50 else s)
+            parts.append(s[:50] + "..." if len(s) > 50 else s)
         for k, v in kwargs.items():
             s = repr(v)
             parts.append(f"{k}={s[:40]}{'...' if len(s) > 40 else ''}")
-        return ', '.join(parts) if parts else ''
+        return ", ".join(parts) if parts else ""
 
     @staticmethod
     def _summarize_result(result):
@@ -206,27 +208,27 @@ class SAPDevThrottle:
         if result is None:
             return "None"
         if isinstance(result, dict):
-            if 'data' in result:
+            if "data" in result:
                 return f"{len(result['data'])} items"
-            if 'header' in result:
+            if "header" in result:
                 return f"order #{result['header'].get('order_number', '?')}"
             return f"dict({len(result)} keys)"
         if isinstance(result, list):
             return f"{len(result)} items"
-        if hasattr(result, '__len__'):
+        if hasattr(result, "__len__"):
             return f"{len(result)} rows"
         return str(type(result).__name__)
 
     def get_stats(self) -> Dict:
         """Return throttle statistics for monitoring."""
         return {
-            'query_count': self._query_count,
-            'total_query_time': round(self._total_query_time, 2),
-            'avg_query_time': round(
+            "query_count": self._query_count,
+            "total_query_time": round(self._total_query_time, 2),
+            "avg_query_time": round(
                 self._total_query_time / max(self._query_count, 1), 2
             ),
-            'connected': self.connected,
-            'cooldown_secs': self.COOLDOWN_SECS,
-            'max_concurrent': self.MAX_CONCURRENT,
-            'idle_timeout': self.IDLE_TIMEOUT,
+            "connected": self.connected,
+            "cooldown_secs": self.COOLDOWN_SECS,
+            "max_concurrent": self.MAX_CONCURRENT,
+            "idle_timeout": self.IDLE_TIMEOUT,
         }

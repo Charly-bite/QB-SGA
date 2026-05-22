@@ -138,7 +138,9 @@ def update_status(order_id):
 
     # Validate status
     try:
-        logging.info(f"update_status: order={order_id}, raw='{new_status}', normalized='{normalized}'")
+        logging.info(
+            f"update_status: order={order_id}, raw='{new_status}', normalized='{normalized}'"
+        )
         status_enum = OrderStatus(normalized)
     except ValueError:
         # Fallback: try case-insensitive match against enum values
@@ -406,7 +408,7 @@ def sync_sap_status():
         logging.info(f"SAP returned status for {len(sap_statuses)} orders")
 
         updated_count = 0
-        now_iso = datetime.datetime.now().isoformat()
+        _now_iso = datetime.datetime.now().isoformat()
 
         for order_id, order in list(order_mgr.orders.items()):
             try:
@@ -1098,7 +1100,7 @@ def public_api_weather():
             f"&appid={API_KEY}&units=metric&lang=es"
         )
         req = urllib.request.Request(url, headers={"User-Agent": "SGA-Monitor/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10) as resp:  # nosec B310
             raw = json_mod.loads(resp.read().decode())
 
         result = {

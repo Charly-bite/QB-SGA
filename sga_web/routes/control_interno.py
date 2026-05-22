@@ -17,13 +17,71 @@ from datetime import datetime
 from typing import Optional
 from flask import send_file, Blueprint, render_template, request, jsonify, current_app
 from flask_login import login_required, current_user
-from user_manager import UserRole
 
 control_bp = Blueprint("control", __name__)
 logger = logging.getLogger(__name__)
 
 # Guard: lote recovery from history runs only once per app lifecycle
 _lote_recovery_done = False
+
+
+def run_startup_lote_recovery(app):
+    """Run the one-time lote recovery during app startup instead of first request.
+
+    This shifts ~10s of work from the first user search to server boot time.
+    """
+    global _lote_recovery_done
+    if _lote_recovery_done:
+        return
+
+    tara_mgr = app.tara_manager
+    history_mgr = getattr(app, "history_mgr", None)
+    if not history_mgr:
+        _lote_recovery_done = True
+        return
+
+    needs_persist = False
+    try:
+        lote_overrides = _extract_user_lote_overrides(tara_mgr, history_mgr)
+        for pid, override in lote_overrides.items():
+            if pid not in tara_mgr._product_classifications:
+                continue
+            class_data = tara_mgr._product_classifications[pid]
+            current_lote = _primary_lote_value(class_data.get("lote", ""))
+            target_lote = override.get("lote", "")
+            if not target_lote:
+                continue
+            target_date = override.get("lote_date", "")
+            target_reinsp = override.get("lote_reinspection_date", "")
+            if (
+                current_lote != target_lote
+                or _normalize_iso_date(class_data.get("lote_date", "")) != target_date
+                or _normalize_iso_date(class_data.get("lote_reinspection_date", ""))
+                != target_reinsp
+            ):
+                class_data["lote"] = target_lote
+                if target_date:
+                    class_data["lote_date"] = target_date
+                if target_reinsp:
+                    class_data["lote_reinspection_date"] = target_reinsp
+                lotes_info = class_data.get("lotes_info", {})
+                if not isinstance(lotes_info, dict):
+                    lotes_info = {}
+                lotes_info[target_lote] = {
+                    "fecha_elaboracion": target_date,
+                    "fecha_inspeccion": target_reinsp,
+                }
+                class_data["lotes_info"] = lotes_info
+                needs_persist = True
+        if needs_persist:
+            tara_mgr._save_classifications()
+            logger.info(
+                "\ud83d\udd04 Recovered stale lote fields from history overrides (startup)"
+            )
+    except Exception as exc:
+        logger.warning(f"Lote override recovery failed at startup (non-fatal): {exc}")
+
+    _lote_recovery_done = True
 
 
 def _parse_history_datetime(raw_value: str) -> datetime:
@@ -154,6 +212,7 @@ def _primary_lote_value(lote_value: str) -> str:
     raw = str(lote_value or "").strip()
     if not raw:
         return ""
+    raw = raw.replace("|", ",")
     return raw.split(",")[-1].strip()
 
 
@@ -170,7 +229,7 @@ def _normalize_iso_date(date_value: str) -> str:
         except ValueError:
             pass
 
-    return candidate
+    return raw
 
 
 def _default_reinspection_date(elab_date: str) -> str:
@@ -226,7 +285,7 @@ def index():
     tara_mgr = current_app.tara_manager
 
     # Initialize classifications if not done yet
-    total = tara_mgr.initialize_classifications(
+    _total = tara_mgr.initialize_classifications(
         smart_label_manager=current_app.smart_label
     )
     summary = tara_mgr.get_classification_summary()
@@ -245,58 +304,10 @@ def api_products():
     tara_mgr = current_app.tara_manager
     tara_mgr.initialize_classifications(smart_label_manager=current_app.smart_label)
 
-    # ── Recover latest lote overrides from history ──────────────────────
-    # This ensures the Clasificación General panel always shows the latest
-    # batch from lote_history, even if the stored `lote` field got out of
-    # sync (e.g. after server restart loading stale JSON, SQL fallback, etc.)
-    # Only runs once per app lifecycle — after recovery, data is persisted.
-    global _lote_recovery_done
+    # Lote recovery now runs at app startup (see run_startup_lote_recovery).
+    # Safety net: if startup didn't run it yet, do it now.
     if not _lote_recovery_done:
-        history_mgr = getattr(current_app, "history_mgr", None)
-        needs_persist = False
-        try:
-            if history_mgr:
-                lote_overrides = _extract_user_lote_overrides(tara_mgr, history_mgr)
-                # Apply overrides back to the classification store so the lote
-                # field stays in sync with history for future reads.
-                for pid, override in lote_overrides.items():
-                    if pid not in tara_mgr._product_classifications:
-                        continue
-                    class_data = tara_mgr._product_classifications[pid]
-                    current_lote = _primary_lote_value(class_data.get("lote", ""))
-                    target_lote = override.get("lote", "")
-                    if not target_lote:
-                        continue
-                    target_date = override.get("lote_date", "")
-                    target_reinsp = override.get("lote_reinspection_date", "")
-                    # Only update if there is a real difference
-                    if (
-                        current_lote != target_lote
-                        or _normalize_iso_date(class_data.get("lote_date", "")) != target_date
-                        or _normalize_iso_date(class_data.get("lote_reinspection_date", "")) != target_reinsp
-                    ):
-                        class_data["lote"] = target_lote
-                        if target_date:
-                            class_data["lote_date"] = target_date
-                        if target_reinsp:
-                            class_data["lote_reinspection_date"] = target_reinsp
-                        # Also keep lotes_info in sync
-                        lotes_info = class_data.get("lotes_info", {})
-                        if not isinstance(lotes_info, dict):
-                            lotes_info = {}
-                        lotes_info[target_lote] = {
-                            "fecha_elaboracion": target_date,
-                            "fecha_inspeccion": target_reinsp,
-                        }
-                        class_data["lotes_info"] = lotes_info
-                        needs_persist = True
-                if needs_persist:
-                    tara_mgr._save_classifications()
-                    logger.info("🔄 Recovered stale lote fields from history overrides")
-        except Exception as exc:
-            logger.warning(f"Lote override recovery failed (non-fatal): {exc}")
-        _lote_recovery_done = True
-
+        run_startup_lote_recovery(current_app)
 
     page = request.args.get("page", 1, type=int)
     per_page = request.args.get("per_page", 50, type=int)

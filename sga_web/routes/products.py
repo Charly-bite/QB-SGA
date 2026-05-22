@@ -8,7 +8,6 @@ import logging
 from datetime import datetime
 from flask import Blueprint, render_template, request, jsonify, current_app, send_file
 from flask_login import login_required, current_user
-from user_manager import UserRole
 
 products_bp = Blueprint("products", __name__)
 

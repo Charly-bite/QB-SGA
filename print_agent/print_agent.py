@@ -28,10 +28,7 @@ import base64
 import io
 import json
 import logging
-import os
 import sys
-import tempfile
-import time
 from datetime import datetime
 from pathlib import Path
 
@@ -52,6 +49,7 @@ except ImportError:
 
 try:
     import numpy as np
+
     NUMPY_AVAILABLE = True
 except ImportError:
     NUMPY_AVAILABLE = False
@@ -88,28 +86,24 @@ DEFAULT_CONFIG = {
     # ── Flask agent ───────────────────────────────────────────────
     "port": 5555,
     "host": "127.0.0.1",
-    "allowed_origins": ["*"],          # CORS origins
+    "allowed_origins": ["*"],  # CORS origins
     "log_level": "INFO",
-
     # ── Print method ──────────────────────────────────────────────
     # "windows" → use installed Windows driver (GDI)
     # "tcp"     → send TSPL commands directly to printer IP:port
     "print_method": "tcp",
-
     # ── Windows GDI mode ─────────────────────────────────────────
-    "printer_name": "",                # Empty = system default
-
+    "printer_name": "",  # Empty = system default
     # ── TCP / network mode ────────────────────────────────────────
     # List of network printers (same model, different units)
     "tcp_printers": [
-        {"name": "TTP2610MT",          "ip": "192.168.2.179", "port": 9100},
-        {"name": "TTP2610MT (Copia 2)","ip": "192.168.2.179", "port": 9100},
+        {"name": "TTP2610MT", "ip": "192.168.2.179", "port": 9100},
+        {"name": "TTP2610MT (Copia 2)", "ip": "192.168.2.179", "port": 9100},
     ],
-    "active_printer_index": 0,         # Index into tcp_printers
-    "printer_dpi": 203,                # Thermal printer DPI (203 or 300)
-
+    "active_printer_index": 0,  # Index into tcp_printers
+    "printer_dpi": 203,  # Thermal printer DPI (203 or 300)
     # ── Label size ────────────────────────────────────────────────
-    "default_width_mm": 200,           # Warehouse 02 label
+    "default_width_mm": 200,  # Warehouse 02 label
     "default_height_mm": 150,
     # ── CALIBRATION: Label gap (brecha entre etiquetas) ────────
     # Physical gap between stickers on the roll, in millimetres.
@@ -122,11 +116,10 @@ DEFAULT_CONFIG = {
     # If prints drift DOWN after many labels  → increase this value.
     # If prints drift UP   after many labels  → decrease this value.
     # Fine-tune in 0.5 mm increments for best results.
-    "label_gap_mm": 3,                 # ★ Gap between stickers on roll (mm)
-    "label_gap_offset_mm": 0,          # ★ Gap sensor offset (usually 0)
-    "print_quality": "high",           # high / draft
-    "auto_orient": True,               # Auto-detect landscape vs portrait
-
+    "label_gap_mm": 3,  # ★ Gap between stickers on roll (mm)
+    "label_gap_offset_mm": 0,  # ★ Gap sensor offset (usually 0)
+    "print_quality": "high",  # high / draft
+    "auto_orient": True,  # Auto-detect landscape vs portrait
     # ── Bitmap polarity ────────────────────────────────────────────
     # TSC printers (TTP-2610MT, etc.) typically need INVERTED bitmap:
     #   0 = black (print/fire), 1 = white (no print/paper)
@@ -172,6 +165,7 @@ def get_printer_name(config: dict = None) -> str:
 # Windows GDI Printing
 # ══════════════════════════════════════════════════════════════════════
 
+
 def list_printers() -> list:
     """Return list of installed Windows printers with status info."""
     printers = []
@@ -182,11 +176,13 @@ def list_printers() -> list:
 
     flags = win32print.PRINTER_ENUM_LOCAL | win32print.PRINTER_ENUM_CONNECTIONS
     for _flags, _desc, name, _comment in win32print.EnumPrinters(flags):
-        printers.append({
-            "name": name,
-            "is_default": (name == default),
-            "method": "windows",
-        })
+        printers.append(
+            {
+                "name": name,
+                "is_default": (name == default),
+                "method": "windows",
+            }
+        )
     return printers
 
 
@@ -194,9 +190,11 @@ def list_printers() -> list:
 # TCP / Network Direct Printing (TSPL — TSC Thermal Label Language)
 # ══════════════════════════════════════════════════════════════════════
 
+
 def test_tcp_connection(ip: str, port: int, timeout: float = 3.0) -> bool:
     """Return True if a TCP connection to ip:port succeeds."""
     import socket
+
     try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.settimeout(timeout)
@@ -223,24 +221,32 @@ def list_tcp_printers(config: dict) -> list:
     active_idx = config.get("active_printer_index", 0)
     for i, p in enumerate(printers):
         online = test_tcp_connection(p["ip"], p["port"], timeout=2.0)
-        result.append({
-            "index": i,
-            "name": p.get("name", f"Printer {i}"),
-            "ip": p["ip"],
-            "port": p["port"],
-            "online": online,
-            "active": (i == active_idx),
-            "method": "tcp",
-        })
+        result.append(
+            {
+                "index": i,
+                "name": p.get("name", f"Printer {i}"),
+                "ip": p["ip"],
+                "port": p["port"],
+                "online": online,
+                "active": (i == active_idx),
+                "method": "tcp",
+            }
+        )
     return result
 
 
-def tspl_print_image(img: Image.Image, ip: str, port: int,
-                     width_mm: float, height_mm: float,
-                     copies: int = 1, dpi: int = 203,
-                     invert: bool = True,
-                     gap_mm: float = 3.0,
-                     gap_offset_mm: float = 0.0) -> dict:
+def tspl_print_image(
+    img: Image.Image,
+    ip: str,
+    port: int,
+    width_mm: float,
+    height_mm: float,
+    copies: int = 1,
+    dpi: int = 203,
+    invert: bool = True,
+    gap_mm: float = 3.0,
+    gap_offset_mm: float = 0.0,
+) -> dict:
     """
     Print a PIL Image directly to a TSC thermal printer via raw TCP socket
     using TSPL (TSC Printer Language) commands.
@@ -275,7 +281,6 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
         dict with job details
     """
     import socket
-    import struct
 
     # ── Convert to grayscale ─────────────────────────────────────
     if img.mode == "RGBA":
@@ -286,14 +291,14 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
         img = img.convert("L")
 
     # ── Auto-rotate to match label orientation ───────────────────
-    target_landscape = (width_mm >= height_mm)
-    img_landscape    = (img.size[0] >= img.size[1])
+    target_landscape = width_mm >= height_mm
+    img_landscape = img.size[0] >= img.size[1]
     if target_landscape != img_landscape:
         img = img.rotate(90, expand=True)
         logging.info(f"🔄 TCP: rotated image to {img.size[0]}x{img.size[1]}px")
 
     # ── Compute dot dimensions ───────────────────────────────────
-    width_dots  = int(round(width_mm  / 25.4 * dpi))
+    width_dots = int(round(width_mm / 25.4 * dpi))
     height_dots = int(round(height_mm / 25.4 * dpi))
     # Ensure width in dots is a multiple of 8 (byte boundary)
     width_dots_aligned = ((width_dots + 7) // 8) * 8
@@ -323,7 +328,9 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
 
     if NUMPY_AVAILABLE:
         # ── Fast path: numpy packbits (unambiguous, MSB-first) ───
-        arr = np.array(img, dtype=np.uint8)  # shape: (height, width), 0=black..255=white
+        arr = np.array(
+            img, dtype=np.uint8
+        )  # shape: (height, width), 0=black..255=white
 
         if invert:
             # 0=black (print), 1=white (no print) — for real TSC hardware
@@ -353,11 +360,11 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
                         if invert:
                             # 0=black: set bit for LIGHT pixels
                             if pixel > threshold:
-                                byte_val |= (0x80 >> bit)
+                                byte_val |= 0x80 >> bit
                         else:
                             # 1=black: set bit for DARK pixels
                             if pixel <= threshold:
-                                byte_val |= (0x80 >> bit)
+                                byte_val |= 0x80 >> bit
                 raw_pixels[out_base + x_byte] = byte_val
         raw_pixels = bytes(raw_pixels)
         logging.info(f"📊 Bitmap packed via Python: {len(raw_pixels):,} bytes")
@@ -378,7 +385,7 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
     # Or via the print_agent_config.json file.
     tspl_header = (
         f"SIZE {width_mm:.1f} mm,{height_mm:.1f} mm\r\n"
-        f"GAP {gap_mm:.1f} mm,{gap_offset_mm:.1f} mm\r\n"   # ← pitch = height + gap
+        f"GAP {gap_mm:.1f} mm,{gap_offset_mm:.1f} mm\r\n"  # ← pitch = height + gap
         f"DIRECTION 0\r\n"
         f"SET PRINTSPEED 4\r\n"
         f"SET DENSITY 8\r\n"
@@ -386,9 +393,7 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
         f"BITMAP 0,0,{bytes_per_row},{height_dots},0,"
     ).encode("ascii")
 
-    tspl_footer = (
-        f"\r\nPRINT {copies},1\r\n"
-    ).encode("ascii")
+    tspl_footer = (f"\r\nPRINT {copies},1\r\n").encode("ascii")
 
     # Verify data size matches what BITMAP expects
     expected_bitmap_bytes = bytes_per_row * height_dots
@@ -398,7 +403,9 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
             f"❌ BITMAP data size mismatch! Expected {expected_bitmap_bytes} "
             f"({bytes_per_row}×{height_dots}), got {actual_bitmap_bytes}"
         )
-        raise ValueError(f"Bitmap data size mismatch: {actual_bitmap_bytes} != {expected_bitmap_bytes}")
+        raise ValueError(
+            f"Bitmap data size mismatch: {actual_bitmap_bytes} != {expected_bitmap_bytes}"
+        )
 
     payload = tspl_header + raw_pixels + tspl_footer
     total_bytes = len(payload)
@@ -435,10 +442,14 @@ def tspl_print_image(img: Image.Image, ip: str, port: int,
     }
 
 
-def print_image(img: Image.Image, printer_name: str,
-                width_mm: float, height_mm: float,
-                orientation: str = "landscape",
-                fit_mode: str = "fill") -> dict:
+def print_image(
+    img: Image.Image,
+    printer_name: str,
+    width_mm: float,
+    height_mm: float,
+    orientation: str = "landscape",
+    fit_mode: str = "fill",
+) -> dict:
     """
     Print a PIL Image to a Windows printer at exact physical dimensions.
 
@@ -480,8 +491,8 @@ def print_image(img: Image.Image, printer_name: str,
     # The PDF generator may produce a portrait image (via template
     # rotation) even when the target label is landscape.  Detect this
     # and rotate the image so it matches the target dimensions.
-    target_landscape = (width_mm >= height_mm)
-    img_landscape = (img.size[0] >= img.size[1])
+    target_landscape = width_mm >= height_mm
+    img_landscape = img.size[0] >= img.size[1]
 
     if target_landscape != img_landscape:
         logging.info(
@@ -513,14 +524,14 @@ def print_image(img: Image.Image, printer_name: str,
         devmode.Orientation = win32con.DMORIENT_PORTRAIT  # ALWAYS portrait
 
         # Set dimensions exactly as requested
-        devmode.PaperWidth = int(width_mm * 10)    # tenths of mm
+        devmode.PaperWidth = int(width_mm * 10)  # tenths of mm
         devmode.PaperLength = int(height_mm * 10)
 
         devmode.Fields |= (
-            win32con.DM_PAPERSIZE |
-            win32con.DM_PAPERWIDTH |
-            win32con.DM_PAPERLENGTH |
-            win32con.DM_ORIENTATION
+            win32con.DM_PAPERSIZE
+            | win32con.DM_PAPERWIDTH
+            | win32con.DM_PAPERLENGTH
+            | win32con.DM_ORIENTATION
         )
 
         logging.info(
@@ -539,12 +550,12 @@ def print_image(img: Image.Image, printer_name: str,
         dpi_x = hDC.GetDeviceCaps(win32con.LOGPIXELSX)
         dpi_y = hDC.GetDeviceCaps(win32con.LOGPIXELSY)
 
-        phys_w_px = hDC.GetDeviceCaps(110)   # PHYSICALWIDTH
-        phys_h_px = hDC.GetDeviceCaps(111)   # PHYSICALHEIGHT
+        phys_w_px = hDC.GetDeviceCaps(110)  # PHYSICALWIDTH
+        phys_h_px = hDC.GetDeviceCaps(111)  # PHYSICALHEIGHT
         printable_w = hDC.GetDeviceCaps(win32con.HORZRES)
         printable_h = hDC.GetDeviceCaps(win32con.VERTRES)
-        off_x = hDC.GetDeviceCaps(112)       # PHYSICALOFFSETX
-        off_y = hDC.GetDeviceCaps(113)       # PHYSICALOFFSETY
+        off_x = hDC.GetDeviceCaps(112)  # PHYSICALOFFSETX
+        off_y = hDC.GetDeviceCaps(113)  # PHYSICALOFFSETY
 
         phys_w_mm = phys_w_px / dpi_x * 25.4
         phys_h_mm = phys_h_px / dpi_y * 25.4
@@ -564,7 +575,7 @@ def print_image(img: Image.Image, printer_name: str,
         # If the driver rejected our PaperWidth > PaperLength and
         # swapped them, the DC will be portrait when we wanted landscape
         # (or vice versa).  Detect and rotate image to compensate.
-        dc_landscape = (phys_w_px > phys_h_px)
+        dc_landscape = phys_w_px > phys_h_px
 
         if target_landscape != dc_landscape:
             logging.warning(
@@ -649,6 +660,7 @@ def print_image(img: Image.Image, printer_name: str,
 # ══════════════════════════════════════════════════════════════════════
 app = Flask(__name__)
 
+
 # CORS support for cross-origin requests from the web app
 @app.after_request
 def add_cors_headers(response):
@@ -675,14 +687,14 @@ def home():
 
     if method == "tcp":
         tcp_ps = list_tcp_printers(config)
-        active = get_active_tcp_printer(config)
+        _active = get_active_tcp_printer(config)
         rows = ""
         for p in tcp_ps:
             status_color = "#10b981" if p["online"] else "#ef4444"
-            status_text  = "🟢 online" if p["online"] else "🔴 offline"
-            active_mark  = " ◀ active" if p["active"] else ""
+            status_text = "🟢 online" if p["online"] else "🔴 offline"
+            active_mark = " ◀ active" if p["active"] else ""
             rows += (
-                f"<tr style='background:{'#f0fdf4' if p['active'] else 'white'}'>"  
+                f"<tr style='background:{'#f0fdf4' if p['active'] else 'white'}'>"
                 f"<td style='padding:8px;'>{p['index']}</td>"
                 f"<td style='padding:8px;font-weight:600;'>{p['name']}{active_mark}</td>"
                 f"<td style='padding:8px;'>{p['ip']}:{p['port']}</td>"
@@ -710,7 +722,8 @@ def home():
 
     badge_color = "#2563eb" if method == "tcp" else "#7c3aed"
     badge_label = "📡 TCP / Network" if method == "tcp" else "🖥️ Windows GDI"
-    return f"""
+    return (
+        f"""
     <html>
     <head><title>GHS Print Agent</title></head>
     <body style="font-family: system-ui; padding: 40px; background: #f8fafc;">
@@ -736,7 +749,9 @@ def home():
         </div>
     </body>
     </html>
-    """, 200
+    """,
+        200,
+    )
 
 
 @app.route("/status", methods=["GET", "OPTIONS"])
@@ -766,21 +781,24 @@ def status():
             "online": True,
         }
 
-    return jsonify({
-        "status": "online",
-        "version": "2.0",
-        "print_method": method,
-        "printer": printer_info,
-        "default_size": {
-            "width_mm": config.get("default_width_mm", 200),
-            "height_mm": config.get("default_height_mm", 150),
-        },
-        # ★ CALIBRATION: gap and pitch info (visible in /status response)
-        "label_gap_mm": config.get("label_gap_mm", 3),
-        "label_gap_offset_mm": config.get("label_gap_offset_mm", 0),
-        "pitch_mm": config.get("default_height_mm", 150) + config.get("label_gap_mm", 3),
-        "timestamp": datetime.now().isoformat(),
-    })
+    return jsonify(
+        {
+            "status": "online",
+            "version": "2.0",
+            "print_method": method,
+            "printer": printer_info,
+            "default_size": {
+                "width_mm": config.get("default_width_mm", 200),
+                "height_mm": config.get("default_height_mm", 150),
+            },
+            # ★ CALIBRATION: gap and pitch info (visible in /status response)
+            "label_gap_mm": config.get("label_gap_mm", 3),
+            "label_gap_offset_mm": config.get("label_gap_offset_mm", 0),
+            "pitch_mm": config.get("default_height_mm", 150)
+            + config.get("label_gap_mm", 3),
+            "timestamp": datetime.now().isoformat(),
+        }
+    )
 
 
 @app.route("/printers", methods=["GET", "OPTIONS"])
@@ -790,17 +808,20 @@ def printers():
         return "", 204
     config = load_config()
     windows_printers = list_printers()
-    tcp_printers     = list_tcp_printers(config)
-    return jsonify({
-        "print_method": config.get("print_method", "windows"),
-        "windows_printers": windows_printers,
-        "tcp_printers": tcp_printers,
-        "active_printer_index": config.get("active_printer_index", 0),
-    })
+    tcp_printers = list_tcp_printers(config)
+    return jsonify(
+        {
+            "print_method": config.get("print_method", "windows"),
+            "windows_printers": windows_printers,
+            "tcp_printers": tcp_printers,
+            "active_printer_index": config.get("active_printer_index", 0),
+        }
+    )
 
 
 # --- CANCELLATION ---
 cancel_requested = False
+
 
 @app.route("/cancel", methods=["POST", "OPTIONS"])
 def cancel_print_endpoint():
@@ -809,8 +830,14 @@ def cancel_print_endpoint():
         return "", 204
     global cancel_requested
     cancel_requested = True
-    logging.warning("🛑 EMERGENCIA: Cancelación de impresión solicitada por el usuario.")
-    return jsonify({"message": "Cancelación solicitada al agente local", "success": True}), 200
+    logging.warning(
+        "🛑 EMERGENCIA: Cancelación de impresión solicitada por el usuario."
+    )
+    return (
+        jsonify({"message": "Cancelación solicitada al agente local", "success": True}),
+        200,
+    )
+
 
 @app.route("/print", methods=["POST", "OPTIONS"])
 def print_label():
@@ -860,42 +887,66 @@ def print_label():
     if method == "tcp":
         # Allow per-request TCP printer index override
         tcp_idx = data.get("tcp_printer_index", config.get("active_printer_index", 0))
-        tcp_ps  = config.get("tcp_printers", [])
+        tcp_ps = config.get("tcp_printers", [])
         if not tcp_ps:
-            return jsonify({"error": "No TCP printers configured. Add tcp_printers to config."}), 500
+            return (
+                jsonify(
+                    {"error": "No TCP printers configured. Add tcp_printers to config."}
+                ),
+                500,
+            )
         tcp_idx = max(0, min(tcp_idx, len(tcp_ps) - 1))
-        tcp_p   = tcp_ps[tcp_idx]
+        tcp_p = tcp_ps[tcp_idx]
         printer_label = f"{tcp_p.get('name', 'TCP')} ({tcp_p['ip']}:{tcp_p['port']})"
         # Verify connectivity
         if not test_tcp_connection(tcp_p["ip"], tcp_p["port"]):
-            return jsonify({
-                "error": f"Cannot connect to printer at {tcp_p['ip']}:{tcp_p['port']}",
-                "tip": "Check printer is powered on and IP is correct.",
-            }), 503
+            return (
+                jsonify(
+                    {
+                        "error": f"Cannot connect to printer at {tcp_p['ip']}:{tcp_p['port']}",
+                        "tip": "Check printer is powered on and IP is correct.",
+                    }
+                ),
+                503,
+            )
     else:
         printer_name = data.get("printer", get_printer_name(config))
         printer_label = printer_name
         available = [p["name"] for p in list_printers()]
         if printer_name not in available:
-            return jsonify({
-                "error": f"Printer '{printer_name}' not found",
-                "available_printers": available,
-            }), 404
+            return (
+                jsonify(
+                    {
+                        "error": f"Printer '{printer_name}' not found",
+                        "available_printers": available,
+                    }
+                ),
+                404,
+            )
 
     # Normalize to list of images
     images = data.get("images", [])
     if not images and "image_base64" in data:
-        images = [{
-            "data": data["image_base64"],
-            "width_mm": data.get("width_mm", default_w),
-            "height_mm": data.get("height_mm", default_h),
-            "copies": data.get("copies", 1),
-            "orientation": data.get("orientation", "landscape"),
-            "rotation": data.get("rotation", 0),  # Optional manual rotation: 0, 90, 180, 270
-        }]
+        images = [
+            {
+                "data": data["image_base64"],
+                "width_mm": data.get("width_mm", default_w),
+                "height_mm": data.get("height_mm", default_h),
+                "copies": data.get("copies", 1),
+                "orientation": data.get("orientation", "landscape"),
+                "rotation": data.get(
+                    "rotation", 0
+                ),  # Optional manual rotation: 0, 90, 180, 270
+            }
+        ]
 
     if not images:
-        return jsonify({"error": "No images provided. Send 'images' array or 'image_base64'."}), 400
+        return (
+            jsonify(
+                {"error": "No images provided. Send 'images' array or 'image_base64'."}
+            ),
+            400,
+        )
 
     results = []
     total_printed = 0
@@ -920,16 +971,20 @@ def print_label():
             raw_bytes = base64.b64decode(img_data)
             img = Image.open(io.BytesIO(raw_bytes))
 
-            width_mm  = float(img_spec.get("width_mm",  default_w))
+            width_mm = float(img_spec.get("width_mm", default_w))
             height_mm = float(img_spec.get("height_mm", default_h))
-            copies    = int(img_spec.get("copies", 1))
+            copies = int(img_spec.get("copies", 1))
             orientation = img_spec.get("orientation", "landscape")
             rotation = int(img_spec.get("rotation", 0))  # Manual rotation override
 
             # ── Apply manual rotation if specified ───────────────────
             if rotation in [90, 180, 270]:
-                img = img.rotate(-rotation, expand=True)  # PIL rotates counter-clockwise
-                logging.info(f"🔄 Applied manual rotation: {rotation}° → image now {img.size[0]}x{img.size[1]}px")
+                img = img.rotate(
+                    -rotation, expand=True
+                )  # PIL rotates counter-clockwise
+                logging.info(
+                    f"🔄 Applied manual rotation: {rotation}° → image now {img.size[0]}x{img.size[1]}px"
+                )
                 # Swap dimensions for 90/270 degree rotations
                 if rotation in [90, 270]:
                     width_mm, height_mm = height_mm, width_mm
@@ -948,30 +1003,46 @@ def print_label():
                 # ★ CALIBRATION: Read gap from request body, then config, then default.
                 # Per-request override:  POST /print {"label_gap_mm": 3.5}
                 # Config-level default:  print_agent_config.json → "label_gap_mm": 3
-                gap_mm        = float(img_spec.get("label_gap_mm",
-                                      data.get("label_gap_mm",
-                                      config.get("label_gap_mm", 3))))
-                gap_offset_mm = float(img_spec.get("label_gap_offset_mm",
-                                      data.get("label_gap_offset_mm",
-                                      config.get("label_gap_offset_mm", 0))))
+                gap_mm = float(
+                    img_spec.get(
+                        "label_gap_mm",
+                        data.get("label_gap_mm", config.get("label_gap_mm", 3)),
+                    )
+                )
+                gap_offset_mm = float(
+                    img_spec.get(
+                        "label_gap_offset_mm",
+                        data.get(
+                            "label_gap_offset_mm", config.get("label_gap_offset_mm", 0)
+                        ),
+                    )
+                )
                 # Split TCP into smaller batches (e.g. 10) so we can abort sooner
                 remaining = copies
                 batch_size = 10
                 while remaining > 0:
                     if cancel_requested:
-                        logging.warning(f"🛑 Cancelado en TCP antes de completar todas las copias. Faltaron: {remaining}")
+                        logging.warning(
+                            f"🛑 Cancelado en TCP antes de completar todas las copias. Faltaron: {remaining}"
+                        )
                         break
-                    
+
                     current_batch = min(remaining, batch_size)
                     result = tspl_print_image(
-                        img, tcp_p["ip"], tcp_p["port"],
-                        width_mm, height_mm,
-                        copies=current_batch, dpi=dpi, invert=invert,
-                        gap_mm=gap_mm, gap_offset_mm=gap_offset_mm,
+                        img,
+                        tcp_p["ip"],
+                        tcp_p["port"],
+                        width_mm,
+                        height_mm,
+                        copies=current_batch,
+                        dpi=dpi,
+                        invert=invert,
+                        gap_mm=gap_mm,
+                        gap_offset_mm=gap_offset_mm,
                     )
                     total_printed += current_batch
                     remaining -= current_batch
-                    
+
                 logging.info(
                     f"✅ TCP printed image {idx + 1} ({total_printed} copies sent) "
                     f"→ {tcp_p['ip']}:{tcp_p['port']}"
@@ -981,44 +1052,57 @@ def print_label():
                     orientation = "landscape" if width_mm > height_mm else "portrait"
                 for copy_n in range(copies):
                     if cancel_requested:
-                        logging.warning(f"🛑 Cancelado en Windows. Copias completadas: {copy_n}/{copies}")
+                        logging.warning(
+                            f"🛑 Cancelado en Windows. Copias completadas: {copy_n}/{copies}"
+                        )
                         break
-                    
-                    result = print_image(img, printer_name, width_mm, height_mm, orientation)
+
+                    result = print_image(
+                        img, printer_name, width_mm, height_mm, orientation
+                    )
                     total_printed += 1
                     logging.info(
                         f"✅ Windows printed image {idx + 1} copy {copy_n + 1}/{copies} "
                         f"to {printer_name}"
                     )
 
-            results.append({
-                "index": idx + 1,
-                "status": "printed",
-                "method": method,
-                "copies": copies,
-                "size_mm": f"{width_mm}×{height_mm}",
-                "details": result,
-            })
+            results.append(
+                {
+                    "index": idx + 1,
+                    "status": "printed",
+                    "method": method,
+                    "copies": copies,
+                    "size_mm": f"{width_mm}×{height_mm}",
+                    "details": result,
+                }
+            )
 
         except Exception as e:
             error_msg = f"Image {idx + 1}: {str(e)}"
             logging.error(f"❌ {error_msg}")
             errors.append(error_msg)
-            results.append({
-                "index": idx + 1,
-                "status": "error",
-                "error": str(e),
-            })
+            results.append(
+                {
+                    "index": idx + 1,
+                    "status": "error",
+                    "error": str(e),
+                }
+            )
 
     status_code = 200 if not errors else (207 if total_printed > 0 else 500)
-    return jsonify({
-        "success": total_printed > 0,
-        "total_printed": total_printed,
-        "printer": printer_label,
-        "method": method,
-        "results": results,
-        "errors": errors,
-    }), status_code
+    return (
+        jsonify(
+            {
+                "success": total_printed > 0,
+                "total_printed": total_printed,
+                "printer": printer_label,
+                "method": method,
+                "results": results,
+                "errors": errors,
+            }
+        ),
+        status_code,
+    )
 
 
 @app.route("/configure", methods=["GET", "POST", "OPTIONS"])
@@ -1049,6 +1133,7 @@ def configure():
 # Printer Selection Endpoint
 # ══════════════════════════════════════════════════════════════════════
 
+
 @app.route("/select_printer", methods=["GET", "POST", "OPTIONS"])
 def select_printer():
     """
@@ -1065,17 +1150,19 @@ def select_printer():
     if request.method == "OPTIONS":
         return "", 204
 
-    config  = load_config()
+    config = load_config()
 
     if request.method == "GET":
-        tcp_ps      = list_tcp_printers(config)
-        win_ps      = list_printers()
-        return jsonify({
-            "current_method":       config.get("print_method", "windows"),
-            "active_printer_index": config.get("active_printer_index", 0),
-            "tcp_printers":         tcp_ps,
-            "windows_printers":     win_ps,
-        })
+        tcp_ps = list_tcp_printers(config)
+        win_ps = list_printers()
+        return jsonify(
+            {
+                "current_method": config.get("print_method", "windows"),
+                "active_printer_index": config.get("active_printer_index", 0),
+                "tcp_printers": tcp_ps,
+                "windows_printers": win_ps,
+            }
+        )
 
     # ── POST: modify selection ─────────────────────────────────────
     data = request.json or {}
@@ -1083,7 +1170,7 @@ def select_printer():
 
     if action == "add_tcp":
         # Add a new TCP printer entry
-        ip   = data.get("ip")
+        ip = data.get("ip")
         port = int(data.get("port", 9100))
         name = data.get("name", f"Printer {ip}")
         if not ip:
@@ -1093,46 +1180,57 @@ def select_printer():
         config["tcp_printers"] = tcp_ps
         save_config(config)
         online = test_tcp_connection(ip, port)
-        return jsonify({
-            "success": True,
-            "message": f"Added printer '{name}' at {ip}:{port}",
-            "online": online,
-            "index": len(tcp_ps) - 1,
-        })
+        return jsonify(
+            {
+                "success": True,
+                "message": f"Added printer '{name}' at {ip}:{port}",
+                "online": online,
+                "index": len(tcp_ps) - 1,
+            }
+        )
 
     # Default action: select
     method = data.get("method", config.get("print_method", "windows"))
     config["print_method"] = method
 
     if method == "tcp":
-        idx    = int(data.get("index", 0))
+        idx = int(data.get("index", 0))
         tcp_ps = config.get("tcp_printers", [])
         if idx < 0 or idx >= len(tcp_ps):
-            return jsonify({
-                "error": f"Index {idx} out of range (0–{len(tcp_ps)-1})",
-                "tcp_printers": tcp_ps,
-            }), 400
+            return (
+                jsonify(
+                    {
+                        "error": f"Index {idx} out of range (0–{len(tcp_ps)-1})",
+                        "tcp_printers": tcp_ps,
+                    }
+                ),
+                400,
+            )
         config["active_printer_index"] = idx
         selected = tcp_ps[idx]
         online = test_tcp_connection(selected["ip"], selected["port"])
         save_config(config)
-        return jsonify({
-            "success": True,
-            "method": "tcp",
-            "active_index": idx,
-            "printer": selected,
-            "online": online,
-        })
+        return jsonify(
+            {
+                "success": True,
+                "method": "tcp",
+                "active_index": idx,
+                "printer": selected,
+                "online": online,
+            }
+        )
     else:
         win_name = data.get("printer_name", "")
         if win_name:
             config["printer_name"] = win_name
         save_config(config)
-        return jsonify({
-            "success": True,
-            "method": "windows",
-            "printer_name": config.get("printer_name", get_printer_name(config)),
-        })
+        return jsonify(
+            {
+                "success": True,
+                "method": "windows",
+                "printer_name": config.get("printer_name", get_printer_name(config)),
+            }
+        )
 
 
 @app.route("/test", methods=["POST", "OPTIONS"])
@@ -1141,17 +1239,18 @@ def test_print():
     if request.method == "OPTIONS":
         return "", 204
 
-    config     = load_config()
-    req_data   = request.json or {}
-    method     = req_data.get("method", config.get("print_method", "windows"))
-    width_mm   = float(req_data.get("width_mm",  config.get("default_width_mm",  200)))
-    height_mm  = float(req_data.get("height_mm", config.get("default_height_mm", 150)))
+    config = load_config()
+    req_data = request.json or {}
+    method = req_data.get("method", config.get("print_method", "windows"))
+    width_mm = float(req_data.get("width_mm", config.get("default_width_mm", 200)))
+    height_mm = float(req_data.get("height_mm", config.get("default_height_mm", 150)))
 
     try:
         from PIL import ImageDraw, ImageFont
+
         # Build test image at label resolution
         dpi = config.get("printer_dpi", 203) if method == "tcp" else 200
-        test_w = int(width_mm  / 25.4 * dpi)
+        test_w = int(width_mm / 25.4 * dpi)
         test_h = int(height_mm / 25.4 * dpi)
         test_img = Image.new("RGB", (test_w, test_h), (255, 255, 255))
         draw = ImageDraw.Draw(test_img)
@@ -1162,35 +1261,56 @@ def test_print():
         draw.line([test_w - 4, 4, 4, test_h - 4], fill=(220, 220, 220), width=1)
 
         try:
-            font    = ImageFont.truetype("arial.ttf", max(12, test_h // 12))
-            font_sm = ImageFont.truetype("arial.ttf", max(8,  test_h // 20))
+            font = ImageFont.truetype("arial.ttf", max(12, test_h // 12))
+            font_sm = ImageFont.truetype("arial.ttf", max(8, test_h // 20))
         except Exception:
-            font    = ImageFont.load_default()
+            font = ImageFont.load_default()
             font_sm = font
 
         tx = test_w // 8
         ty = test_h // 4
-        draw.text((tx, ty),      "GHS Print Agent",           fill=(37, 99, 235), font=font)
-        draw.text((tx, ty + test_h//10), "Test Page — OK",    fill=(16, 185, 129), font=font)
-        draw.text((tx, ty + test_h//5),  f"Method: {method}", fill=(0, 0, 0), font=font_sm)
-        draw.text((tx, ty + 3*test_h//10), f"Size: {width_mm:.0f}×{height_mm:.0f} mm | {dpi} DPI",
-                  fill=(0, 0, 0), font=font_sm)
-        draw.text((tx, ty + 2*test_h//5),
-                  f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-                  fill=(100, 116, 139), font=font_sm)
+        draw.text((tx, ty), "GHS Print Agent", fill=(37, 99, 235), font=font)
+        draw.text(
+            (tx, ty + test_h // 10), "Test Page — OK", fill=(16, 185, 129), font=font
+        )
+        draw.text(
+            (tx, ty + test_h // 5), f"Method: {method}", fill=(0, 0, 0), font=font_sm
+        )
+        draw.text(
+            (tx, ty + 3 * test_h // 10),
+            f"Size: {width_mm:.0f}×{height_mm:.0f} mm | {dpi} DPI",
+            fill=(0, 0, 0),
+            font=font_sm,
+        )
+        draw.text(
+            (tx, ty + 2 * test_h // 5),
+            f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            fill=(100, 116, 139),
+            font=font_sm,
+        )
 
         if method == "tcp":
-            idx    = int(req_data.get("tcp_printer_index", config.get("active_printer_index", 0)))
+            idx = int(
+                req_data.get("tcp_printer_index", config.get("active_printer_index", 0))
+            )
             tcp_ps = config.get("tcp_printers", [])
             if not tcp_ps:
                 return jsonify({"error": "No TCP printers configured"}), 500
-            idx   = max(0, min(idx, len(tcp_ps) - 1))
+            idx = max(0, min(idx, len(tcp_ps) - 1))
             tcp_p = tcp_ps[idx]
             if not test_tcp_connection(tcp_p["ip"], tcp_p["port"]):
-                return jsonify({"error": f"Cannot reach {tcp_p['ip']}:{tcp_p['port']}"}), 503
+                return (
+                    jsonify({"error": f"Cannot reach {tcp_p['ip']}:{tcp_p['port']}"}),
+                    503,
+                )
             result = tspl_print_image(
-                test_img, tcp_p["ip"], tcp_p["port"],
-                width_mm, height_mm, copies=1, dpi=dpi,
+                test_img,
+                tcp_p["ip"],
+                tcp_p["port"],
+                width_mm,
+                height_mm,
+                copies=1,
+                dpi=dpi,
                 invert=config.get("invert_bitmap", True),
             )
             msg = f"Test page sent to {tcp_p['name']} ({tcp_p['ip']}:{tcp_p['port']})"
@@ -1210,31 +1330,46 @@ def test_print():
 # Entry Point
 # ══════════════════════════════════════════════════════════════════════
 
+
 def main():
     parser = argparse.ArgumentParser(description="GHS Label Print Agent v2")
-    parser.add_argument("--port",     type=int, help="Agent HTTP port (default: 5555)")
-    parser.add_argument("--printer",  type=str, help="Windows printer name (method=windows)")
-    parser.add_argument("--host",     type=str, default="127.0.0.1", help="Bind address")
-    parser.add_argument("--method",   type=str, choices=["tcp", "windows"],
-                        help="Print method: tcp (network) or windows (driver)")
-    parser.add_argument("--tcp-ip",   type=str, help="TCP printer IP address")
-    parser.add_argument("--tcp-port", type=int, default=9100, help="TCP printer port (default: 9100)")
-    parser.add_argument("--debug",    action="store_true", help="Enable debug mode")
-    parser.add_argument("--list-printers", action="store_true", help="List printers and exit")
+    parser.add_argument("--port", type=int, help="Agent HTTP port (default: 5555)")
+    parser.add_argument(
+        "--printer", type=str, help="Windows printer name (method=windows)"
+    )
+    parser.add_argument("--host", type=str, default="127.0.0.1", help="Bind address")
+    parser.add_argument(
+        "--method",
+        type=str,
+        choices=["tcp", "windows"],
+        help="Print method: tcp (network) or windows (driver)",
+    )
+    parser.add_argument("--tcp-ip", type=str, help="TCP printer IP address")
+    parser.add_argument(
+        "--tcp-port", type=int, default=9100, help="TCP printer port (default: 9100)"
+    )
+    parser.add_argument("--debug", action="store_true", help="Enable debug mode")
+    parser.add_argument(
+        "--list-printers", action="store_true", help="List printers and exit"
+    )
     args = parser.parse_args()
 
     # Load / create config
     config = load_config()
 
     # Apply CLI overrides
-    if args.port:    config["port"]          = args.port
-    if args.host:    config["host"]          = args.host
-    if args.printer: config["printer_name"]  = args.printer
-    if args.method:  config["print_method"]  = args.method
+    if args.port:
+        config["port"] = args.port
+    if args.host:
+        config["host"] = args.host
+    if args.printer:
+        config["printer_name"] = args.printer
+    if args.method:
+        config["print_method"] = args.method
     if args.tcp_ip:
         tcp_ps = config.get("tcp_printers", [])
         if tcp_ps:
-            tcp_ps[config.get("active_printer_index", 0)]["ip"]   = args.tcp_ip
+            tcp_ps[config.get("active_printer_index", 0)]["ip"] = args.tcp_ip
             tcp_ps[config.get("active_printer_index", 0)]["port"] = args.tcp_port
         else:
             tcp_ps = [{"name": "CLI Printer", "ip": args.tcp_ip, "port": args.tcp_port}]
@@ -1252,7 +1387,9 @@ def main():
         for p in list_tcp_printers(config):
             online = "🟢 online" if p["online"] else "🔴 offline"
             active = " ← ACTIVE" if p["active"] else ""
-            print(f"   [{p['index']}] {p['name']} — {p['ip']}:{p['port']} {online}{active}")
+            print(
+                f"   [{p['index']}] {p['name']} — {p['ip']}:{p['port']} {online}{active}"
+            )
         sys.exit(0)
 
     # Save config if it doesn't exist yet
@@ -1260,15 +1397,19 @@ def main():
         save_config(config)
 
     # Setup logging
-    log_level = logging.DEBUG if args.debug else getattr(logging, config.get("log_level", "INFO"))
+    log_level = (
+        logging.DEBUG
+        if args.debug
+        else getattr(logging, config.get("log_level", "INFO"))
+    )
     logging.basicConfig(
         level=log_level,
         format="%(asctime)s [%(levelname)s] %(message)s",
         datefmt="%H:%M:%S",
     )
 
-    port   = config.get("port", 5555)
-    host   = config.get("host", "127.0.0.1")
+    port = config.get("port", 5555)
+    host = config.get("host", "127.0.0.1")
     method = config.get("print_method", "windows")
 
     print()
@@ -1276,8 +1417,12 @@ def main():
     print("║         🖨️  GHS Label Print Agent  v2.0                 ║")
     print("╠══════════════════════════════════════════════════════════╣")
     print(f"║  Agent URL : http://{host}:{port:<26} ║")
-    print(f"║  Method    : {'TCP / Network  (TSPL)' if method == 'tcp' else 'Windows GDI (driver)':<36} ║")
-    print(f"║  Label     : {config.get('default_width_mm', 200)}×{config.get('default_height_mm', 150)} mm{'':>31} ║")
+    print(
+        f"║  Method    : {'TCP / Network  (TSPL)' if method == 'tcp' else 'Windows GDI (driver)':<36} ║"
+    )
+    print(
+        f"║  Label     : {config.get('default_width_mm', 200)}×{config.get('default_height_mm', 150)} mm{'':>31} ║"
+    )
 
     if method == "tcp":
         tcp_ps = config.get("tcp_printers", [])
@@ -1288,7 +1433,7 @@ def main():
             online = test_tcp_connection(tp["ip"], tp["port"], timeout=2)
             status = "🟢" if online else "🔴"
             active = " ◀" if i == active_idx else "  "
-            line   = f"  [{i}]{active} {tp.get('name','?')[:18]:18} {tp['ip']}:{tp['port']} {status}"
+            line = f"  [{i}]{active} {tp.get('name','?')[:18]:18} {tp['ip']}:{tp['port']} {status}"
             print(f"║  {line:<54} ║")
     else:
         printer = get_printer_name(config)

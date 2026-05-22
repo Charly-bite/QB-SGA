@@ -6,6 +6,7 @@ Handles authentication, permissions, and user administration
 Auth Source: SQL Server (single source of truth)
 JSON backup: Written on every save as disaster-recovery export only — never read for auth.
 """
+
 import json
 import os
 import hashlib
@@ -15,7 +16,6 @@ import threading
 from datetime import datetime
 from typing import Optional, Dict, List, Any
 from enum import Enum
-
 
 logger = logging.getLogger(__name__)
 
@@ -37,13 +37,12 @@ class UserManager:
         self._lock = threading.RLock()
         self.users_file = users_file  # JSON backup path (write-only export)
         self.sql_engine = None
-        self._db_client = None
         try:
             from database_client import get_shared_client
 
-            self._db_client = get_shared_client()
-            if self._db_client.is_connected():
-                self.sql_engine = self._db_client.get_sql_engine()
+            client = get_shared_client()
+            if client.is_connected():
+                self.sql_engine = client.get_sql_engine()
         except ImportError:
             pass
         except Exception as e:
@@ -52,56 +51,25 @@ class UserManager:
         self._ensure_defaults()
         self._current_user = None
 
-    def _get_sql_engine(self):
-        """Return the SQL engine, retrying connection if it was unavailable at init.
-
-        This handles the case where the SQL Server was temporarily unreachable 
-        at startup — avoids needing a full server restart.
-        """
-        if self.sql_engine is not None:
-            return self.sql_engine
-
-        # Lazy retry: reconnect using the shared singleton
-        try:
-            from database_client import get_shared_client
-
-            client = get_shared_client()
-            # If the shared client doesn't have a SQL engine yet, try reconnecting
-            if not client.get_sql_engine():
-                client.connect()
-            
-            if client.is_connected() and client.get_sql_engine():
-                self.sql_engine = client.get_sql_engine()
-                self._db_client = client
-                logger.info("SQL engine reconnected successfully (lazy retry)")
-                self._ensure_defaults()
-                return self.sql_engine
-        except Exception as e:
-            logger.debug(f"SQL engine lazy retry failed: {e}")
-
-        return None
-
     # ------------------------------------------------------------------
     # Initialization
     # ------------------------------------------------------------------
 
     def _ensure_defaults(self):
         """Ensure the SGA_Users table has at least one admin account."""
-        engine = self._get_sql_engine()
-        if engine is None:
+        if self.sql_engine is None:
             logger.error(
-                "SQL engine is not available — user authentication will not work!"
+                "SQL engine is not available — falling back to JSON user store"
             )
+            self._ensure_json_defaults()
             return
 
         from sqlalchemy import text
 
         try:
-            with engine.begin() as conn:
+            with self.sql_engine.begin() as conn:
                 # Ensure table exists (idempotent)
-                conn.execute(
-                    text(
-                        """
+                conn.execute(text("""
                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='SGA_Users' AND xtype='U')
                 BEGIN
                     CREATE TABLE SGA_Users (
@@ -117,9 +85,7 @@ class UserManager:
                         must_change_password BIT DEFAULT 0
                     )
                 END
-                """
-                    )
-                )
+                """))
 
                 # Check if any admin exists
                 row = conn.execute(
@@ -130,16 +96,14 @@ class UserManager:
                     # Seed a default admin
                     pwd_hash = self._hash_password("admin123")
                     conn.execute(
-                        text(
-                            """
+                        text("""
                         INSERT INTO SGA_Users
                             (username, password_hash, role, full_name, email, warehouse,
                              created_at, is_active, must_change_password)
                         VALUES
                             (:u, :p, 'admin', 'Administrator', '', '',
                              :now, 1, 1)
-                    """
-                        ),
+                    """),
                         {
                             "u": "admin",
                             "p": pwd_hash,
@@ -153,21 +117,60 @@ class UserManager:
         except Exception as e:
             logger.error(f"Error in _ensure_defaults: {e}")
 
+    def _ensure_json_defaults(self):
+        """Seed a JSON user store with a default admin when SQL is unavailable."""
+        try:
+            if os.path.exists(self.users_file):
+                with open(self.users_file, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                users = data.get("users", [])
+                # Check if admin has a valid hash (not a placeholder)
+                for user in users:
+                    if user["username"] == "admin" and "$" in user.get(
+                        "password_hash", ""
+                    ):
+                        return  # Already seeded with a proper hash
+
+            # Create / reseed the default admin
+            pwd_hash = self._hash_password("admin123")
+            data = {
+                "users": [
+                    {
+                        "username": "admin",
+                        "password_hash": pwd_hash,
+                        "role": "admin",
+                        "full_name": "Administrator",
+                        "email": "",
+                        "warehouse": "",
+                        "created_at": datetime.now().isoformat(),
+                        "last_login": None,
+                        "is_active": True,
+                        "must_change_password": False,
+                    }
+                ]
+            }
+            os.makedirs(os.path.dirname(os.path.abspath(self.users_file)), exist_ok=True)
+            with open(self.users_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=4, ensure_ascii=False)
+            print("⚠️  Default admin account created in JSON (dev mode)")
+            print("   Username: admin")
+            print("   Password: admin123")
+        except Exception as e:
+            logger.error(f"Error creating JSON defaults: {e}")
+
     # ------------------------------------------------------------------
     # Data Access — SQL is the single source of truth
     # ------------------------------------------------------------------
 
     def _load_data(self) -> Dict[str, Any]:
-        """Load users from SQL database."""
-        engine = self._get_sql_engine()
-        if engine is None:
-            logger.error("SQL engine unavailable — cannot load users")
-            return {"users": []}
+        """Load users from SQL database, falling back to JSON in dev mode."""
+        if self.sql_engine is None:
+            return self._load_json_fallback()
 
         from sqlalchemy import text
 
         try:
-            with engine.connect() as conn:
+            with self.sql_engine.connect() as conn:
                 result = conn.execute(text("SELECT * FROM SGA_Users"))
                 users_list = []
                 for row in result:
@@ -206,14 +209,23 @@ class UserManager:
             logger.error(f"SQL User Load Error: {e}")
             return {"users": []}
 
+    def _load_json_fallback(self) -> Dict[str, Any]:
+        """Load users from JSON file when SQL is unavailable (dev mode)."""
+        try:
+            if os.path.exists(self.users_file):
+                with open(self.users_file, "r", encoding="utf-8") as f:
+                    return json.load(f)
+        except Exception as e:
+            logger.error(f"JSON fallback load error: {e}")
+        return {"users": []}
+
     def _save_data(self, data: Dict[str, Any]):
         """Save users to SQL database. Also exports a JSON backup."""
         # 1. Write JSON as a one-way disaster-recovery backup
         self._export_json_backup(data)
 
         # 2. Write to SQL (authoritative)
-        engine = self._get_sql_engine()
-        if engine is None:
+        if self.sql_engine is None:
             logger.error("SQL engine unavailable — cannot save users")
             return
 
@@ -224,7 +236,7 @@ class UserManager:
             if not users_data:
                 return
 
-            with engine.begin() as conn:
+            with self.sql_engine.begin() as conn:
                 db_users = conn.execute(
                     text("SELECT username FROM SGA_Users")
                 ).fetchall()
@@ -260,24 +272,20 @@ class UserManager:
 
                     if username.lower() not in db_usernames:
                         conn.execute(
-                            text(
-                                """
+                            text("""
                         INSERT INTO SGA_Users (username, password_hash, role, full_name, email, warehouse, created_at, last_login, is_active, must_change_password)
                         VALUES (:username, :pwd, :role, :full_name, :email, :warehouse, :created_at, :last_login, :is_active, :must_change)
-                        """
-                            ),
+                        """),
                             params,
                         )
                     else:
                         conn.execute(
-                            text(
-                                """
+                            text("""
                         UPDATE SGA_Users
                         SET password_hash=:pwd, role=:role, full_name=:full_name, email=:email,
                             warehouse=:warehouse, last_login=:last_login, is_active=:is_active, must_change_password=:must_change
                         WHERE username = :username
-                        """
-                            ),
+                        """),
                             params,
                         )
         except Exception as e:
@@ -371,13 +379,12 @@ class UserManager:
 
     def _update_last_login(self, username: str):
         """Update last_login timestamp directly in SQL (avoids full save cycle)."""
-        engine = self._get_sql_engine()
-        if engine is None:
+        if self.sql_engine is None:
             return
         from sqlalchemy import text
 
         try:
-            with engine.begin() as conn:
+            with self.sql_engine.begin() as conn:
                 conn.execute(
                     text("UPDATE SGA_Users SET last_login = :now WHERE username = :u"),
                     {"now": datetime.now().isoformat(), "u": username},
@@ -589,14 +596,13 @@ class UserManager:
             return False, "Cannot delete your own account"
 
         # Delete directly from SQL
-        engine = self._get_sql_engine()
-        if engine is None:
+        if self.sql_engine is None:
             return False, "SQL engine unavailable"
 
         from sqlalchemy import text
 
         try:
-            with engine.begin() as conn:
+            with self.sql_engine.begin() as conn:
                 result = conn.execute(
                     text("DELETE FROM SGA_Users WHERE LOWER(username) = :u"),
                     {"u": username.lower()},

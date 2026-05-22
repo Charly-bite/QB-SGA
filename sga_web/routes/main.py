@@ -50,6 +50,20 @@ def dashboard():
 
     db_connection_text = db_mode_labels.get(db_source, "Local (Fallback)")
 
+    # Fetch history early so we can use it for stats
+    all_history = current_app.history_mgr.get_history()
+
+    printed_labels_count = sum(
+        (
+            h.get("details", {}).get("count", 0)
+            if isinstance(h.get("details"), dict)
+            else 0
+        )
+        for h in all_history
+        if h.get("event_type", h.get("type"))
+        in ["PRINT_JOB", "PRINT_JOB_HTML", "LABEL_GENERATION"]
+    )
+
     stats = {
         "total_products": (
             smart_label.count_all_products()
@@ -71,6 +85,7 @@ def dashboard():
             ]
         ),
         "total_orders": len(order_mgr.orders),
+        "printed_labels": printed_labels_count,
         "sap_connected": current_app.sap_connector is not None
         and getattr(current_app.sap_connector, "connected", False),
         "db_connected": db_connected,
@@ -85,7 +100,6 @@ def dashboard():
     from datetime import datetime
 
     selected_date = request.args.get("date", datetime.now().strftime("%Y-%m-%d"))
-    all_history = current_app.history_mgr.get_history()
     history = [
         h for h in all_history if h.get("timestamp", "").startswith(selected_date)
     ]
@@ -114,28 +128,57 @@ def dashboard():
         # Format details in a human-readable way
         details = entry.get("details", {})
         if isinstance(details, dict):
+            # Try to extract an order reference if present
+            order_ref = details.get("order") or details.get("order_id")
+            order_str = f" [Pedido: {order_ref}]" if order_ref else ""
+
             if "count" in details and "items" in details:
                 # Print job format
                 count = details.get("count", 0)
                 items = details.get("items", [])
                 if count == 1:
                     entry["details_display"] = (
-                        f"1 etiqueta: {items[0]}" if items else "1 etiqueta"
+                        f"1 etiqueta: {items[0]}{order_str}"
+                        if items
+                        else f"1 etiqueta{order_str}"
                     )
                 else:
                     items_preview = ", ".join(items[:3])
                     if len(items) > 3:
                         items_preview += f", +{len(items)-3} más"
-                    entry["details_display"] = f"{count} etiquetas: {items_preview}"
+                    entry["details_display"] = (
+                        f"{count} etiquetas: {items_preview}{order_str}"
+                    )
+            elif "product_code" in details and "changes" in details:
+                # Product Edit format
+                changes = details["changes"]
+                change_strs = []
+                if isinstance(changes, dict):
+                    if "lote" in changes:
+                        change_strs.append(f"Lote: '{changes['lote']}'")
+                    if "lote_date" in changes:
+                        change_strs.append(f"Fecha: '{changes['lote_date']}'")
+                    if not change_strs:
+                        change_strs = [f"{k}: '{v}'" for k, v in changes.items()][:2]
+
+                changes_str = ", ".join(change_strs) if change_strs else "Modificado"
+                entry["details_display"] = (
+                    f"Producto: {details['product_code']} - {changes_str}{order_str}"
+                )
             elif "order_id" in details:
                 entry["details_display"] = f"Pedido #{details['order_id']}"
             elif "product_id" in details:
-                entry["details_display"] = f"Producto: {details['product_id']}"
+                entry["details_display"] = (
+                    f"Producto: {details['product_id']}{order_str}"
+                )
             else:
                 # Generic dict display
-                entry["details_display"] = ", ".join(
-                    f"{k}: {v}" for k, v in details.items() if v
+                display_str = ", ".join(
+                    f"{k}: {v}"
+                    for k, v in details.items()
+                    if v and k not in ["order", "order_id"]
                 )[:80]
+                entry["details_display"] = f"{display_str}{order_str}"
         elif isinstance(details, str):
             entry["details_display"] = details
         else:

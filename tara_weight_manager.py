@@ -397,7 +397,7 @@ def load_clasificacion_excel(excel_path: Optional[str] = None) -> Dict[str, str]
 
     """
 
-    global CLASIFICACION_EXCEL_PRODUCTS
+    # global CLASIFICACION_EXCEL_PRODUCTS  # removed: never assigned in scope
 
     if excel_path is None:
 
@@ -547,7 +547,9 @@ class TaraWeightManager:
 
         except Exception as e:
 
-            logger.warning(f"[WARN] Warning initializing DB in tara_weight_manager: {e}")
+            logger.warning(
+                f"[WARN] Warning initializing DB in tara_weight_manager: {e}"
+            )
 
         if csv_path and os.path.exists(csv_path) and not self.sql_engine:
 
@@ -1196,9 +1198,13 @@ class TaraWeightManager:
 
                     def _sanitize_nans(obj):
                         import math
-                        if isinstance(obj, float) and math.isnan(obj): return ""
-                        if isinstance(obj, dict): return {k: _sanitize_nans(val) for k, val in obj.items()}
-                        if isinstance(obj, list): return [_sanitize_nans(val) for val in obj]
+
+                        if isinstance(obj, float) and math.isnan(obj):
+                            return ""
+                        if isinstance(obj, dict):
+                            return {k: _sanitize_nans(val) for k, val in obj.items()}
+                        if isinstance(obj, list):
+                            return [_sanitize_nans(val) for val in obj]
                         return obj
 
                     for k, v in props.items():
@@ -1244,42 +1250,52 @@ class TaraWeightManager:
                 # Also load batch data from product_batches table and merge into classifications
                 try:
                     df_batches = pd.read_sql(
-                        "SELECT product_id, lote, fecha_elaboracion, fecha_reinspeccion FROM product_batches", con=self.sql_engine
+                        "SELECT * FROM product_batches", con=self.sql_engine
                     )
-                    
+
                     if not df_batches.empty:
                         merged_count = 0
                         for _, batch_row in df_batches.iterrows():
                             pid = str(batch_row["product_id"])
                             lote = str(batch_row["lote"])
-                            fecha_elab = str(batch_row.get("fecha_elaboracion", ""))[:10] if pd.notna(batch_row.get("fecha_elaboracion")) else ""
-                            fecha_insp = str(batch_row.get("fecha_reinspeccion", ""))[:10] if pd.notna(batch_row.get("fecha_reinspeccion")) else ""
-                            
+                            fecha_elab = (
+                                str(batch_row.get("fecha_elaboracion", ""))[:10]
+                                if pd.notna(batch_row.get("fecha_elaboracion"))
+                                else ""
+                            )
+                            fecha_insp = (
+                                str(batch_row.get("fecha_reinspeccion", ""))[:10]
+                                if pd.notna(batch_row.get("fecha_reinspeccion"))
+                                else ""
+                            )
+
                             if pid in classifications:
                                 entry = classifications[pid]
-                                
+
                                 # Only merge if product doesn't already have this lote
                                 existing_lotes = entry.get("lotes_info", {})
                                 if not isinstance(existing_lotes, dict):
                                     existing_lotes = {}
-                                
+
                                 if lote not in existing_lotes:
                                     existing_lotes[lote] = {
                                         "fecha_elaboracion": fecha_elab,
-                                        "fecha_inspeccion": fecha_insp
+                                        "fecha_inspeccion": fecha_insp,
                                     }
                                     entry["lotes_info"] = existing_lotes
-                                    
+
                                     # If this is the only lote or no primary lote is set, make it primary
                                     if not entry.get("lote"):
                                         entry["lote"] = lote
                                         entry["lote_date"] = fecha_elab
                                         entry["lote_reinspection_date"] = fecha_insp
-                                    
+
                                     merged_count += 1
-                        
+
                         if merged_count > 0:
-                            logger.info(f"✅ Merged {merged_count} batch records from product_batches table")
+                            logger.info(
+                                f"✅ Merged {merged_count} batch records from product_batches table"
+                            )
                 except Exception as e:
                     logger.warning(f"⚠️ Could not load product_batches: {e}")
 
@@ -1297,8 +1313,16 @@ class TaraWeightManager:
                             lote = str(row.get("lote", ""))
                             if not lote or lote.lower() in ("nan", "none"):
                                 continue
-                            fecha_elab = str(row.get("fecha_elaboracion", ""))[:10] if pd.notna(row.get("fecha_elaboracion")) else ""
-                            fecha_insp = str(row.get("fecha_inspeccion", ""))[:10] if pd.notna(row.get("fecha_inspeccion")) else ""
+                            fecha_elab = (
+                                str(row.get("fecha_elaboracion", ""))[:10]
+                                if pd.notna(row.get("fecha_elaboracion"))
+                                else ""
+                            )
+                            fecha_insp = (
+                                str(row.get("fecha_inspeccion", ""))[:10]
+                                if pd.notna(row.get("fecha_inspeccion"))
+                                else ""
+                            )
                             if fecha_elab.lower() in ("nan", "none", "nat"):
                                 fecha_elab = ""
                             if fecha_insp.lower() in ("nan", "none", "nat"):
@@ -1325,51 +1349,89 @@ class TaraWeightManager:
                                     plotes_count += 1
 
                         if plotes_count > 0:
-                            logger.info(f"✅ Merged {plotes_count} batch records from product_lotes table")
+                            logger.info(
+                                f"✅ Merged {plotes_count} batch records from product_lotes table"
+                            )
                 except Exception as e:
                     logger.debug(f"product_lotes table not available (non-fatal): {e}")
 
-                # NEW: Also load lote history from product_lote_history table to rebuild if missing/truncated
+                # OPTIMIZED: Use ROW_NUMBER() to only fetch the latest 20 entries per product
+                # instead of loading all 224K+ rows. Uses groupby + set dedup instead of iterrows + O(n²) any().
                 try:
                     df_history = pd.read_sql(
-                        "SELECT * FROM product_lote_history ORDER BY product_id, event_date DESC", 
-                        con=self.sql_engine
+                        """
+                        SELECT * FROM (
+                            SELECT *, ROW_NUMBER() OVER (
+                                PARTITION BY product_id ORDER BY event_date DESC
+                            ) as rn
+                            FROM product_lote_history
+                        ) t WHERE rn <= 20
+                        ORDER BY product_id, event_date DESC
+                        """,
+                        con=self.sql_engine,
                     )
                     if not df_history.empty:
                         hist_count = 0
-                        for _, hist_row in df_history.iterrows():
-                            pid = str(hist_row["product_id"])
-                            if pid in self._product_classifications:
-                                entry = self._product_classifications[pid]
-                                if "lote_history" not in entry or not isinstance(entry["lote_history"], list):
-                                    entry["lote_history"] = []
-                                
-                                # Convert SQL row to history entry format
-                                def _safe_str(val):
-                                    if pd.isna(val): return ""
-                                    s = str(val).strip()
-                                    if s.lower() in ("nan", "none", "nat", "<na>"): return ""
-                                    return s
 
+                        def _safe_str(val):
+                            if pd.isna(val):
+                                return ""
+                            s = str(val).strip()
+                            if s.lower() in ("nan", "none", "nat", "<na>"):
+                                return ""
+                            return s
+
+                        # Batch process by product_id using groupby instead of iterrows
+                        for pid, group in df_history.groupby("product_id"):
+                            pid = str(pid)
+                            if pid not in self._product_classifications:
+                                continue
+
+                            entry = self._product_classifications[pid]
+                            if "lote_history" not in entry or not isinstance(
+                                entry["lote_history"], list
+                            ):
+                                entry["lote_history"] = []
+
+                            # Build a set of existing timestamps for O(1) dedup
+                            existing_ts = set()
+                            for x in entry["lote_history"]:
+                                ts_val = x.get("timestamp", "")
+                                if ts_val:
+                                    existing_ts.add(ts_val)
+                                date_val = x.get("date", "")
+                                if date_val:
+                                    existing_ts.add(date_val)
+
+                            for _, hist_row in group.iterrows():
                                 h_entry = {
                                     "old_lote": _safe_str(hist_row.get("old_lote")),
                                     "new_lote": _safe_str(hist_row.get("new_lote")),
-                                    "old_date": _safe_str(hist_row.get("old_date"))[:10],
-                                    "new_date": _safe_str(hist_row.get("new_date"))[:10],
-                                    "user": _safe_str(hist_row.get("user_name")) or "Sistema",
-                                    "timestamp": _safe_str(hist_row.get("event_date"))[:19],
+                                    "old_date": _safe_str(hist_row.get("old_date"))[
+                                        :10
+                                    ],
+                                    "new_date": _safe_str(hist_row.get("new_date"))[
+                                        :10
+                                    ],
+                                    "user": _safe_str(hist_row.get("user_name"))
+                                    or "Sistema",
+                                    "timestamp": _safe_str(hist_row.get("event_date"))[
+                                        :19
+                                    ],
                                     "source": "sql_recovery",
-                                    "notes": _safe_str(hist_row.get("notes"))
+                                    "notes": _safe_str(hist_row.get("notes")),
                                 }
-                                
-                                # Check if already in history (prevent duplicates)
+
                                 ts = h_entry["timestamp"]
-                                if not any(x.get("timestamp") == ts or x.get("date") == ts for x in entry["lote_history"]):
+                                if ts not in existing_ts:
                                     entry["lote_history"].append(h_entry)
+                                    existing_ts.add(ts)
                                     hist_count += 1
-                        
+
                         if hist_count > 0:
-                            logger.info(f"✅ Rebuilt {hist_count} history entries from product_lote_history SQL table")
+                            logger.info(
+                                f"✅ Rebuilt {hist_count} history entries from product_lote_history SQL table"
+                            )
                 except Exception as e:
                     logger.warning(f"⚠️ Could not recover lote history from SQL: {e}")
 
@@ -1437,9 +1499,16 @@ class TaraWeightManager:
                     continue
 
                 # Parse timestamp from either 'date' or 'timestamp' field
-                ts_raw = str(entry.get("date", entry.get("timestamp", "")) or "").strip()
+                ts_raw = str(
+                    entry.get("date", entry.get("timestamp", "")) or ""
+                ).strip()
                 ts = dt.datetime.min
-                for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+                for fmt in (
+                    "%Y-%m-%d %H:%M:%S",
+                    "%Y-%m-%dT%H:%M:%S.%f",
+                    "%Y-%m-%dT%H:%M:%S",
+                    "%Y-%m-%d",
+                ):
                     try:
                         ts = dt.datetime.strptime(ts_raw, fmt)
                         break
@@ -1457,8 +1526,13 @@ class TaraWeightManager:
                 if target_lote and target_lote != current_lote:
                     class_data["lote"] = target_lote
                     # Also update dates from the history entry
-                    new_date = str(best_entry.get("new_elab_date", best_entry.get("new_date", "")) or "").strip()
-                    new_reinsp = str(best_entry.get("new_reinsp_date", "") or "").strip()
+                    new_date = str(
+                        best_entry.get("new_elab_date", best_entry.get("new_date", ""))
+                        or ""
+                    ).strip()
+                    new_reinsp = str(
+                        best_entry.get("new_reinsp_date", "") or ""
+                    ).strip()
                     if new_date and new_date != "nan":
                         class_data["lote_date"] = new_date[:10]
                     if new_reinsp and new_reinsp != "nan":
@@ -1515,18 +1589,20 @@ class TaraWeightManager:
             if best_lote and best_info and has_valid_date:
                 current_lote = str(class_data.get("lote", "")).strip()
                 should_override = True
-                
+
                 # If the current lote is already in lotes_info and has the SAME date as best_dt,
                 # preserve it! This prevents reverting user edits that changed the lote name but kept the same date.
                 if current_lote in lotes_info:
-                    c_elab = str(lotes_info[current_lote].get("fecha_elaboracion", "")).strip()[:10]
+                    c_elab = str(
+                        lotes_info[current_lote].get("fecha_elaboracion", "")
+                    ).strip()[:10]
                     try:
                         c_dt = datetime.datetime.strptime(c_elab, "%Y-%m-%d")
                         if c_dt >= best_dt:
                             should_override = False
                     except ValueError:
                         pass
-                
+
                 if should_override:
                     class_data["lote"] = str(best_lote)
                     class_data["lote_date"] = best_info.get(
@@ -1632,7 +1708,7 @@ class TaraWeightManager:
                             else:
                                 rec[k] = v
                     records.append(rec)
-                
+
                 if records:
                     with self.sql_engine.connect() as conn:
                         with conn.begin():
@@ -1658,7 +1734,7 @@ class TaraWeightManager:
                                     requires_attention BIT
                                 );
                             """))
-                            
+
                             # Upload to the SAME connection's temp table via native executemany
                             conn.execute(
                                 text("""
@@ -1674,9 +1750,9 @@ class TaraWeightManager:
                                         :lote_reinspection_date, :lotes_info, :lote_history, :requires_attention
                                     )
                                 """),
-                                records
+                                records,
                             )
-                            
+
                             # Merge temp table into actual table
                             conn.execute(text("""
                                 MERGE product_classifications AS target
@@ -1739,8 +1815,9 @@ class TaraWeightManager:
                         f_elab = str(info.get("fecha_elaboracion") or "")[:10]
                         f_insp = str(info.get("fecha_inspeccion") or "")[:10]
 
-                        import re
-                        date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+                        # import re  # already imported at module level
+
+                        date_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}$")
                         batch_records.append(
                             {
                                 "product_id": str(pid)[:50],
@@ -1759,9 +1836,7 @@ class TaraWeightManager:
                     with self.sql_engine.connect() as conn:
                         with conn.begin():
                             # Create table if it doesn't exist
-                            conn.execute(
-                                text(
-                                    """
+                            conn.execute(text("""
                                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='product_batches' and xtype='U')
                                 CREATE TABLE product_batches (
                                     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -1771,10 +1846,8 @@ class TaraWeightManager:
                                     fecha_reinspeccion DATE,
                                     CONSTRAINT UQ_product_batches UNIQUE (product_id, lote)
                                 )
-                            """
-                                )
-                            )
-                            
+                            """))
+
                             # Create temp table for batch upsert
                             conn.execute(text("""
                                 IF OBJECT_ID('tempdb..#temp_batches') IS NOT NULL DROP TABLE #temp_batches;
@@ -1785,13 +1858,15 @@ class TaraWeightManager:
                                     fecha_reinspeccion DATE
                                 );
                             """))
-                            
+
                             # Fast upload via executemany
                             conn.execute(
-                                text("INSERT INTO #temp_batches (product_id, lote, fecha_elaboracion, fecha_reinspeccion) VALUES (:product_id, :lote, :fecha_elaboracion, :fecha_reinspeccion)"),
-                                batch_records
+                                text(
+                                    "INSERT INTO #temp_batches (product_id, lote, fecha_elaboracion, fecha_reinspeccion) VALUES (:product_id, :lote, :fecha_elaboracion, :fecha_reinspeccion)"
+                                ),
+                                batch_records,
                             )
-                            
+
                             # Single-statement MERGE
                             conn.execute(text("""
                                 MERGE product_batches AS target
@@ -1805,7 +1880,7 @@ class TaraWeightManager:
                                     INSERT (product_id, lote, fecha_elaboracion, fecha_reinspeccion)
                                     VALUES (source.product_id, source.lote, source.fecha_elaboracion, source.fecha_reinspeccion);
                             """))
-                    
+
                     logger.info(
                         f"✅ Saved {len(batch_records)} batch records to product_batches SQL table (UPSERT mode)"
                     )
@@ -1820,49 +1895,71 @@ class TaraWeightManager:
                 from datetime import datetime as _dt
 
                 # Helper: sanitize date strings
-                _DATE_RE = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+                _DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
                 def _safe_date(val):
-                    if val is None: return None
+                    if val is None:
+                        return None
                     s = str(val).strip()[:10]
-                    if s.lower() in ('nan', 'none', 'nat', '', 'null'): return None
-                    if not _DATE_RE.match(s): return None
+                    if s.lower() in ("nan", "none", "nat", "", "null"):
+                        return None
+                    if not _DATE_RE.match(s):
+                        return None
                     return s
 
                 def _safe_datetime(val):
-                    if val is None: return None
+                    if val is None:
+                        return None
                     s = str(val).strip()[:19]
-                    if s.lower() in ('nan', 'none', 'nat', '', 'null'): return None
-                    if len(s) < 10: return None
+                    if s.lower() in ("nan", "none", "nat", "", "null"):
+                        return None
+                    if len(s) < 10:
+                        return None
                     try:
                         date_str = s.replace(" ", "T")
                         return _dt.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
                     except ValueError:
-                        try: return _dt.strptime(s[:10], "%Y-%m-%d")
-                        except ValueError: return None
+                        try:
+                            return _dt.strptime(s[:10], "%Y-%m-%d")
+                        except ValueError:
+                            return None
 
                 history_records = []
                 for pid, props in self._product_classifications.items():
-                    if not isinstance(props, dict): continue
+                    if not isinstance(props, dict):
+                        continue
                     lote_history = props.get("lote_history", [])
-                    if not isinstance(lote_history, list): continue
+                    if not isinstance(lote_history, list):
+                        continue
 
                     for entry in lote_history:
-                        if not isinstance(entry, dict): continue
+                        if not isinstance(entry, dict):
+                            continue
                         raw_event = entry.get("date") or entry.get("timestamp") or ""
                         event_date = _safe_datetime(raw_event)
-                        history_records.append({
-                            "product_id": str(pid)[:50],
-                            "old_lote": str(entry.get("old_lote") or "")[:255],
-                            "new_lote": str(entry.get("new_lote") or "")[:255],
-                            "old_date": _safe_date(entry.get("old_date")),
-                            "new_date": _safe_date(entry.get("new_date")),
-                            "old_reinsp_date": _safe_date(entry.get("old_reinsp_date")),
-                            "new_reinsp_date": _safe_date(entry.get("new_reinsp_date")),
-                            "event_date": event_date,
-                            "user_name": str(entry.get("user") or "")[:50],
-                            "merma_kg": float(entry.get("merma_kg")) if entry.get("merma_kg") is not None else None,
-                            "notes": str(entry.get("notes") or "")[:4000],
-                        })
+                        history_records.append(
+                            {
+                                "product_id": str(pid)[:50],
+                                "old_lote": str(entry.get("old_lote") or "")[:255],
+                                "new_lote": str(entry.get("new_lote") or "")[:255],
+                                "old_date": _safe_date(entry.get("old_date")),
+                                "new_date": _safe_date(entry.get("new_date")),
+                                "old_reinsp_date": _safe_date(
+                                    entry.get("old_reinsp_date")
+                                ),
+                                "new_reinsp_date": _safe_date(
+                                    entry.get("new_reinsp_date")
+                                ),
+                                "event_date": event_date,
+                                "user_name": str(entry.get("user") or "")[:50],
+                                "merma_kg": (
+                                    float(entry.get("merma_kg"))
+                                    if entry.get("merma_kg") is not None
+                                    else None
+                                ),
+                                "notes": str(entry.get("notes") or "")[:4000],
+                            }
+                        )
 
                 if history_records:
                     # Optimized: Single transaction and batch MERGE for history
@@ -1887,7 +1984,7 @@ class TaraWeightManager:
                                     CONSTRAINT UQ_product_lote_history UNIQUE (product_id, old_lote, new_lote, event_date)
                                 )
                             """))
-                            
+
                             # Create temp table
                             conn.execute(text("""
                                 IF OBJECT_ID('tempdb..#temp_history') IS NOT NULL DROP TABLE #temp_history;
@@ -1905,7 +2002,7 @@ class TaraWeightManager:
                                     notes NVARCHAR(MAX)
                                 );
                             """))
-                            
+
                             # Fast upload via executemany
                             conn.execute(
                                 text("""
@@ -1919,9 +2016,9 @@ class TaraWeightManager:
                                         :merma_kg, :notes
                                     )
                                 """),
-                                history_records
+                                history_records,
                             )
-                            
+
                             # Single-statement MERGE
                             conn.execute(text("""
                                 MERGE product_lote_history AS target
@@ -1947,14 +2044,12 @@ class TaraWeightManager:
                                             source.old_reinsp_date, source.new_reinsp_date, 
                                             source.event_date, source.user_name, source.merma_kg, source.notes);
                             """))
-                    
+
                     logger.info(
                         f"✅ Saved {len(history_records)} lote history records to product_lote_history SQL table (UPSERT mode)"
                     )
             except Exception as e:
                 logger.error(f"❌ Error saving lote history records to SQL: {e}")
-
-
 
     def auto_classify_all(self):
         """
@@ -2764,15 +2859,23 @@ class TaraWeightManager:
                     # ── Product type import ────────────────────────────────
 
                     if pid in self._product_classifications:
+
                         entry = self._product_classifications[pid]
+
                         if entry.get("type_source") == "manual":
+
                             skipped_manual += 1
+
                         else:
-                            if entry.get("product_type") != product_type or entry.get("type_source") != "excel":
-                                entry["product_type"] = product_type
-                                entry["type_source"] = "excel"
-                                imported += 1
+
+                            entry["product_type"] = product_type
+
+                            entry["type_source"] = "excel"
+
+                            imported += 1
+
                     else:
+
                         self._product_classifications[pid] = {
                             "product_id": pid,
                             "chemical_name": (
@@ -2788,23 +2891,37 @@ class TaraWeightManager:
                             "notes": "",
                             "tara_overrides": {},
                         }
+
                         imported += 1
+
                         new_products += 1
 
                     # ── Tara override import (NETO->TARA from Excel row) ───
+
                     if col_neto and col_tara:
+
                         try:
-                            neto_val = float(str(row.get(col_neto, "")).replace(",", "."))
-                            tara_val = float(str(row.get(col_tara, "")).replace(",", "."))
+
+                            neto_val = float(
+                                str(row.get(col_neto, "")).replace(",", ".")
+                            )
+
+                            tara_val = float(
+                                str(row.get(col_tara, "")).replace(",", ".")
+                            )
 
                             if neto_val > 0 and tara_val > 0:
+
                                 entry = self._product_classifications[pid]
+
                                 overrides = entry.setdefault("tara_overrides", {})
+
                                 key = str(neto_val)
-                                
-                                if key not in overrides or overrides[key] != tara_val:
-                                    overrides[key] = tara_val
-                                    tara_overrides_added += 1
+
+                                overrides[key] = tara_val
+
+                                tara_overrides_added += 1
+
                         except (ValueError, TypeError):
 
                             pass  # Row without valid NETO/TARA data — skip silently

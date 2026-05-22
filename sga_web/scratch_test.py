@@ -13,7 +13,7 @@ if today_date_part.startswith("00/") or today_date_part.startswith("00-"):
 elif today_date_part.endswith("-00"):
     hide_elab_day = True
     today_str = today_str[:7] + "-01" + today_str[10:]
-    
+
 reinsp_date_part = reinsp_override[:10]
 if reinsp_date_part.startswith("00/") or reinsp_date_part.startswith("00-"):
     hide_insp_day = True

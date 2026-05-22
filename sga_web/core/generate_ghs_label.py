@@ -158,7 +158,7 @@ class GHSLabelGenerator:
         # use rotation=0 to avoid printer scaling issues. Only use 90/270 if
         # you need the PDF to be portrait for a portrait label printer.
 
-        logging.info(f"═══ Template PDF Generation ═══")
+        logging.info("═══ Template PDF Generation ═══")
         logging.info(f"  Design canvas: {w_mm} × {h_mm} mm")
         logging.info(f"  Rotation: {rotation}°")
 
@@ -174,7 +174,7 @@ class GHSLabelGenerator:
             logging.warning(
                 f"     If your label stock is {w_mm}×{h_mm}mm, the printer may scale content!"
             )
-            logging.warning(f"     Consider using rotation=0 for landscape labels.")
+            logging.warning("     Consider using rotation=0 for landscape labels.")
 
             # Apply transformation to rotate content
             if rotation == 90:
@@ -1111,7 +1111,6 @@ class GHSLabelGenerator:
         Returns:
             PIL.Image object or None if generation fails
         """
-        import tempfile
 
         try:
             # Generate PDF to a temporary file (needed for pdf2image on Windows)
@@ -1132,7 +1131,7 @@ class GHSLabelGenerator:
                 if poppler_path:
                     print(f"[DEBUG] Using Poppler at: {poppler_path}")
                 else:
-                    print(f"[WARNING] Poppler not found - PDF preview may fail")
+                    print("[WARNING] Poppler not found - PDF preview may fail")
 
                 # Convert to image
                 images = convert_from_path(
@@ -1211,7 +1210,7 @@ class GHSLabelGenerator:
             product = self.manager.get_product_data(product_code_or_data)
 
         if not product:
-            print(f"Product data not found!")
+            print("Product data not found!")
             return
 
         # ═══ CANVAS SETUP ═══
@@ -1712,6 +1711,7 @@ class GHSLabelGenerator:
         use_m_y_format = product.get("use_m_y_format", False)
 
         if use_m_y_format:
+
             def to_m_y(d_str):
                 d_str = str(d_str).strip()
                 if not d_str or d_str == "N/A":
