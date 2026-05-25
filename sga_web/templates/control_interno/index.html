@@ -975,6 +975,7 @@
                 // so the first real search is instant even if server just booted.
                 fetch('/control/api/summary').catch(() => {});
 
+
                 // Watchers for filters
                 this.$watch('searchQuery', () => {
                     this.isTyping = false;

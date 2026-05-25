@@ -28,8 +28,8 @@ from app import app
 if __name__ == "__main__":
     # Dedicated development bind to avoid collisions with pre-production services.
     # Override with DEV_HOST / DEV_PORT when needed.
-    dev_host = os.environ.get("DEV_HOST", "192.168.2.172")
-    dev_port = int(os.environ.get("DEV_PORT", "5004"))
+    dev_host = os.environ.get("DEV_HOST", "192.168.2.218")
+    dev_port = int(os.environ.get("DEV_PORT", "5000"))
 
     try:
         logging.info("Starting SGA Developer Server...")

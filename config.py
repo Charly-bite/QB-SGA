@@ -3,7 +3,7 @@ import logging
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sga_web', '.env'))
 
 # --- SQL Server Environment Variables ---
 SQL_SERVER = os.getenv("SQL_SERVER", "192.168.2.237")

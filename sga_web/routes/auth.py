@@ -32,49 +32,54 @@ def _is_safe_url(target):
 @auth_bp.route("/login", methods=["GET", "POST"])
 @limiter.limit("5 per minute", methods=["POST"])
 def login():
-    """User login page"""
+    """User login page — TEMPORARY: password bypass enabled"""
     if current_user.is_authenticated:
         return redirect(url_for("main.dashboard"))
 
     if request.method == "POST":
         username = request.form.get("username", "").strip()
-        password = request.form.get("password", "")
         remember = request.form.get("remember", False)
 
-        if not username or not password:
-            flash("Por favor ingrese usuario y contraseña", "error")
+        if not username:
+            flash("Por favor ingrese su usuario", "error")
             return render_template("auth/login.html")
 
-        # Authenticate using existing UserManager
+        # ── TEMPORARY BYPASS: skip password, login by username only ──
         user_manager = current_app.user_manager
-        if user_manager.authenticate(username, password):
-            # After authenticate(), get_current_user() returns the logged-in user data
-            user_data = user_manager.get_current_user()
-            user = User(user_data)
+        # Try to find the user in SQL or JSON
+        data = user_manager._load_data()
+        user_data = None
+        for u in data.get("users", []):
+            if u["username"].lower() == username.lower():
+                user_data = u
+                break
 
-            if not user.is_active:
-                flash(
-                    "Su cuenta ha sido desactivada. Contacte al administrador.", "error"
-                )
-                return render_template("auth/login.html")
+        if user_data is None:
+            # User not found — create a temporary session as operator
+            user_data = {
+                "username": username,
+                "role": "operator",
+                "full_name": username,
+                "warehouse": "",
+                "must_change_password": False,
+            }
 
-            login_user(user, remember=remember)
-            session.permanent = True  # Use PERMANENT_SESSION_LIFETIME
+        if not user_data.get("is_active", True):
+            flash(
+                "Su cuenta ha sido desactivada. Contacte al administrador.", "error"
+            )
+            return render_template("auth/login.html")
 
-            # Check if must change password
-            if user.must_change_password:
-                flash("Debe cambiar su contraseña antes de continuar", "warning")
-                return redirect(url_for("auth.change_password"))
+        user = User(user_data)
+        login_user(user, remember=remember)
+        session.permanent = True
 
-            flash(f"Bienvenido, {user.full_name}", "success")
+        flash(f"Bienvenido, {user.full_name}", "success")
 
-            # Redirect to requested page or dashboard (validate to prevent open redirect)
-            next_page = request.args.get("next")
-            if next_page and not _is_safe_url(next_page):
-                next_page = None
-            return redirect(next_page or url_for("main.dashboard"))
-        else:
-            flash("Usuario o contraseña incorrectos", "error")
+        next_page = request.args.get("next")
+        if next_page and not _is_safe_url(next_page):
+            next_page = None
+        return redirect(next_page or url_for("main.dashboard"))
 
     return render_template("auth/login.html")
 

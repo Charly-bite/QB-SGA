@@ -164,6 +164,19 @@ class UserManager:
 
     def _load_data(self) -> Dict[str, Any]:
         """Load users from SQL database, falling back to JSON in dev mode."""
+        # Lazy retry: if SQL engine wasn't available at init, try again now
+        if self.sql_engine is None:
+            try:
+                from database_client import get_shared_client
+
+                client = get_shared_client()
+                if client.is_connected():
+                    self.sql_engine = client.get_sql_engine()
+                    if self.sql_engine:
+                        logger.info("UserManager: SQL engine acquired on retry")
+            except Exception:
+                pass
+
         if self.sql_engine is None:
             return self._load_json_fallback()
 

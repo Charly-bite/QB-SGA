@@ -1,0 +1,10 @@
+pictogram_id,name,ghs_code,un_code,asset_filename,asset_exists
+GHS07,Exclamación,GHS07,UN3082,exclamacion.png,Y
+GHS05,Corrosión,GHS05,UN1760,corrosion.png,Y
+GHS08,Peligro para la salud,GHS08,UN2810,peligro_salud.png,Y
+GHS06,Calavera,GHS06,UN2810,calavera.png,Y
+GHS02,Llama,GHS02,UN1993,llama.png,Y
+GHS09,Ambiente,GHS09,UN3082,ambiente.png,Y
+GHS03,Llama sobre círculo,GHS03,UN2015,llama_circulo.png,Y
+GHS01,Bomba explotando,GHS01,UN0349,bomba.png,Y
+GHS04,Cilindro de gas,GHS04,UN1956,cilindro.png,N
