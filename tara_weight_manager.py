@@ -1614,6 +1614,7 @@ class TaraWeightManager:
 
     def _save_classifications(self):
         """Save product classifications to SQL and JSON file."""
+        import re
 
         # Always save to JSON as fallback WITH ATOMIC WRITES AND RETENTION BACKUPS
 
@@ -1714,7 +1715,34 @@ class TaraWeightManager:
                         with conn.begin():
                             # 1. UPSERT classifications using a single connection/transaction
                             conn.execute(text("""
+                                IF OBJECT_ID('product_classifications', 'U') IS NULL
+                                BEGIN
+                                    CREATE TABLE product_classifications (
+                                        product_id VARCHAR(50) PRIMARY KEY,
+                                        chemical_name NVARCHAR(255),
+                                        cas_number VARCHAR(100),
+                                        signal_word VARCHAR(100),
+                                        product_type VARCHAR(50),
+                                        default_container VARCHAR(50),
+                                        notes NVARCHAR(MAX),
+                                        type_source VARCHAR(50),
+                                        tara_history NVARCHAR(MAX),
+                                        tara_overrides NVARCHAR(MAX),
+                                        lote VARCHAR(255),
+                                        lote_date VARCHAR(50),
+                                        lote_reinspection_date VARCHAR(50),
+                                        lotes_info NVARCHAR(MAX),
+                                        lote_history NVARCHAR(MAX),
+                                        requires_attention BIT
+                                    );
+                                END
+                            """))
+                            
+                            conn.execute(text("""
                                 IF OBJECT_ID('tempdb..#temp_classifications') IS NOT NULL DROP TABLE #temp_classifications;
+                            """))
+
+                            conn.execute(text("""
                                 CREATE TABLE #temp_classifications (
                                     product_id VARCHAR(50),
                                     chemical_name NVARCHAR(255),
@@ -1837,20 +1865,25 @@ class TaraWeightManager:
                         with conn.begin():
                             # Create table if it doesn't exist
                             conn.execute(text("""
-                                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='product_batches' and xtype='U')
-                                CREATE TABLE product_batches (
-                                    id INT IDENTITY(1,1) PRIMARY KEY,
-                                    product_id VARCHAR(50),
-                                    lote VARCHAR(255),
-                                    fecha_elaboracion DATE,
-                                    fecha_reinspeccion DATE,
-                                    CONSTRAINT UQ_product_batches UNIQUE (product_id, lote)
-                                )
+                                IF OBJECT_ID('product_batches', 'U') IS NULL
+                                BEGIN
+                                    CREATE TABLE product_batches (
+                                        id INT IDENTITY(1,1) PRIMARY KEY,
+                                        product_id VARCHAR(50),
+                                        lote VARCHAR(255),
+                                        fecha_elaboracion DATE,
+                                        fecha_reinspeccion DATE,
+                                        CONSTRAINT UQ_product_batches UNIQUE (product_id, lote)
+                                    );
+                                END
+                            """))
+
+                            conn.execute(text("""
+                                IF OBJECT_ID('tempdb..#temp_batches') IS NOT NULL DROP TABLE #temp_batches;
                             """))
 
                             # Create temp table for batch upsert
                             conn.execute(text("""
-                                IF OBJECT_ID('tempdb..#temp_batches') IS NOT NULL DROP TABLE #temp_batches;
                                 CREATE TABLE #temp_batches (
                                     product_id VARCHAR(50),
                                     lote VARCHAR(255),
@@ -1890,7 +1923,6 @@ class TaraWeightManager:
         # Added: Sync product_lote_history to a dedicated SQL table for Control Interno protection
         if self.sql_engine:
             try:
-                import re
                 from sqlalchemy import text
                 from datetime import datetime as _dt
 
@@ -1924,6 +1956,7 @@ class TaraWeightManager:
                         except ValueError:
                             return None
 
+                seen_history = set()
                 history_records = []
                 for pid, props in self._product_classifications.items():
                     if not isinstance(props, dict):
@@ -1937,6 +1970,16 @@ class TaraWeightManager:
                             continue
                         raw_event = entry.get("date") or entry.get("timestamp") or ""
                         event_date = _safe_datetime(raw_event)
+                        
+                        # Fallback to prevent multiple NULLs causing UNIQUE constraint violation in SQL Server
+                        if event_date is None:
+                            event_date = _dt(1900, 1, 1)
+                            
+                        unique_key = (str(pid)[:50], str(entry.get("old_lote") or "")[:255], str(entry.get("new_lote") or "")[:255], event_date)
+                        if unique_key in seen_history:
+                            continue
+                        seen_history.add(unique_key)
+                        
                         history_records.append(
                             {
                                 "product_id": str(pid)[:50],
@@ -1967,27 +2010,32 @@ class TaraWeightManager:
                         with conn.begin():
                             # Create table if it doesn't exist
                             conn.execute(text("""
-                                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='product_lote_history' and xtype='U')
-                                CREATE TABLE product_lote_history (
-                                    id INT IDENTITY(1,1) PRIMARY KEY,
-                                    product_id VARCHAR(50),
-                                    old_lote VARCHAR(255),
-                                    new_lote VARCHAR(255),
-                                    old_date DATE,
-                                    new_date DATE,
-                                    old_reinsp_date DATE,
-                                    new_reinsp_date DATE,
-                                    event_date DATETIME,
-                                    user_name VARCHAR(50),
-                                    merma_kg FLOAT,
-                                    notes NVARCHAR(MAX),
-                                    CONSTRAINT UQ_product_lote_history UNIQUE (product_id, old_lote, new_lote, event_date)
-                                )
+                                IF OBJECT_ID('product_lote_history', 'U') IS NULL
+                                BEGIN
+                                    CREATE TABLE product_lote_history (
+                                        id INT IDENTITY(1,1) PRIMARY KEY,
+                                        product_id VARCHAR(50),
+                                        old_lote VARCHAR(255),
+                                        new_lote VARCHAR(255),
+                                        old_date DATE,
+                                        new_date DATE,
+                                        old_reinsp_date DATE,
+                                        new_reinsp_date DATE,
+                                        event_date DATETIME,
+                                        user_name VARCHAR(50),
+                                        merma_kg FLOAT,
+                                        notes NVARCHAR(MAX),
+                                        CONSTRAINT UQ_product_lote_history UNIQUE (product_id, old_lote, new_lote, event_date)
+                                    );
+                                END
+                            """))
+                            
+                            conn.execute(text("""
+                                IF OBJECT_ID('tempdb..#temp_history') IS NOT NULL DROP TABLE #temp_history;
                             """))
 
                             # Create temp table
                             conn.execute(text("""
-                                IF OBJECT_ID('tempdb..#temp_history') IS NOT NULL DROP TABLE #temp_history;
                                 CREATE TABLE #temp_history (
                                     product_id VARCHAR(50),
                                     old_lote VARCHAR(255),
