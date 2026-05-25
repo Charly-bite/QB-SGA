@@ -12,8 +12,13 @@ import tempfile
 import logging
 from resource_path import get_base_dir, get_poppler_path
 
-# Version for label tracking
-SGA_VERSION = "SGA v1.01"
+# Version for label tracking — reads from git tags automatically
+try:
+    from sga_web.version import get_version_display
+
+    SGA_VERSION = get_version_display()
+except ImportError:
+    SGA_VERSION = "SGA v2.0.0"
 
 try:
     from PIL import Image as PILImage

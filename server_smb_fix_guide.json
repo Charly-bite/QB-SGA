@@ -1,0 +1,116 @@
+{
+  "title": "SGA SMB Server Recovery Runbook",
+  "created_on": "2026-03-17",
+  "goal": "Restore write access to the shared normalized database and verify SGA uses server mode.",
+  "issue_summary": [
+    "SMB auth fails with password-expired errors (WinError 1330 / system error 2242).",
+    "Client falls back to local unified_db and lab changes may not persist to server.",
+    "Server copy reported smart_label.py NameError for get_base_dir in one environment."
+  ],
+  "prompt_for_agent": "You are a Windows/Python troubleshooting agent. Work in C:\\Users\\Administrador\\Desktop\\SGAv1.01 on ServerWebQB. Fix SMB access for \\\\ServerWebQB\\SGA_Database and ensure SGA writes to the server shared database. Do not expose passwords in logs. Steps: (1) verify SMB share path and connectivity, (2) reset sga_user password and prevent expiration, (3) clear stale SMB sessions/cached credentials, (4) reconnect to \\\\192.168.2.237\\SGA_Database interactively, (5) verify Python app resolves server path, (6) fix smart_label.py if get_base_dir is missing, (7) run final validation commands and provide PASS/FAIL with evidence.",
+  "prerequisites": [
+    "Run commands as Administrator on ServerWebQB.",
+    "Project folder exists: C:\\Users\\Administrador\\Desktop\\SGAv1.01",
+    "Share exists: SGA_Database",
+    "Know the new password policy for account sga_user"
+  ],
+  "steps": [
+    {
+      "id": 1,
+      "name": "Confirm share path",
+      "run_on": "server",
+      "commands": [
+        "Get-SmbShare -Name SGA_Database | Format-List Name,Path,Description,ScopeName",
+        "Get-SmbShare | Where-Object { $_.Name -match 'SGA|Database|DB' } | Format-Table Name,Path -AutoSize"
+      ],
+      "success_criteria": "SGA_Database path is shown and points to the expected unified_db folder."
+    },
+    {
+      "id": 2,
+      "name": "Locate project Python",
+      "run_on": "server",
+      "commands": [
+        "Set-Location 'C:\\Users\\Administrador\\Desktop\\SGAv1.01'",
+        "$py = @('.\\sga_web\\.venv\\Scripts\\python.exe', '.\\.venv\\Scripts\\python.exe') | Where-Object { Test-Path $_ } | Select-Object -First 1",
+        "if (-not $py) { Get-ChildItem -Path . -Recurse -Filter python.exe -ErrorAction SilentlyContinue | Select-Object -First 10 -ExpandProperty FullName } else { Write-Host \"Python detectado en: $py\" }"
+      ],
+      "success_criteria": "$py resolves to a valid python.exe path."
+    },
+    {
+      "id": 3,
+      "name": "Repair smart_label helper if missing",
+      "run_on": "server",
+      "commands": [
+        "Select-String -Path '.\\smart_label.py' -Pattern '^def get_base_dir'",
+        "$path = '.\\smart_label.py'; $txt = Get-Content $path -Raw; if ($txt -notmatch 'def get_base_dir\\(') { $insert = @\"\ndef get_base_dir():\n    \"\"\"Get the base directory of the application\"\"\"\n    return os.path.dirname(os.path.abspath(__file__))\n\n\"@; $txt = $txt -replace '(from typing import [^\\r\\n]+\\r?\\n)', '`$1`r`n$insert'; Set-Content -Path $path -Value $txt -Encoding UTF8; 'Patched get_base_dir in smart_label.py' }"
+      ],
+      "success_criteria": "smart_label.py contains def get_base_dir and SmartLabelManager can initialize."
+    },
+    {
+      "id": 4,
+      "name": "Reset SMB account password",
+      "run_on": "server",
+      "commands": [
+        "net user sga_user *",
+        "Set-LocalUser -Name 'sga_user' -PasswordNeverExpires $true"
+      ],
+      "success_criteria": "Password reset completes without error and expiration is disabled."
+    },
+    {
+      "id": 5,
+      "name": "Clear stale SMB sessions",
+      "run_on": "client_or_server",
+      "commands": [
+        "net use \\\\192.168.2.237\\SGA_Database /delete /y",
+        "net use \\\\ServerWebQB\\SGA_Database /delete /y",
+        "cmdkey /delete:192.168.2.237",
+        "cmdkey /delete:ServerWebQB",
+        "net use"
+      ],
+      "success_criteria": "No stale entries for ServerWebQB/192.168.2.237 remain."
+    },
+    {
+      "id": 6,
+      "name": "Reconnect interactively",
+      "run_on": "client",
+      "commands": [
+        "net use \\\\192.168.2.237\\SGA_Database /user:sga_user *",
+        "Test-Path '\\\\192.168.2.237\\SGA_Database'"
+      ],
+      "success_criteria": "net use succeeds and Test-Path returns True."
+    },
+    {
+      "id": 7,
+      "name": "Verify app resolves server DB",
+      "run_on": "client",
+      "commands": [
+        "& 'C:/Users/QB_DESARROLLO/Desktop/SGAv1.01/sga_web/.venv/Scripts/python.exe' -c \"import sga_web.db_connector as dc; cfg=dc.load_server_config('sga_web/server_config.json'); p,s=dc.get_db_path(cfg); print('DB_PATH=',p); print('DB_SOURCE=',s)\"",
+        "& 'C:/Users/QB_DESARROLLO/Desktop/SGAv1.01/sga_web/.venv/Scripts/python.exe' -c \"from smart_label import SmartLabelManager; m=SmartLabelManager(); print('SMART_LABEL_DATA_DIR=', m.data_dir); print('SMART_LABEL_MODE=', m.connection_mode)\""
+      ],
+      "success_criteria": "DB_SOURCE=server and SMART_LABEL_MODE indicates server (or not local fallback)."
+    },
+    {
+      "id": 8,
+      "name": "Final write test",
+      "run_on": "client",
+      "commands": [
+        "& 'C:/Users/QB_DESARROLLO/Desktop/SGAv1.01/sga_web/.venv/Scripts/python.exe' -c \"from smart_label import SmartLabelManager; s=SmartLabelManager(); ok=s.save_products(); print('SAVE_OK=', ok); print('STATUS=', s.get_last_save_status())\""
+      ],
+      "success_criteria": "SAVE_OK=True and STATUS.error is null."
+    }
+  ],
+  "expected_final_state": [
+    "SMB share is reachable from client with sga_user.",
+    "SGA resolves database path to server share, not local fallback.",
+    "Normalized database save succeeds with no credential errors."
+  ],
+  "report_template": {
+    "share_path": "",
+    "password_reset": "PASS|FAIL",
+    "smb_reconnect": "PASS|FAIL",
+    "db_source": "",
+    "smart_label_mode": "",
+    "save_ok": "PASS|FAIL",
+    "notes": ""
+  }
+}

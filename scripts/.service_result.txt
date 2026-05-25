@@ -1,0 +1,8 @@
+﻿PreProd_App=C:\Users\QB_DESARROLLO\Desktop\SGA PROD\.venv\Scripts\python.exe
+PreProd_Dir=C:\Users\QB_DESARROLLO\Desktop\SGA PROD\sga_web
+PreProd_Params=C:\Users\QB_DESARROLLO\Desktop\SGA PROD\sga_web\run_production.py
+PreProd_Status=Stopped
+Watchdog_App=C:\Users\QB_DESARROLLO\Desktop\SGA PROD\.venv\Scripts\python.exe
+Watchdog_Dir=C:\Users\QB_DESARROLLO\Desktop\SGA PROD
+Watchdog_Params=C:\Users\QB_DESARROLLO\Desktop\SGA PROD\watchdog.py
+Watchdog_Status=Stopped

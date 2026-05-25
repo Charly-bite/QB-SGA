@@ -5,7 +5,25 @@ GHS Label System for Warehouse Operations
 
 import os
 import sys
+import io
 import logging
+
+# ── Fix Windows encoding FIRST (before any logging or print) ──────────
+# When running under NSSM, stdout/stderr are file handles in cp1252.
+# Emojis and Unicode in print()/logging crash without this fix.
+if sys.platform == "win32" and "pytest" not in sys.modules:
+    os.environ.setdefault("PYTHONIOENCODING", "utf-8")
+    try:
+        if hasattr(sys.stdout, "buffer"):
+            sys.stdout = io.TextIOWrapper(
+                sys.stdout.buffer, encoding="utf-8", errors="replace"
+            )
+        if hasattr(sys.stderr, "buffer"):
+            sys.stderr = io.TextIOWrapper(
+                sys.stderr.buffer, encoding="utf-8", errors="replace"
+            )
+    except Exception:
+        pass  # Ignore if already wrapped or buffer unavailable
 
 # Central application logging unconditionally
 os.makedirs(
@@ -38,26 +56,11 @@ from user_manager import UserManager, UserRole
 from generate_ghs_label import GHSLabelGenerator
 from smart_label import SmartLabelManager
 from extensions import limiter as _limiter
+from version import get_version, get_version_display, get_version_full, get_git_sha
 from sga_web.config import config
 from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_login import LoginManager
 from flask import Flask, render_template, jsonify, request, flash, redirect, url_for
-import os
-import sys
-import io
-
-# Fix Windows console encoding for Unicode characters
-# Skip when running under pytest — TextIOWrapper conflicts with pytest's capture
-if sys.platform == "win32" and "pytest" not in sys.modules:
-    try:
-        sys.stdout = io.TextIOWrapper(
-            sys.stdout.buffer, encoding="utf-8", errors="replace"
-        )
-        sys.stderr = io.TextIOWrapper(
-            sys.stderr.buffer, encoding="utf-8", errors="replace"
-        )
-    except Exception:
-        pass  # Ignore if already wrapped
 
 # Load environment variables from .env file
 from dotenv import load_dotenv
@@ -320,6 +323,8 @@ def create_app(config_name="default"):
             "sap_available": SAP_AVAILABLE,
             "UserRole": UserRole,
             "OrderStatus": OrderStatus,
+            "sga_version": get_version(),
+            "sga_version_display": get_version_display(),
         }
 
     # Resolve and cache poppler path once at startup (avoids repeated filesystem scans)
@@ -333,26 +338,23 @@ def create_app(config_name="default"):
     # Health check endpoint for CI/CD pipeline monitoring
     @app.route("/health")
     def health_check():
-        import subprocess
-
         smart_label = app.smart_label
-        # Get git SHA for deployment version tracking
+        # Diagnostic: check UserManager state
+        um = app.user_manager
+        um_has_sql = um.sql_engine is not None
         try:
-            git_sha = (
-                subprocess.check_output(
-                    ["git", "rev-parse", "--short", "HEAD"],
-                    cwd=PARENT_DIR,
-                    stderr=subprocess.DEVNULL,
-                )
-                .decode()
-                .strip()
-            )
+            um_data = um._load_data()
+            um_user_count = len(um_data.get("users", []))
+            um_usernames = [u["username"] for u in um_data.get("users", [])]
         except Exception:
-            git_sha = "unknown"
+            um_user_count = -1
+            um_usernames = []
         return jsonify(
             {
                 "status": "ok",
-                "version": git_sha,
+                "version": get_version(),
+                "version_full": get_version_full(),
+                "git_sha": get_git_sha(),
                 "environment": os.environ.get("SGA_ENV", "development"),
                 "db_connected": smart_label.df_products is not None,
                 "sap_available": SAP_AVAILABLE,
@@ -361,6 +363,9 @@ def create_app(config_name="default"):
                     if smart_label.df_products is not None
                     else 0
                 ),
+                "auth_sql_engine": um_has_sql,
+                "auth_user_count": um_user_count,
+                "auth_users": um_usernames,
             }
         )
 
