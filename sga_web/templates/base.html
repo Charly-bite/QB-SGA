@@ -48,8 +48,17 @@
                     if (!opts.headers['X-CSRFToken']) {
                         opts.headers['X-CSRFToken'] = csrfToken;
                     }
+                    if (!opts.headers['X-Requested-With']) {
+                        opts.headers['X-Requested-With'] = 'XMLHttpRequest';
+                    }
                 }
-                return _fetch.call(this, url, opts);
+                return _fetch.call(this, url, opts).then(res => {
+                    // Global unauthenticated redirect handler for API fetch requests
+                    if (res.status === 401) {
+                        window.location.href = '/auth/login';
+                    }
+                    return res;
+                });
             };
         })();
     </script>

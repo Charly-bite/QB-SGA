@@ -62,6 +62,7 @@ def start_web_server():
     print("=" * 60)
 
     os.chdir(os.path.join(os.path.dirname(__file__), "sga_web"))
+    sys.path.insert(0, os.getcwd())
 
     # Use Flask's development server
     # For production, use: gunicorn app:app
@@ -110,7 +111,7 @@ def main():
     print("SGA Development Web Server Startup")
     print("=" * 60)
     print("Machine: 192.168.2.172")
-    print("Database: 192.168.2.237/SGA_Database (SMB)")
+    print("Database: 192.168.2.187/SGA_Database (SQL)")
     print()
 
     # Check dependencies

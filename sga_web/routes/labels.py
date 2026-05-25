@@ -335,7 +335,10 @@ def add_to_queue():
 
     if batch_date:
         try:
-            parsed_bd = datetime.strptime(batch_date[:10], "%Y-%m-%d")
+            try:
+                parsed_bd = datetime.strptime(batch_date[:10], "%Y-%m-%d")
+            except ValueError:
+                parsed_bd = datetime.strptime(batch_date[:10], "%d/%m/%Y")
             if parsed_bd.date() > datetime.now().date():
                 return (
                     jsonify(
@@ -396,6 +399,23 @@ def add_to_queue():
     if not reinspection_date and db_vencimiento:
         reinspection_date = db_vencimiento
 
+    # Normalize dates to DD/MM/YYYY for consistent display in text inputs
+    def _normalize_date(d):
+        """Convert YYYY-MM-DD to DD/MM/YYYY if needed."""
+        d = str(d).strip()
+        if len(d) >= 10 and d[4] == "-" and d[7] == "-":
+            try:
+                dt = datetime.strptime(d[:10], "%Y-%m-%d")
+                return dt.strftime("%d/%m/%Y")
+            except ValueError:
+                pass
+        return d
+
+    if batch_date:
+        batch_date = _normalize_date(batch_date)
+    if reinspection_date:
+        reinspection_date = _normalize_date(reinspection_date)
+
     # Only override tare if it wasn't provided and we found one
     if peso_tara == 0:
         peso_tara = db_tara
@@ -415,15 +435,19 @@ def add_to_queue():
     # Auto-calculate reinspection date if not provided (batch_date + 1 year)
     if not reinspection_date and batch_date:
         try:
-
-            bd = datetime.strptime(batch_date, "%Y-%m-%d")
+            try:
+                bd = datetime.strptime(batch_date[:10], "%Y-%m-%d")
+            except ValueError:
+                bd = datetime.strptime(batch_date[:10], "%d/%m/%Y")
+            
             try:
                 rd = bd.replace(year=bd.year + 1)
             except ValueError:
                 rd = bd.replace(year=bd.year + 1, day=28)
-            reinspection_date = rd.strftime("%Y-%m-%d")
+            reinspection_date = rd.strftime("%d/%m/%Y")
+            batch_date = bd.strftime("%d/%m/%Y")
         except Exception:
-            reinspection_date = ""
+            pass
 
     item = {
         "id": new_id,
@@ -436,7 +460,7 @@ def add_to_queue():
         "peso_tara": peso_tara,
         "peso_bruto": 0,
         "batch_number": batch_number if batch_number else "",
-        "batch_date": batch_date if batch_date else date.today().isoformat(),
+        "batch_date": batch_date if batch_date else date.today().strftime("%d/%m/%Y"),
         "reinspection_date": reinspection_date if reinspection_date else "",
         "copies": max(1, int(copies)) if copies else 1,
         "warehouse": warehouse,
@@ -479,11 +503,14 @@ def update_queue_item(item_id):
     data = request.get_json()
     queue = session.get("print_queue", [])
 
-    # Validate batch_date if updated
+    # Validate batch_date if updated (skip "00" blank sentinel)
     new_batch_date = data.get("batch_date", "")
-    if new_batch_date:
+    if new_batch_date and new_batch_date != "00":
         try:
-            parsed_bd = datetime.strptime(new_batch_date[:10], "%Y-%m-%d")
+            try:
+                parsed_bd = datetime.strptime(new_batch_date[:10], "%Y-%m-%d")
+            except ValueError:
+                parsed_bd = datetime.strptime(new_batch_date[:10], "%d/%m/%Y")
             if parsed_bd.date() > datetime.now().date():
                 return (
                     jsonify(

@@ -234,6 +234,13 @@ class GHSLabelGenerator:
             elab_date = today_str or _dt.date.today().strftime("%d/%m/%Y")
             insp_date = "N/A"
 
+        # Handle "00" sentinel: user wants this date field blank on the label
+        if today_str == "00":
+            elab_date = ""
+            insp_date = "" if (not reinsp_override or reinsp_override == "00") else str(reinsp_override)
+        elif reinsp_override == "00":
+            insp_date = ""
+
         # Respect explicit date format flag from frontend
         use_m_y_format = product_data.get("use_m_y_format", False)
 
@@ -245,10 +252,10 @@ class GHSLabelGenerator:
                     return d_str
                 # Check for DD/MM/YYYY
                 if len(d_str) >= 10 and d_str[2] == "/" and d_str[5] == "/":
-                    return f"{d_str[3:5]}/{d_str[8:10]}"
+                    return f"{d_str[3:5]}/{d_str[6:10]}"
                 # Check for YYYY-MM-DD
                 if len(d_str) >= 10 and d_str[4] == "-" and d_str[7] == "-":
-                    return f"{d_str[5:7]}/{d_str[2:4]}"
+                    return f"{d_str[5:7]}/{d_str[0:4]}"
                 return d_str
 
             elab_date = to_m_y(elab_date)
@@ -1707,49 +1714,28 @@ class GHSLabelGenerator:
             )
             insp_date = "N/A"
 
-        # Respect explicit date format flag from frontend
-        use_m_y_format = product.get("use_m_y_format", False)
+        # Handle "00" sentinel: user wants this date field blank on the label
+        if today_str == "00":
+            elab_date = ""
+            insp_date = "" if (not reinsp_override or reinsp_override == "00") else str(reinsp_override)
+        elif reinsp_override == "00":
+            insp_date = ""
 
-        if use_m_y_format:
-
-            def to_m_y(d_str):
-                d_str = str(d_str).strip()
-                if not d_str or d_str == "N/A":
-                    return d_str
-                # Check for DD/MM/YYYY
-                if len(d_str) >= 10 and d_str[2] == "/" and d_str[5] == "/":
-                    return f"{d_str[3:5]}/{d_str[8:10]}"
-                # Check for YYYY-MM-DD
-                if len(d_str) >= 10 and d_str[4] == "-" and d_str[7] == "-":
-                    return f"{d_str[5:7]}/{d_str[2:4]}"
-                return d_str
-
-            elab_date = to_m_y(elab_date)
-            insp_date = to_m_y(insp_date)
-
-        # ── ROW 1: DATES (both on same line, side by side) ──
+        # ── ROW 1: DATES (label above, value below for each date) ──
         date_label_size = 7
-        date_value_size = 16
+        date_value_size = 11
 
-        # Elaboration
+        # Elaboration — label on top line, value on line below
         c.setFont("Helvetica-Bold", date_label_size)
-        c.drawString(1 * mm, 18 * mm, "F.ELABORACION: ")  # Label
-
+        c.drawString(1 * mm, 21 * mm, "F.ELABORACION:")  # Label at Y=21mm
         c.setFont("Helvetica-Bold", date_value_size)
-        label_width_elab = stringWidth(
-            "F.ELABORACION: ", "Helvetica-Bold", date_label_size
-        )
-        c.drawString(1 * mm + label_width_elab, 18 * mm, elab_date)  # Value
+        c.drawString(1 * mm, 17.5 * mm, elab_date)  # Value at Y=17.5mm
 
-        # Reinspection
+        # Reinspection — label on top line, value on line below
         c.setFont("Helvetica-Bold", date_label_size)
-        c.drawString(1 * mm, 10 * mm, "F.REINSPECCION: ")  # Label
-
+        c.drawString(1 * mm, 13 * mm, "F. REINSPECCION:")  # Label at Y=13mm
         c.setFont("Helvetica-Bold", date_value_size)
-        label_width_insp = stringWidth(
-            "F.REINSPECCION: ", "Helvetica-Bold", date_label_size
-        )
-        c.drawString(1 * mm + label_width_insp, 10 * mm, insp_date)  # Value
+        c.drawString(1 * mm, 9.5 * mm, insp_date)  # Value at Y=9.5mm
 
         # ── ROW 2: LOTE LABEL ──
         batch_num = product.get("batch_number", "000000")

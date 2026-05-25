@@ -17,7 +17,7 @@ PARENT_DIR = os.path.dirname(BASE_DIR)
 
 def get_sql_connection_string(driver="{ODBC Driver 17 for SQL Server}"):
     """Compatibility helper used by root managers importing `config` from sga_web path."""
-    sql_server = os.getenv("SQL_SERVER", "192.168.2.237")
+    sql_server = os.getenv("SQL_SERVER", "192.168.2.187")
     sql_database = os.getenv("SQL_DATABASE", "SGA_Database")
     sql_user = os.getenv("SQL_USER", "sga_app_user")
     sql_password = os.getenv("SQL_PASSWORD", "")

@@ -1707,29 +1707,28 @@ class GHSLabelGenerator:
             )
             insp_date = "N/A"
 
-        # ── ROW 1: DATES (both on same line, side by side) ──
+        # Handle "00" sentinel: user wants this date field blank on the label
+        if today_str == "00":
+            elab_date = ""
+            insp_date = "" if (not reinsp_override or reinsp_override == "00") else str(reinsp_override)
+        elif reinsp_override == "00":
+            insp_date = ""
+
+        # ── ROW 1: DATES (label above, value below for each date) ──
         date_label_size = 7
-        date_value_size = 16
+        date_value_size = 11
 
-        # Elaboration
+        # Elaboration — label on top line, value on line below
         c.setFont("Helvetica-Bold", date_label_size)
-        c.drawString(1 * mm, 18 * mm, "F.ELABORACION: ")  # Label
-
+        c.drawString(1 * mm, 21 * mm, "F.ELABORACION:")  # Label at Y=21mm
         c.setFont("Helvetica-Bold", date_value_size)
-        label_width_elab = stringWidth(
-            "F.ELABORACION: ", "Helvetica-Bold", date_label_size
-        )
-        c.drawString(1 * mm + label_width_elab, 18 * mm, elab_date)  # Value
+        c.drawString(1 * mm, 17.5 * mm, elab_date)  # Value at Y=17.5mm
 
-        # Reinspection
+        # Reinspection — label on top line, value on line below
         c.setFont("Helvetica-Bold", date_label_size)
-        c.drawString(1 * mm, 10 * mm, "F.REINSPECCION: ")  # Label
-
+        c.drawString(1 * mm, 13 * mm, "F. REINSPECCION:")  # Label at Y=13mm
         c.setFont("Helvetica-Bold", date_value_size)
-        label_width_insp = stringWidth(
-            "F.REINSPECCION: ", "Helvetica-Bold", date_label_size
-        )
-        c.drawString(1 * mm + label_width_insp, 10 * mm, insp_date)  # Value
+        c.drawString(1 * mm, 9.5 * mm, insp_date)  # Value at Y=9.5mm
 
         # ── ROW 2: LOTE LABEL ──
         batch_num = product.get("batch_number", "000000")

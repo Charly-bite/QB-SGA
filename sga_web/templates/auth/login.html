@@ -3,6 +3,13 @@
 {% block title %}Iniciar Sesión{% endblock %}
 
 {% block unauthenticated_content %}
+<script>
+    // If the login page is loaded inside an iframe (like the preview panel),
+    // redirect the main window to the login page.
+    if (window.top !== window.self) {
+        window.top.location.href = window.self.location.href;
+    }
+</script>
 <div class="w-full max-w-md">
     <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
         <!-- Header -->
@@ -32,7 +39,6 @@
             {% endwith %}
 
             <form method="POST" action="{{ url_for('auth.login') }}">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="mb-4">
                     <label for="username" class="block text-sm font-medium text-slate-700 mb-1">Usuario</label>

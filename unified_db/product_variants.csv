@@ -1,0 +1,4 @@
+variant_id,product_id,barcode,pack_size,description,is_active
+VAR-750100000001,IFF-QB00122,750100000001,1kg,Menta - Presentación 1kg,Y
+VAR-750100000002,IFF-QB00122,750100000002,20kg,Menta - Presentación 20kg (Cubeta),Y
+VAR-750100000003,VAR-QB00005,750100000003,,,Y

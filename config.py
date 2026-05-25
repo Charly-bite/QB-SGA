@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- SQL Server Environment Variables ---
-SQL_SERVER = os.getenv("SQL_SERVER", "192.168.2.237")
+SQL_SERVER = os.getenv("SQL_SERVER", "192.168.2.187")
 SQL_DATABASE = os.getenv("SQL_DATABASE", "SGA_Database")
 SQL_USER = os.getenv("SQL_USER", "sga_app_user")
 SQL_PASSWORD = os.getenv("SQL_PASSWORD", "")
