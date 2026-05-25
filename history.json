@@ -82,5 +82,61 @@
             "product_code": "TEST001",
             "product_name": "Test Product"
         }
+    },
+    {
+        "timestamp": "2026-05-21 12:45:52",
+        "event_type": "product_edit",
+        "user": "admin",
+        "details": {
+            "product_code": "TEST001",
+            "changes": {
+                "Chemical Name": "Updated Name"
+            }
+        }
+    },
+    {
+        "timestamp": "2026-05-21 12:45:55",
+        "event_type": "product_add",
+        "user": "admin",
+        "details": {
+            "product_code": "NEW001"
+        }
+    },
+    {
+        "timestamp": "2026-05-21 12:45:56",
+        "event_type": "product_delete",
+        "user": "admin",
+        "details": {
+            "product_code": "TEST001",
+            "product_name": "Test Product"
+        }
+    },
+    {
+        "timestamp": "2026-05-21 13:20:08",
+        "event_type": "product_edit",
+        "user": "admin",
+        "details": {
+            "product_code": "TEST001",
+            "changes": {
+                "Chemical Name": "Updated Name"
+            }
+        }
+    },
+    {
+        "timestamp": "2026-05-21 13:20:10",
+        "event_type": "product_add",
+        "user": "admin",
+        "details": {
+            "product_code": "NEW001"
+        }
+    },
+    {
+        "timestamp": "2026-05-21 13:20:12",
+        "event_type": "product_delete",
+        "user": "admin",
+        "details": {
+            "product_code": "TEST001",
+            "product_name": "Test Product"
+        }
     }
 ]
