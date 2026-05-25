@@ -1377,6 +1377,7 @@ class TaraWeightManager:
 
     def _save_classifications(self):
         """Save product classifications to SQL and JSON file."""
+        import re
 
         # Always save to JSON as fallback
 
