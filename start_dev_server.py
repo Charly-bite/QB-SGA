@@ -87,7 +87,7 @@ def start_web_server():
 
         # Run with debug=True for development
         app.run(
-            host="192.168.2.172",
+            host="0.0.0.0",
             port=5004,
             debug=False,  # Set to True for auto-reload on code changes
             use_reloader=False,  # Disable reloader to avoid double initialization

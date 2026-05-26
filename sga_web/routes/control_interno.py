@@ -76,7 +76,7 @@ def run_startup_lote_recovery(app):
         if needs_persist:
             tara_mgr._save_classifications()
             logger.info(
-                "\ud83d\udd04 Recovered stale lote fields from history overrides (startup)"
+                "[RECOVER] Recovered stale lote fields from history overrides (startup)"
             )
     except Exception as exc:
         logger.warning(f"Lote override recovery failed at startup (non-fatal): {exc}")
