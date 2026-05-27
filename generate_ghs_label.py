@@ -197,12 +197,42 @@ class GHSLabelGenerator:
             "batch_date", _dt.date.today().strftime("%d/%m/%Y")
         )
         reinsp_override = product_data.get("reinspection_date", "")
+
+        # Helper: resolve reinsp_override into a display string
+        def _resolve_reinsp_override(reinsp_val):
+            if not reinsp_val or reinsp_val == "00":
+                return ""
+            try:
+                # Handle "00/" sentinel in reinspection date (day-less)
+                _rv = str(reinsp_val)
+                _rv_parse = _rv
+                _rv_had_00 = False
+                if _rv.startswith("00/"):
+                    _rv_parse = "01/" + _rv[3:]
+                    _rv_had_00 = True
+                if "-" in _rv_parse:
+                    rd = _dt.datetime.strptime(_rv_parse, "%Y-%m-%d")
+                else:
+                    rd = _dt.datetime.strptime(_rv_parse, "%d/%m/%Y")
+                if _rv_had_00:
+                    return rd.strftime("00/%m/%Y")
+                return rd.strftime("%d/%m/%Y")
+            except Exception:
+                return str(reinsp_val)
+
         try:
             dt = None
-            if "-" in str(today_str):
-                dt = _dt.datetime.strptime(today_str, "%Y-%m-%d")
-            elif "/" in str(today_str):
-                parts = str(today_str).split("/")
+            # Handle "00/" sentinel in batch_date (day-less date)
+            parse_str = str(today_str)
+            had_00_day = False
+            if parse_str.startswith("00/"):
+                parse_str = "01/" + parse_str[3:]
+                had_00_day = True
+
+            if "-" in parse_str:
+                dt = _dt.datetime.strptime(parse_str, "%Y-%m-%d")
+            elif "/" in parse_str:
+                parts = parse_str.split("/")
                 if len(parts) == 3:
                     # Check if year is last (len 4)
                     if len(parts[2]) == 4:
@@ -215,29 +245,36 @@ class GHSLabelGenerator:
                         )  # YMD
 
             if dt:
-                elab_date = dt.strftime("%d/%m/%Y")
+                if had_00_day:
+                    elab_date = dt.strftime("00/%m/%Y")
+                else:
+                    elab_date = dt.strftime("%d/%m/%Y")
                 # Use explicit reinspection_date if provided, otherwise auto-calc +1 year
                 if reinsp_override:
-                    try:
-                        if "-" in str(reinsp_override):
-                            rd = _dt.datetime.strptime(reinsp_override, "%Y-%m-%d")
-                        else:
-                            rd = _dt.datetime.strptime(reinsp_override, "%d/%m/%Y")
-                        insp_date = rd.strftime("%d/%m/%Y")
-                    except Exception:
-                        insp_date = str(reinsp_override)
+                    insp_date = _resolve_reinsp_override(reinsp_override)
                 else:
                     try:
                         insp_dt = dt.replace(year=dt.year + 1)
                     except ValueError:
                         insp_dt = dt.replace(year=dt.year + 1, day=28)
-                    insp_date = insp_dt.strftime("%d/%m/%Y")
+                    if had_00_day:
+                        insp_date = insp_dt.strftime("00/%m/%Y")
+                    else:
+                        insp_date = insp_dt.strftime("%d/%m/%Y")
             else:
                 elab_date = today_str
-                insp_date = "N/A"
+                # Still try to use reinsp_override even if batch date parsing failed
+                if reinsp_override:
+                    insp_date = _resolve_reinsp_override(reinsp_override)
+                else:
+                    insp_date = "N/A"
         except Exception:
             elab_date = today_str or _dt.date.today().strftime("%d/%m/%Y")
-            insp_date = "N/A"
+            # Still try to use reinsp_override even if batch date parsing failed
+            if reinsp_override:
+                insp_date = _resolve_reinsp_override(reinsp_override)
+            else:
+                insp_date = "N/A"
 
         is_almacen2 = template.get("name", "").strip().lower() == "almacen2"
         use_m_y_format = product_data.get("use_m_y_format", False) or is_almacen2
@@ -1662,14 +1699,44 @@ class GHSLabelGenerator:
             "batch_date", datetime.date.today().strftime("%d/%m/%Y")
         )
         reinsp_override = product.get("reinspection_date", "")
+
+        # Helper: resolve reinsp_override into a display string
+        def _resolve_reinsp(reinsp_val):
+            if not reinsp_val or reinsp_val == "00":
+                return ""
+            try:
+                # Handle "00/" sentinel in reinspection date (day-less)
+                _rv = str(reinsp_val)
+                _rv_parse = _rv
+                _rv_had_00 = False
+                if _rv.startswith("00/"):
+                    _rv_parse = "01/" + _rv[3:]
+                    _rv_had_00 = True
+                if "-" in _rv_parse:
+                    rd = datetime.datetime.strptime(_rv_parse, "%Y-%m-%d")
+                else:
+                    rd = datetime.datetime.strptime(_rv_parse, "%d/%m/%Y")
+                if _rv_had_00:
+                    return rd.strftime("00/%m/%Y")
+                return rd.strftime("%d/%m/%Y")
+            except Exception:
+                return str(reinsp_val)
+
         try:
             dt = None
-            if "-" in str(today_str):
+            # Handle "00/" sentinel in batch_date (day-less date)
+            parse_str = str(today_str)
+            had_00_day = False
+            if parse_str.startswith("00/"):
+                parse_str = "01/" + parse_str[3:]
+                had_00_day = True
+
+            if "-" in parse_str:
                 # ISO format: YYYY-MM-DD
-                dt = datetime.datetime.strptime(today_str, "%Y-%m-%d")
-            elif "/" in str(today_str):
+                dt = datetime.datetime.strptime(parse_str, "%Y-%m-%d")
+            elif "/" in parse_str:
                 # Try different date formats
-                parts = str(today_str).split("/")
+                parts = parse_str.split("/")
                 if len(parts) == 3:
                     # Check if it's M/D/YYYY (US format) or D/M/YYYY
                     if len(parts[2]) == 4:  # Year is last
@@ -1684,17 +1751,13 @@ class GHSLabelGenerator:
                             dt = datetime.datetime(year, month_or_day, day_or_month)
 
             if dt:
-                elab_date = dt.strftime("%d/%m/%Y")
+                if had_00_day:
+                    elab_date = dt.strftime("00/%m/%Y")
+                else:
+                    elab_date = dt.strftime("%d/%m/%Y")
                 # Use explicit reinspection_date if provided, otherwise auto-calc +1 year
                 if reinsp_override:
-                    try:
-                        if "-" in str(reinsp_override):
-                            rd = datetime.datetime.strptime(reinsp_override, "%Y-%m-%d")
-                        else:
-                            rd = datetime.datetime.strptime(reinsp_override, "%d/%m/%Y")
-                        insp_date = rd.strftime("%d/%m/%Y")
-                    except Exception:
-                        insp_date = str(reinsp_override)
+                    insp_date = _resolve_reinsp(reinsp_override)
                 else:
                     try:
                         insp_dt = dt.replace(
@@ -1702,20 +1765,31 @@ class GHSLabelGenerator:
                         )  # Reinspection = elaboration + 1 year
                     except ValueError:
                         insp_dt = dt.replace(year=dt.year + 1, day=28)
-                    insp_date = insp_dt.strftime("%d/%m/%Y")
+                    if had_00_day:
+                        insp_date = insp_dt.strftime("00/%m/%Y")
+                    else:
+                        insp_date = insp_dt.strftime("%d/%m/%Y")
             else:
                 elab_date = today_str
-                insp_date = "N/A"
+                # Still try to use reinsp_override even if batch date parsing failed
+                if reinsp_override:
+                    insp_date = _resolve_reinsp(reinsp_override)
+                else:
+                    insp_date = "N/A"
         except Exception:
             elab_date = (
                 today_str if today_str else datetime.date.today().strftime("%d/%m/%Y")
             )
-            insp_date = "N/A"
+            # Still try to use reinsp_override even if batch date parsing failed
+            if reinsp_override:
+                insp_date = _resolve_reinsp(reinsp_override)
+            else:
+                insp_date = "N/A"
 
         # Handle "00" sentinel: user wants this date field blank on the label
         if today_str == "00":
             elab_date = ""
-            insp_date = "" if (not reinsp_override or reinsp_override == "00") else str(reinsp_override)
+            insp_date = "" if (not reinsp_override or reinsp_override == "00") else _resolve_reinsp(reinsp_override)
         elif reinsp_override == "00":
             insp_date = ""
 

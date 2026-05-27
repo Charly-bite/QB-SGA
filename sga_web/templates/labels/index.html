@@ -1889,19 +1889,28 @@
             }
             try {
                 let bd;
-                if (item.batch_date.includes('/')) {
-                    const parts = item.batch_date.split('/');
+                let had00Day = false;
+                let parseDate = item.batch_date;
+
+                // Handle "00/" sentinel: day=00 means "no day", swap to 01 for parsing
+                if (parseDate.startsWith('00/')) {
+                    parseDate = '01/' + parseDate.substring(3);
+                    had00Day = true;
+                }
+
+                if (parseDate.includes('/')) {
+                    const parts = parseDate.split('/');
                     if (parts.length === 3) {
                         bd = new Date(`${parts[2]}-${parts[1]}-${parts[0]}T00:00:00`);
                     }
                 } else {
-                    bd = new Date(item.batch_date + 'T00:00:00');
+                    bd = new Date(parseDate + 'T00:00:00');
                 }
                 
                 if (bd && !isNaN(bd)) {
                     const rd = new Date(bd);
                     rd.setFullYear(rd.getFullYear() + 1);
-                    const dd = String(rd.getDate()).padStart(2, '0');
+                    const dd = had00Day ? '00' : String(rd.getDate()).padStart(2, '0');
                     const mm = String(rd.getMonth() + 1).padStart(2, '0');
                     const yyyy = rd.getFullYear();
                     item.reinspection_date = `${dd}/${mm}/${yyyy}`;

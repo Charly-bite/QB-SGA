@@ -333,7 +333,7 @@ def add_to_queue():
     batch_number = data.get("batch_number", "")  # Get batch number from request
     batch_date = data.get("batch_date", "")  # Get batch date from request
 
-    if batch_date:
+    if batch_date and not batch_date.startswith("00/"):
         try:
             try:
                 parsed_bd = datetime.strptime(batch_date[:10], "%Y-%m-%d")
@@ -435,17 +435,28 @@ def add_to_queue():
     # Auto-calculate reinspection date if not provided (batch_date + 1 year)
     if not reinspection_date and batch_date:
         try:
+            # Handle "00/" sentinel: swap to "01/" for parsing, preserve flag
+            parse_bd = batch_date
+            had_00_day = False
+            if parse_bd.startswith("00/"):
+                parse_bd = "01/" + parse_bd[3:]
+                had_00_day = True
+
             try:
-                bd = datetime.strptime(batch_date[:10], "%Y-%m-%d")
+                bd = datetime.strptime(parse_bd[:10], "%Y-%m-%d")
             except ValueError:
-                bd = datetime.strptime(batch_date[:10], "%d/%m/%Y")
+                bd = datetime.strptime(parse_bd[:10], "%d/%m/%Y")
             
             try:
                 rd = bd.replace(year=bd.year + 1)
             except ValueError:
                 rd = bd.replace(year=bd.year + 1, day=28)
-            reinspection_date = rd.strftime("%d/%m/%Y")
-            batch_date = bd.strftime("%d/%m/%Y")
+
+            if had_00_day:
+                reinspection_date = rd.strftime("00/%m/%Y")
+            else:
+                reinspection_date = rd.strftime("%d/%m/%Y")
+                batch_date = bd.strftime("%d/%m/%Y")
         except Exception:
             pass
 
@@ -503,9 +514,9 @@ def update_queue_item(item_id):
     data = request.get_json()
     queue = session.get("print_queue", [])
 
-    # Validate batch_date if updated (skip "00" blank sentinel)
+    # Validate batch_date if updated (skip "00" blank sentinel and "00/" day-less sentinel)
     new_batch_date = data.get("batch_date", "")
-    if new_batch_date and new_batch_date != "00":
+    if new_batch_date and new_batch_date != "00" and not new_batch_date.startswith("00/"):
         try:
             try:
                 parsed_bd = datetime.strptime(new_batch_date[:10], "%Y-%m-%d")
